@@ -4,7 +4,7 @@ import whiteImage from "../../images/rook-white.png"
 
 const moveSet = [
     {vertical: 1, horizontal: 0, repeating: true},
-    {vertical: 0, horizontal: -1, repetaing: true},
+    {vertical: 0, horizontal: -1, repeating: true},
     {vertical: 0, horizontal: 1, repeating: true},
     {vertical: -1, horizontal: 0, repeating: true}
 ]
