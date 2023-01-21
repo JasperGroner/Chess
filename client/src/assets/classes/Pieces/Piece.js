@@ -19,10 +19,6 @@ class Piece {
             this.image = whiteImage
         }
     }
-
-    // move this to board?
-    // makes sense given board data is already there
-
 }
 
 export default Piece
