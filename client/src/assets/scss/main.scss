@@ -24,7 +24,7 @@ img {
 
 .container {
   width: $board-dimension;
-  margin: $square-dimension auto;
+  margin: 25px auto;
   border: 1px solid black;
   padding: 0px;
 }
@@ -55,4 +55,10 @@ img {
 
 .square--valid-move {
   background-color: lightblue;
+}
+
+.turn-display {
+  width: $board-dimension;
+  margin: 10px auto;
+  text-align: center;
 }

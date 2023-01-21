@@ -1,4 +1,3 @@
-import React from "react"
 import Bishop from "./Pieces/Bishop"
 import King from "./Pieces/King"
 import Knight from "./Pieces/Knight"
