@@ -55,7 +55,7 @@ class Board {
             if (move.repeating) {
                 let row = this.selectedPieceLocation.row + move.vertical
                 let column = this.selectedPieceLocation.column + move.horizontal
-                while (this.onBoard(row, column)) {
+                while (this.isValidMove(row, column)) {
                     validMovesLocations.push({row, column})
                     row += move.vertical
                     column += move.horizontal
@@ -64,7 +64,7 @@ class Board {
                 const row = this.selectedPieceLocation.row + move.vertical
                 const column = this.selectedPieceLocation.column + move.horizontal  
                 const moveLocation = {row, column}
-                if (this.onBoard(row, column)) {
+                if (this.isValidMove(row, column)) {
                     validMovesLocations.push(moveLocation)
                 }
             }
@@ -72,9 +72,23 @@ class Board {
         return validMovesLocations
     }
 
-    onBoard(row, column) {
-        return (row >= 0 && row <= this.boardModel.length -1 
-            && column >= 0 && column <= this.boardModel[0].length - 1)
+    isValidMove(row, column) {
+        if (this.offBoard(row, column)) {
+            return false
+        } else if (this.occupiedByAlly(row, column)) {
+            return false
+        }
+        return true
+    }
+
+    offBoard(row, column) {
+        return (row < 0 || row > this.boardModel.length -1 
+            || column < 0 || column > this.boardModel[0].length - 1)
+    }
+
+    occupiedByAlly(row, column) {
+        return (this.boardModel[row][column] &&
+            this.boardModel[row][column].color === this.selectedPiece.color)
     }
 
     static convertRow(rowArray) {
