@@ -11,6 +11,7 @@ class Board {
         this.boardModel = []
         this.selectedPiece = null
         this.selectedPieceLocation = {row: null, column: null}
+        this.selectedPieceMoves = []
         this.populateBoard()
     }
 
@@ -32,8 +33,13 @@ class Board {
         }
     }
 
-    select(row, column) {
-        if (this.boardModel[row][column]) {
+    handleClick(row, column) {
+        if (this.canMove(row, column)) {
+            this.boardModel[row][column] = this.selectedPiece
+            this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = null
+            this.selectedPieceLocation = {row, column}
+            this.selectedPiece = null
+        } else if (this.boardModel[row][column]) {
             if (this.selectedPieceLocation.row === row && 
                 this.selectedPieceLocation.column === column) {
                 this.selectedPiece = null
@@ -48,31 +54,42 @@ class Board {
         return []
     }
 
+    canMove(row, column) {
+        if (this.selectedPiece) {
+            for (const move of this.selectedPieceMoves) {
+                if (move.row === row && move.column === column) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     getSelectedPieceMoves() {
-        const validMovesLocations = []
+        this.selectedPieceMoves = []
         const moveSet = this.selectedPiece.moveSet
         moveSet.forEach(move => {
             if (move.repeating) {
                 let row = this.selectedPieceLocation.row + move.vertical
                 let column = this.selectedPieceLocation.column + move.horizontal
-                while (this.isValidMove(row, column)) {
-                    validMovesLocations.push({row, column})
+                while (this.isValidMove({row, column})) {
+                    this.selectedPieceMoves.push({row, column})
                     row += move.vertical
                     column += move.horizontal
                 }
             } else {
                 const row = this.selectedPieceLocation.row + move.vertical
                 const column = this.selectedPieceLocation.column + move.horizontal  
-                const moveLocation = {row, column}
-                if (this.isValidMove(row, column)) {
-                    validMovesLocations.push(moveLocation)
+                if (this.isValidMove({row, column})) {
+                    this.selectedPieceMoves.push({row, column})
                 }
             }
         })
-        return validMovesLocations
+
+        return this.selectedPieceMoves
     }
 
-    isValidMove(row, column) {
+    isValidMove({row, column}) {
         if (this.offBoard(row, column)) {
             return false
         } else if (this.occupiedByAlly(row, column)) {
