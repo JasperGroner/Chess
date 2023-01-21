@@ -35,14 +35,15 @@ const Chess = props => {
     }
 
     const select = (row, column) => {
-        if (selectedTile.row === row && selectedTile.column === column) {
+        const handleClickResponse = boardState.handleClick(row, column)
+        setSelectedPieceMoves(handleClickResponse.moves)
+        if ((selectedTile.row === row && selectedTile.column === column) ||
+            handleClickResponse.unselect === true) {
             setSelectedTile({row: null, column: null})
         } else {
             setSelectedTile({row, column})
         }
-        setSelectedPieceMoves(boardState.handleClick(row, column))
-        // to do: fix bug in queen movement - only can move one square down, other directions fine
-        // rook can only move one space left
+        console.log(handleClickResponse)
         setBoardState(boardState)
     }
 

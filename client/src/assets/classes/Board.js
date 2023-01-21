@@ -39,19 +39,20 @@ class Board {
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = null
             this.selectedPieceLocation = {row, column}
             this.selectedPiece = null
+            return {moves: [], turnSwitch: true, unselect: true}
         } else if (this.boardModel[row][column]) {
             if (this.selectedPieceLocation.row === row && 
                 this.selectedPieceLocation.column === column) {
                 this.selectedPiece = null
                 this.selectedPieceLocation = {}
-                return []
+                return {moves: []}
             } else {
                 this.selectedPiece = this.boardModel[row][column]
                 this.selectedPieceLocation = {row, column}
-                return this.getSelectedPieceMoves()
+                return {moves: this.getSelectedPieceMoves()}
             }
         }
-        return []
+        return {moves: []}
     }
 
     canMove(row, column) {
