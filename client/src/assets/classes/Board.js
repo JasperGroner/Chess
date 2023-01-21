@@ -72,7 +72,7 @@ class Board {
             if (move.repeating) {
                 let row = this.selectedPieceLocation.row + move.vertical
                 let column = this.selectedPieceLocation.column + move.horizontal
-                while (this.isValidMove({row, column})) {
+                while (this.isValidMove({row, column}, move)) {
                     this.selectedPieceMoves.push({row, column})
                     row += move.vertical
                     column += move.horizontal
@@ -80,7 +80,7 @@ class Board {
             } else {
                 const row = this.selectedPieceLocation.row + move.vertical
                 const column = this.selectedPieceLocation.column + move.horizontal  
-                if (this.isValidMove({row, column})) {
+                if (this.isValidMove({row, column}, move)) {
                     this.selectedPieceMoves.push({row, column})
                 }
             }
@@ -89,10 +89,12 @@ class Board {
         return this.selectedPieceMoves
     }
 
-    isValidMove({row, column}) {
+    isValidMove({row, column}, move) {
         if (this.offBoard(row, column)) {
             return false
         } else if (this.occupiedByAlly(row, column)) {
+            return false
+        } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal)) {
             return false
         }
         return true
@@ -106,6 +108,11 @@ class Board {
     occupiedByAlly(row, column) {
         return (this.boardModel[row][column] &&
             this.boardModel[row][column].color === this.selectedPiece.color)
+    }
+
+    occupiedByEnemy(row, column) {
+        return (this.boardModel[row][column] &&
+            this.boardModel[row][column].color !== this.selectedPiece.color)
     }
 
     static convertRow(rowArray) {
