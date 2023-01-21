@@ -49,7 +49,27 @@ class Board {
     }
 
     getSelectedPieceMoves() {
-        return this.selectedPiece.getValidMoves(this, this.selectedPieceLocation)
+        const validMovesLocations = []
+        const moveSet = this.selectedPiece.moveSet
+        moveSet.forEach(move => {
+            if (move.repeating) {
+                let row = this.selectedPieceLocation.row + move.vertical
+                let column = this.selectedPieceLocation.column + move.horizontal
+                while (this.onBoard(row, column)) {
+                    validMovesLocations.push({row, column})
+                    row += move.vertical
+                    column += move.horizontal
+                }
+            } else {
+                const row = this.selectedPieceLocation.row + move.vertical
+                const column = this.selectedPieceLocation.column + move.horizontal  
+                const moveLocation = {row, column}
+                if (this.onBoard(row, column)) {
+                    validMovesLocations.push(moveLocation)
+                }
+            }
+        })
+        return validMovesLocations
     }
 
     onBoard(row, column) {
