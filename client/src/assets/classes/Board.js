@@ -32,7 +32,7 @@ class Board {
         }
     }
 
-    handleClick(row, column) {
+    handleClick(row, column, turn) {
         if (this.canMove(row, column)) {
             this.boardModel[row][column] = this.selectedPiece
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = null
@@ -40,8 +40,9 @@ class Board {
             this.selectedPiece = null
             return {moves: [], turnSwitch: true, unselect: true}
         } else if (this.boardModel[row][column]) {
-            if (this.selectedPieceLocation.row === row && 
-                this.selectedPieceLocation.column === column) {
+            if ((this.selectedPieceLocation.row === row && 
+                this.selectedPieceLocation.column === column) ||
+                this.boardModel[row][column].color !== turn) {
                 this.selectedPiece = null
                 this.selectedPieceLocation = {}
                 return {moves: []}

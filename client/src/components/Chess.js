@@ -38,7 +38,7 @@ const Chess = props => {
     }
 
     const select = (row, column) => {
-        const handleClickResponse = boardState.handleClick(row, column)
+        const handleClickResponse = boardState.handleClick(row, column, turn)
         setSelectedPieceMoves(handleClickResponse.moves)
         if ((selectedTile.row === row && selectedTile.column === column) ||
             handleClickResponse.unselect === true) {
