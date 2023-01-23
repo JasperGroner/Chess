@@ -10,7 +10,7 @@ const CheckDisplay = ( {check} ) => {
             checkList.push(<h2>White in Check</h2>)
         }
     }
-    return (<div>
+    return (<div className="info-display">
         {checkList}
     </div>)
 }
