@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import ChessRow from "./ChessRow"
 import Board from "../assets/classes/Board"
 import TurnDisplay from "./TurnDisplay"
+import CheckDipslay from "./CheckDisplay"
 
 const Chess = props => {
     const [ selectedTile, setSelectedTile ] = useState({
@@ -14,6 +15,8 @@ const Chess = props => {
     const [ boardState, setBoardState ] = useState(new Board())
 
     const [ turn, setTurn ] = useState("white")
+
+    const [ check, setCheck ] = useState({})
 
     const setUpChessRows = () => {
         const rows = []
@@ -47,7 +50,10 @@ const Chess = props => {
             setSelectedTile({row, column})
         }
         if (handleClickResponse.turnSwitch) {
-            turn === "white" ? setTurn("black") : setTurn("white")
+            setTurn(handleClickResponse.turnSwitch)
+        }
+        if (handleClickResponse.check) {
+            setCheck(handleClickResponse.check)
         }
         setBoardState(boardState)
     }
@@ -60,6 +66,7 @@ const Chess = props => {
         <div className ="container grid-container">
             {rows}
         </div>
+        <CheckDipslay check={check}/>
     </div>)
 }
 

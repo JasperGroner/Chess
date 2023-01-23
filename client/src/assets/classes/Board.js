@@ -11,6 +11,7 @@ class Board {
         this.selectedPiece = null
         this.selectedPieceLocation = {row: null, column: null}
         this.selectedPieceMoves = []
+        this.turn = "white"
         this.populateBoard()
     }
 
@@ -37,8 +38,9 @@ class Board {
             this.boardModel[row][column] = this.selectedPiece
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = null
             this.selectedPieceLocation = {row, column}
+            const check = this.switchTurn()
             this.selectedPiece = null
-            return {moves: [], turnSwitch: true, unselect: true}
+            return {moves: [], turnSwitch: this.turn, unselect: true, check: check}
         } else if (this.boardModel[row][column]) {
             if ((this.selectedPieceLocation.row === row && 
                 this.selectedPieceLocation.column === column) ||
@@ -67,27 +69,32 @@ class Board {
     }
 
     getSelectedPieceMoves() {
-        this.selectedPieceMoves = []
-        const moveSet = this.selectedPiece.moveSet
+        this.selectedPieceMoves = this.getPieceMoves(this.selectedPiece, this.selectedPieceLocation.row, this.selectedPieceLocation.column)
+        return this.selectedPieceMoves
+    }
+
+    getPieceMoves(piece, pieceRow, pieceColumn) {
+        const pieceMoves = []
+        const moveSet = piece.moveSet
         moveSet.forEach(move => {
             if (move.repeating) {
-                let row = this.selectedPieceLocation.row + move.vertical
-                let column = this.selectedPieceLocation.column + move.horizontal
+                let row = pieceRow + move.vertical
+                let column = pieceColumn + move.horizontal
                 while (this.isValidMove({row, column}, move)) {
-                    this.selectedPieceMoves.push({row, column})
+                    pieceMoves.push({row, column})
                     row += move.vertical
                     column += move.horizontal
                 }
             } else {
-                const row = this.selectedPieceLocation.row + move.vertical
-                const column = this.selectedPieceLocation.column + move.horizontal  
+                const row = pieceRow + move.vertical
+                const column = pieceColumn + move.horizontal  
                 if (this.isValidMove({row, column}, move)) {
-                    this.selectedPieceMoves.push({row, column})
+                    pieceMoves.push({row, column})
                 }
             }
         })
 
-        return this.selectedPieceMoves
+        return  pieceMoves
     }
 
     isValidMove({row, column}, move) {
@@ -118,8 +125,55 @@ class Board {
             this.boardModel[row][column].color !== this.selectedPiece.color)
     }
 
+    switchTurn () {
+        this.turn = this.turn === "white" ? "black" : "white"
+        return this.isCheck()
+    }
+
+    isCheck() {
+        const check = {none: true}
+        const whiteKingLocation = this.getKingLocation("white")
+        const blackKingLocation = this.getKingLocation("black")
+        for (let i = 0; i < this.boardModel.length; i++) {
+            for (let j = 0; j < this.boardModel.length; j++) { 
+                // maybe make "getAllPieces" function to handle this
+                let piece = this.boardModel[i][j]
+                if (piece) {
+                    const validMoves = this.getPieceMoves(piece, i, j)
+                    validMoves.forEach(move => {
+                        if (piece.color === "white" && 
+                            move.row === blackKingLocation.row &&
+                            move.column === blackKingLocation.column) {
+                            check.black = true
+                            check.none = false
+                        }
+                        else if (piece.color === "black" &&
+                            move.row === whiteKingLocation.row &&
+                            move.column === whiteKingLocation.column) {
+                            check.white = true
+                            check.none = false
+                        }
+                    })
+                }
+            }
+        }
+        return check
+    }
+
+    getKingLocation(color) {
+        for (let i = 0; i < this.boardModel.length; i++) {
+            for (let j = 0; j < this.boardModel[i].length; j++) {
+                if (this.boardModel[i][j] instanceof King &&
+                    this.boardModel[i][j].color === color) {
+                    
+                    return({row: i, column: j})
+                }
+            }
+        } 
+    }
+
     static convertRow(rowArray) {
-        for (let i =0; i < rowArray.length; i++) {
+        for (let i = 0; i < rowArray.length; i++) {
             rowArray[i] = Board.convertPiece(rowArray[i])
         }
         return rowArray
