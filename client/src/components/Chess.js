@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import ChessRow from "./ChessRow"
-import Board from "../assets/classes/Board"
+import ActualBoard from "../assets/classes/Boards/ActualBoard"
 import TurnDisplay from "./TurnDisplay"
 import CheckDipslay from "./CheckDisplay"
 
@@ -12,7 +12,7 @@ const Chess = props => {
 
     const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
 
-    const [ boardState, setBoardState ] = useState(new Board())
+    const [ boardState, setBoardState ] = useState(new ActualBoard())
 
     const [ turn, setTurn ] = useState("white")
 

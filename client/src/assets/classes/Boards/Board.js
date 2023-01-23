@@ -1,9 +1,9 @@
-import Bishop from "./Pieces/Bishop"
-import King from "./Pieces/King"
-import Knight from "./Pieces/Knight"
-import Pawn from "./Pieces/Pawn"
-import Queen from "./Pieces/Queen"
-import Rook from "./Pieces/Rook"
+import Bishop from "../Pieces/Bishop"
+import King from "../Pieces/King"
+import Knight from "../Pieces/Knight"
+import Pawn from "../Pieces/Pawn"
+import Queen from "../Pieces/Queen"
+import Rook from "../Pieces/Rook"
 
 class Board {
     constructor() {
@@ -11,61 +11,7 @@ class Board {
         this.selectedPiece = null
         this.selectedPieceLocation = {row: null, column: null}
         this.selectedPieceMoves = []
-        this.turn = "white"
-        this.populateBoard()
-    }
-
-    populateBoard() {
-        for (let i = 0; i < 8; i++) {
-            let row = []
-            if (i === 0) {
-                row = Board.convertRow(["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"])
-            } else if (i === 7) {
-                row = Board.convertRow(["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"])
-            } else {
-                for (let j = 0; j < 8; j++) {
-                    if (i === 1) row.push(new Pawn("black"))
-                    else if (i === 6) row.push(new Pawn("white"))
-                    else row.push(false)
-                }
-            }
-            this.boardModel.push(row)
-        }
-    }
-
-    handleClick(row, column, turn) {
-        if (this.canMove(row, column)) {
-            this.boardModel[row][column] = this.selectedPiece
-            this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = null
-            this.selectedPieceLocation = {row, column}
-            const check = this.switchTurn()
-            this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check}
-        } else if (this.boardModel[row][column]) {
-            if ((this.selectedPieceLocation.row === row && 
-                this.selectedPieceLocation.column === column) ||
-                this.boardModel[row][column].color !== turn) {
-                this.selectedPiece = null
-                this.selectedPieceLocation = {}
-                return {moves: []}
-            } else {
-                this.selectedPiece = this.boardModel[row][column]
-                this.selectedPieceLocation = {row, column}
-                return {moves: this.getSelectedPieceMoves()}
-            }
-        }
-        return {moves: []}
-    }
-
-    canMove(row, column) {
-        if (this.selectedPiece) {
-            for (const move of this.selectedPieceMoves) {
-                if (move.row === row && move.column === column) {
-                    return true
-                }
-            }
-        }
-        return false
+        this.turn = ""
     }
 
     getSelectedPieceMoves() {
@@ -80,7 +26,7 @@ class Board {
             if (move.repeating) {
                 let row = pieceRow + move.vertical
                 let column = pieceColumn + move.horizontal
-                while (this.isValidMove({row, column}, move)) {
+                while (this.isValidMove({row, column, move, piece})) {
                     pieceMoves.push({row, column})
                     row += move.vertical
                     column += move.horizontal
@@ -88,7 +34,7 @@ class Board {
             } else {
                 const row = pieceRow + move.vertical
                 const column = pieceColumn + move.horizontal  
-                if (this.isValidMove({row, column}, move)) {
+                if (this.isValidMove({row, column, move, piece})) {
                     pieceMoves.push({row, column})
                 }
             }
@@ -97,12 +43,12 @@ class Board {
         return  pieceMoves
     }
 
-    isValidMove({row, column}, move) {
+    isValidMove({row, column, move, piece}) {
         if (this.offBoard(row, column)) {
             return false
-        } else if (this.occupiedByAlly(row, column)) {
+        } else if (this.occupiedByAlly(row, column, piece)) {
             return false
-        } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal)) {
+        } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal), piece) {
             return false
         } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
             return false
@@ -115,23 +61,18 @@ class Board {
             || column < 0 || column > this.boardModel[0].length - 1)
     }
 
-    occupiedByAlly(row, column) {
+    occupiedByAlly(row, column, piece) {
         return (this.boardModel[row][column] &&
-            this.boardModel[row][column].color === this.selectedPiece.color)
+            this.boardModel[row][column].color === piece.color)
     }
 
-    occupiedByEnemy(row, column) {
+    occupiedByEnemy(row, column, piece) {
         return (this.boardModel[row][column] &&
-            this.boardModel[row][column].color !== this.selectedPiece.color)
-    }
-
-    switchTurn () {
-        this.turn = this.turn === "white" ? "black" : "white"
-        return this.isCheck()
+            this.boardModel[row][column].color !== piece.color)
     }
 
     isCheck() {
-        const check = {none: true}
+        const check = {}
         const whiteKingLocation = this.getKingLocation("white")
         const blackKingLocation = this.getKingLocation("black")
         for (let i = 0; i < this.boardModel.length; i++) {
@@ -145,16 +86,15 @@ class Board {
                             move.row === blackKingLocation.row &&
                             move.column === blackKingLocation.column) {
                             check.black = true
-                            check.none = false
                         }
                         else if (piece.color === "black" &&
                             move.row === whiteKingLocation.row &&
                             move.column === whiteKingLocation.column) {
                             check.white = true
-                            check.none = false
                         }
                     })
                 }
+
             }
         }
         return check
@@ -170,6 +110,26 @@ class Board {
                 }
             }
         } 
+    }
+
+    static getDefaultBoard() {
+        let defaultBoard = []
+        for (let i = 0; i < 8; i++) {
+            let row = []
+            if (i === 0) {
+                row = Board.convertRow(["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"])
+            } else if (i === 7) {
+                row = Board.convertRow(["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"])
+            } else {
+                for (let j = 0; j < 8; j++) {
+                    if (i === 1) row.push(new Pawn("black"))
+                    else if (i === 6) row.push(new Pawn("white"))
+                    else row.push(false)
+                }
+            }
+            defaultBoard.push(row)
+        }
+        return defaultBoard
     }
 
     static convertRow(rowArray) {
@@ -205,6 +165,13 @@ class Board {
                 return new Rook("white")
             case "br":
                 return new Rook('black')
+        }
+    }
+
+    static createBlankBoard() {
+        const blankBoard = []
+        for(let i = 0; i < 8; i++) {
+            blankBoard.push(new Array(8))
         }
     }
 }
