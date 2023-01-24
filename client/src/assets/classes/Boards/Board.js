@@ -14,6 +14,56 @@ class Board {
         this.turn = ""
     }
 
+    // method for handling user input - can turn parameter be deleted?
+
+    handleClick(row, column, turn) {
+        if (this.canMove(row, column)) {
+            this.boardModel[row][column] = this.selectedPiece
+            this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
+            this.selectedPieceLocation = {row, column}
+            let check = this.switchTurn()
+            this.selectedPiece = null
+            return {moves: [], turnSwitch: this.turn, unselect: true, check: check}
+        } else if (this.boardModel[row][column]) {
+            if ((this.selectedPieceLocation.row === row && 
+                this.selectedPieceLocation.column === column) ||
+                this.boardModel[row][column].color !== turn) {
+                this.selectedPiece = null
+                this.selectedPieceLocation = {}
+                return {moves: []}
+            } else {
+                this.selectedPiece = this.boardModel[row][column]
+                this.selectedPieceLocation = {row, column}
+                return {moves: this.getSelectedPieceMoves()}
+            }
+        }
+        return {moves: []}
+    }
+
+    // method for determining whether the selected piece can move to a given tile
+    // based on selectedPieceMoves state determined on selection of piece
+
+    canMove(row, column) {
+        if (this.selectedPiece) {
+            for (const move of this.selectedPieceMoves) {
+                if (move.row === row && move.column === column) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    // method for handling switch between turns
+
+    switchTurn () {
+        this.turn = this.turn === "white" ? "black" : "white"
+        return this.isCheck()
+    }
+    
+
+    // methods for getting moves for pieces
+
     getSelectedPieceMoves() {
         this.selectedPieceMoves = this.getPieceMoves(this.selectedPiece, this.selectedPieceLocation.row, this.selectedPieceLocation.column)
         return this.selectedPieceMoves
@@ -43,6 +93,8 @@ class Board {
         return  pieceMoves
     }
 
+    // methods for determining if move is valid
+
     isValidMove({row, column, move, piece}) {
         if (this.offBoard(row, column)) {
             return false
@@ -71,19 +123,7 @@ class Board {
             this.boardModel[row][column].color !== piece.color)
     }
 
-    getKingLocation(color) {
-        for (let i = 0; i < this.boardModel.length; i++) {
-            for (let j = 0; j < this.boardModel[i].length; j++) {
-                if (this.boardModel[i][j] instanceof King &&
-                    this.boardModel[i][j].color === color) {
-                    
-                    return({row: i, column: j})
-                }
-            }
-        } 
-    }
-
-
+    // methods for determining whether check has occurred
 
     isCheck() {
         const check = {}
@@ -115,47 +155,20 @@ class Board {
         return check
     }
 
-
-    handleClick(row, column, turn) {
-        if (this.canMove(row, column)) {
-            this.boardModel[row][column] = this.selectedPiece
-            this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
-            this.selectedPieceLocation = {row, column}
-            let check = this.switchTurn()
-            this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check}
-        } else if (this.boardModel[row][column]) {
-            if ((this.selectedPieceLocation.row === row && 
-                this.selectedPieceLocation.column === column) ||
-                this.boardModel[row][column].color !== turn) {
-                this.selectedPiece = null
-                this.selectedPieceLocation = {}
-                return {moves: []}
-            } else {
-                this.selectedPiece = this.boardModel[row][column]
-                this.selectedPieceLocation = {row, column}
-                return {moves: this.getSelectedPieceMoves()}
-            }
-        }
-        return {moves: []}
-    }
-
-    canMove(row, column) {
-        if (this.selectedPiece) {
-            for (const move of this.selectedPieceMoves) {
-                if (move.row === row && move.column === column) {
-                    return true
+    getKingLocation(color) {
+        for (let i = 0; i < this.boardModel.length; i++) {
+            for (let j = 0; j < this.boardModel[i].length; j++) {
+                if (this.boardModel[i][j] instanceof King &&
+                    this.boardModel[i][j].color === color) {
+                    
+                    return({row: i, column: j})
                 }
             }
-        }
-        return false
+        } 
     }
 
-    switchTurn () {
-        this.turn = this.turn === "white" ? "black" : "white"
-        return this.isCheck()
-    }
-    
+    // method for getting default board
+
     static getDefaultBoard() {
         let defaultBoard = []
         for (let i = 0; i < 8; i++) {
@@ -175,6 +188,8 @@ class Board {
         }
         return defaultBoard
     }
+
+    // methods for converting board notation into objects
 
     static convertRow(rowArray) {
         for (let i = 0; i < rowArray.length; i++) {
