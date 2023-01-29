@@ -19,7 +19,6 @@ class ActualBoard extends Board {
         } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
             return false
         } else if (!hypothetical && this.wouldBeCheck({row, column})) {
-            console.log("invalid move!")
             return false
         }
         return true
@@ -30,6 +29,29 @@ class ActualBoard extends Board {
         hypotheticalBoard.boardModel[row][column] = hypotheticalBoard.selectedPiece
         hypotheticalBoard.boardModel[hypotheticalBoard.selectedPieceLocation.row][hypotheticalBoard.selectedPieceLocation.column] = false
         return hypotheticalBoard.opponentCanTakeQueen()
+    }
+
+    inCheckmate() {
+        const check = this.isCheck()
+        if (!check) {
+            return false 
+            } else {
+            const checkedColor = check.black ? "black" : "white"
+            for (let row = 0; row < this.boardModel.length; row++) {
+                for (let column = 0; column < this.boardModel.length; column++) {
+                    const piece = this.boardModel[row][column]
+                    if(piece &&
+                        piece.color === checkedColor) {
+                        for(const move of piece.moveSet) {
+                            if (this.isValidMove({row, column, move, piece})) {
+                                return false
+                            }
+                        }
+                    }
+                }
+            }
+            return true
+        }
     }
 }
 
