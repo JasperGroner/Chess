@@ -21,9 +21,11 @@ class Board {
             this.boardModel[row][column] = this.selectedPiece
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
             this.selectedPieceLocation = {row, column}
-            let check = this.switchTurn()
+            this.switchTurn()
+            let check = this.isCheck()
+            let checkmate = this.inCheckmate(check)
             this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check}
+            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate}
         } else if (this.boardModel[row][column]) {
             if ((this.selectedPieceLocation.row === row && 
                 this.selectedPieceLocation.column === column) ||
@@ -54,13 +56,35 @@ class Board {
         return false
     }
 
-    // method for handling switch between turns
+    // methods for handling switch between turns
 
     switchTurn () {
         this.turn = this.turn === "white" ? "black" : "white"
-        return this.isCheck()
     }
     
+    inCheckmate(check) {
+        if (!check.black && !check.white) {
+            return false 
+            } else {
+            const checkedColor = check.black ? "black" : "white"
+            for (let row = 0; row < this.boardModel.length; row++) {
+                for (let column = 0; column < this.boardModel.length; column++) {
+                    const piece = this.boardModel[row][column]
+                    if(piece &&
+                        piece.color === checkedColor) {
+                        for(const move of piece.moveSet) {
+                            let moveRow = row + move.vertical
+                            let moveColumn = column + move.horizontal
+                            if (this.isValidMove({row: moveRow, column: moveColumn, move, piece})) {
+                                return false
+                            }
+                        }
+                    }
+                }
+            }
+            return true
+        }
+    }
 
     // methods for getting moves for pieces
 
@@ -126,7 +150,7 @@ class Board {
     // methods for determining whether check has occurred
 
     isCheck() {
-        const check = {}
+        const check = {black: false, white: false}
         const whiteKingLocation = this.getKingLocation("white")
         const blackKingLocation = this.getKingLocation("black")
         for (let i = 0; i < this.boardModel.length; i++) {
