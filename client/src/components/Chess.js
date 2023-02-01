@@ -18,6 +18,8 @@ const Chess = props => {
 
     const [ check, setCheck ] = useState({})
 
+    const [ checkmate, setCheckmate ] = useState(false)
+
     const setUpChessRows = () => {
         const rows = []
         for (let i = 0; i < 8; i++) {
@@ -55,6 +57,9 @@ const Chess = props => {
         if (handleClickResponse.check) {
             setCheck(handleClickResponse.check)
         }
+        if (handleClickResponse.checkmate) {
+            setCheckmate(handleClickResponse.checkmate)
+        }
         setBoardState(boardState)
     }
 
@@ -66,7 +71,7 @@ const Chess = props => {
         <div className ="container grid-container">
             {rows}
         </div>
-        <CheckDipslay check={check}/>
+        <CheckDipslay check={check} checkmate={checkmate}/>
     </div>)
 }
 

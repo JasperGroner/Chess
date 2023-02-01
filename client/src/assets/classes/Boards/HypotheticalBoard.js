@@ -26,8 +26,6 @@ class HypotheticalBoard extends Board {
                     for (const move of validMoves) {
                         if (move.row === kingLocation.row &&
                             move.column === kingLocation.column) {
-                            console.log('match')
-                            console.log(piece)
                             return true
                         }
                     }
