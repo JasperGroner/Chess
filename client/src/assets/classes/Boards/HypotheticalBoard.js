@@ -13,7 +13,7 @@ class HypotheticalBoard extends Board {
         this.turn = turn
     }
 
-    opponentCanTakeQueen() {
+    opponentCanTakeKing() {
         const kingLocation = this.getKingLocation(this.turn)
         if (!kingLocation) return true
         const pieceColor = this.turn === "white" ? "black" : "white"

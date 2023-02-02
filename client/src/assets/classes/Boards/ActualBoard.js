@@ -28,7 +28,7 @@ class ActualBoard extends Board {
         const hypotheticalBoard = new HypotheticalBoard(this)
         hypotheticalBoard.boardModel[row][column] = piece
         hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
-        return hypotheticalBoard.opponentCanTakeQueen()
+        return hypotheticalBoard.opponentCanTakeKing()
     }
 }
 
