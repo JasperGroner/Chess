@@ -97,17 +97,15 @@ class Board {
         const pieceMoves = []
         const moveSet = piece.moveSet
         moveSet.forEach(move => {
+            let row = pieceRow + move.vertical
+            let column = pieceColumn + move.horizontal
             if (move.repeating) {
-                let row = pieceRow + move.vertical
-                let column = pieceColumn + move.horizontal
                 while (this.isValidMove({row, column, move, piece, hypothetical})) {
                     pieceMoves.push({row, column})
                     row += move.vertical
                     column += move.horizontal
                 }
             } else {
-                const row = pieceRow + move.vertical
-                const column = pieceColumn + move.horizontal  
                 if (this.isValidMove({row, column, move, piece, hypothetical})) {
                     pieceMoves.push({row, column})
                 }
