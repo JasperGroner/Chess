@@ -72,13 +72,11 @@ class Board {
                     const piece = this.boardModel[row][column]
                     if(piece &&
                         piece.color === checkedColor) {
-                        for(const move of piece.moveSet) {
-                            let moveRow = row + move.vertical
-                            let moveColumn = column + move.horizontal
-                            if (this.isValidMove({row: moveRow, column: moveColumn, move, piece})) {
+                            let moves = this.getPieceMoves(piece, row, column)
+                            if (moves.length > 0)
+                            {
                                 return false
                             }
-                        }
                     }
                 }
             }
