@@ -7,14 +7,14 @@
     "e2e"
   ],
   "scripts": {
-    "build:client": "yarn workspace express-react-objection-boilerplate-client build",
-    "dev": "yarn workspace express-react-objection-boilerplate-server dev",
-    "dev:debug": "yarn workspace express-react-objection-boilerplate-server dev:debug",
-    "heroku-postbuild": "yarn workspace express-react-objection-boilerplate-client build",
-    "start": "yarn workspace express-react-objection-boilerplate-server start",
-    "dev:cypress": "yarn workspace express-react-objection-boilerplate-server dev:e2e",
-    "e2e:open": "yarn workspace express-react-objection-boilerplate-e2e e2e:open",
-    "e2e:run": "yarn workspace express-react-objection-boilerplate-e2e e2e:run"
+    "build:client": "yarn workspace Chess-client build",
+    "dev": "yarn workspace Chess-server dev",
+    "dev:debug": "yarn workspace Chess-server dev:debug",
+    "heroku-postbuild": "yarn workspace Chess-client build",
+    "start": "yarn workspace Chess-server start",
+    "dev:cypress": "yarn workspace Chess-server dev:e2e",
+    "e2e:open": "yarn workspace Chess-e2e e2e:open",
+    "e2e:run": "yarn workspace Chess-e2e e2e:run"
   },
   "engines": {
     "node": "^16.18"

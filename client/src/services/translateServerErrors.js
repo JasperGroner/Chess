@@ -1,4 +1,5 @@
 import _ from 'lodash'
+
 let translateServerErrors = (errors) => {
   let serializedErrors = {}
 
@@ -10,8 +11,8 @@ let translateServerErrors = (errors) => {
         [field]: error.message
       }
     })
-  })
+  });
   return serializedErrors
-}
+};
 
-export default translateServerErrors
+export default translateServerErrors;

@@ -8,7 +8,7 @@ const ErrorList = props => {
       index++
       return (
         <li key={index}>
-          {field}: {props.errors[field]}
+          {field} {props.errors[field]}
         </li>
       )
     })
@@ -22,4 +22,4 @@ const ErrorList = props => {
   }
 }
 
-export default ErrorList 
+export default ErrorList
