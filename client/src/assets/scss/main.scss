@@ -22,6 +22,21 @@ img {
   width: 99%
 }
 
+.page-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.captured-display {
+  margin-top: 5%;
+  width: 19%;
+  text-align: center;
+}
+
+.game-display {
+  width: 60%
+}
+
 .container {
   width: $board-dimension;
   margin: 25px auto;
@@ -36,7 +51,6 @@ img {
 .square {
   width: $square-dimension;
   height: $square-dimension;
-  border: 1px solid black;
   margin: 0px;
   display: inline-block;
 }

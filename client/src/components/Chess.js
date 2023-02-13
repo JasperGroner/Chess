@@ -3,6 +3,7 @@ import ChessRow from "./ChessRow"
 import ActualBoard from "../assets/classes/Boards/ActualBoard"
 import TurnDisplay from "./TurnDisplay"
 import CheckDipslay from "./CheckDisplay"
+import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 
 const Chess = props => {
     const [ selectedTile, setSelectedTile ] = useState({
@@ -19,6 +20,11 @@ const Chess = props => {
     const [ check, setCheck ] = useState({})
 
     const [ checkmate, setCheckmate ] = useState(false)
+
+    const [ capturedPieces, setCapturedPieces ] = useState({
+        white: [],
+        black: []
+    })
 
     const setUpChessRows = () => {
         const rows = []
@@ -60,19 +66,27 @@ const Chess = props => {
         if (handleClickResponse.checkmate) {
             setCheckmate(handleClickResponse.checkmate)
         }
+        if (handleClickResponse.capturedPieces) {
+            setCapturedPieces(handleClickResponse.capturedPieces)
+        }
         setBoardState(boardState)
     }
 
     let rows = setUpChessRows()
 
     return (
-    <div>
-        <TurnDisplay turn={turn} />
-        <div className ="container grid-container">
-            {rows}
+        <div className="page-container">
+            <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
+            <div classNmae="game-display">
+                <TurnDisplay turn={turn} />
+                <div className ="container grid-container">
+                    {rows}
+                </div>
+                <CheckDipslay check={check} checkmate={checkmate}/>
+            </div>
+            <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
         </div>
-        <CheckDipslay check={check} checkmate={checkmate}/>
-    </div>)
+    )
 }
 
 export default Chess
