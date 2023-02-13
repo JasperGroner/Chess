@@ -2,9 +2,9 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
-$square-dimension: 75px;
-$board-dimension: $square-dimension * 8 + 2px;
-
+$square-dimension: 10vh;
+$board-dimension: 82vh;
+$board-border: 2px solid black;
 
 *,
 *::before,
@@ -40,7 +40,6 @@ img {
 .container {
   width: $board-dimension;
   margin: 25px auto;
-  border: 1px solid black;
   padding: 0px;
 }
 
@@ -53,6 +52,7 @@ img {
   height: $square-dimension;
   margin: 0px;
   display: inline-block;
+  box-sizing: content-box;  
 }
 
 .square--black {
@@ -69,6 +69,23 @@ img {
 
 .square--valid-move {
   background-color: lightblue;
+  border: 1px solid black;
+}
+
+.square--left {
+  border-left: $board-border
+}
+
+.square--right {
+  border-right: $board-border
+}
+
+.square--top {
+  border-top: $board-border
+}
+
+.square--bottom {
+  border-bottom: $board-border
 }
 
 .info-display {
