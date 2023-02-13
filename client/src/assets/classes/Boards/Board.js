@@ -4,6 +4,7 @@ import Knight from "../Pieces/Knight"
 import Pawn from "../Pieces/Pawn"
 import Queen from "../Pieces/Queen"
 import Rook from "../Pieces/Rook"
+import Decoder from "../Decoder"
 
 class Board {
     constructor() {
@@ -190,20 +191,10 @@ class Board {
 
     static getDefaultBoard() {
         let defaultBoard = []
+        const defaultBoardStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+        const defaultBoardArr = Decoder.decodeBoard(defaultBoardStr)
         for (let i = 0; i < 8; i++) {
-            let row = []
-            if (i === 0) {
-                row = Board.convertRow(["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"])
-            } else if (i === 7) {
-                row = Board.convertRow(["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"])
-            } else {
-                for (let j = 0; j < 8; j++) {
-                    if (i === 1) row.push(new Pawn("black"))
-                    else if (i === 6) row.push(new Pawn("white"))
-                    else row.push(false)
-                }
-            }
-            defaultBoard.push(row)
+            defaultBoard.push(this.convertRow(defaultBoardArr[i]))
         }
         return defaultBoard
     }
@@ -219,30 +210,32 @@ class Board {
 
     static convertPiece(name) {
         switch(name) {
-            case "wb":
+            case "B":
                 return new Bishop("white")
-            case "bb":
+            case "b":
                 return new Bishop("black")
-            case "wk":
+            case "K":
                 return new King("white")
-            case "bk":
+            case "k":
                 return new King("black")
-            case "wn":
+            case "N":
                 return new Knight("white")
-            case "bn":
+            case "n":
                 return new Knight("black")
-            case "wp":
+            case "P":
                 return new Pawn("white")
-            case "bp":
+            case "p":
                 return new Pawn("black")
-            case "wq":
+            case "Q":
                 return new Queen("white")
-            case "bq":
+            case "q":
                 return new Queen("black")
-            case "wr":
+            case "R":
                 return new Rook("white")
-            case "br":
+            case "r":
                 return new Rook('black')
+            default:
+                return false
         }
     }
 
