@@ -1,10 +1,6 @@
-import Bishop from "../Pieces/Bishop"
 import King from "../Pieces/King"
-import Knight from "../Pieces/Knight"
-import Pawn from "../Pieces/Pawn"
-import Queen from "../Pieces/Queen"
-import Rook from "../Pieces/Rook"
 import Decoder from "../Decoder"
+import pieceConverter from "../../../services/pieceConverter"
 
 class Board {
     constructor() {
@@ -28,9 +24,10 @@ class Board {
             this.selectedPiece = null
             return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate}
         } else if (this.boardModel[row][column]) {
+            const piece = this.boardModel[row][column]
             if ((this.selectedPieceLocation.row === row && 
                 this.selectedPieceLocation.column === column) ||
-                this.boardModel[row][column].color !== turn) {
+                pieceConverter[piece].color !== turn) {
                 this.selectedPiece = null
                 this.selectedPieceLocation = {}
                 return {moves: []}
@@ -71,13 +68,12 @@ class Board {
             for (let row = 0; row < this.boardModel.length; row++) {
                 for (let column = 0; column < this.boardModel.length; column++) {
                     const piece = this.boardModel[row][column]
-                    if(piece &&
-                        piece.color === checkedColor) {
-                            let moves = this.getPieceMoves(piece, row, column)
-                            if (moves.length > 0)
-                            {
-                                return false
-                            }
+                    if (piece && pieceConverter[piece].color === checkedColor) {
+                        let moves = this.getPieceMoves(piece, row, column)
+                        if (moves.length > 0)
+                        {
+                            return false
+                        }
                     }
                 }
             }
@@ -94,7 +90,7 @@ class Board {
 
     getPieceMoves(piece, pieceRow, pieceColumn, hypothetical) {
         const pieceMoves = []
-        const moveSet = piece.moveSet
+        const moveSet = pieceConverter[piece].moveSet
         moveSet.forEach(move => {
             let row = pieceRow + move.vertical
             let column = pieceColumn + move.horizontal
@@ -111,7 +107,7 @@ class Board {
             }
         })
 
-        return  pieceMoves
+        return pieceMoves
     }
 
     // methods for determining if move is valid
@@ -135,13 +131,15 @@ class Board {
     }
 
     occupiedByAlly(row, column, piece) {
-        return (this.boardModel[row][column] &&
-            this.boardModel[row][column].color === piece.color)
+        const movePiece = this.boardModel[row][column]
+        return (movePiece &&
+            pieceConverter[movePiece].color === pieceConverter[piece].color)
     }
 
     occupiedByEnemy(row, column, piece) {
-        return (this.boardModel[row][column] &&
-            this.boardModel[row][column].color !== piece.color)
+        const movePiece = this.boardModel[row][column]
+        return (movePiece &&
+            pieceConverter[movePiece].color !== pieceConverter[piece].color)
     }
 
     // methods for determining whether check has occurred
@@ -157,12 +155,12 @@ class Board {
                 if (piece) {
                     const validMoves = this.getPieceMoves(piece, i, j, true)
                     validMoves.forEach(move => {
-                        if (piece.color === "white" && 
+                        if (pieceConverter[piece].color === "white" && 
                             move.row === blackKingLocation.row &&
                             move.column === blackKingLocation.column) {
                             check.black = true
                         }
-                        else if (piece.color === "black" &&
+                        else if (pieceConverter[piece].color === "black" &&
                             move.row === whiteKingLocation.row &&
                             move.column === whiteKingLocation.column) {
                             check.white = true
@@ -178,9 +176,9 @@ class Board {
     getKingLocation(color) {
         for (let i = 0; i < this.boardModel.length; i++) {
             for (let j = 0; j < this.boardModel[i].length; j++) {
-                if (this.boardModel[i][j] instanceof King &&
-                    this.boardModel[i][j].color === color) {
-                    
+                const piece = this.boardModel[i][j]
+                if (pieceConverter[piece] instanceof King &&
+                    pieceConverter[piece].color === color) {
                     return({row: i, column: j})
                 }
             }
@@ -190,53 +188,9 @@ class Board {
     // method for getting default board
 
     static getDefaultBoard() {
-        let defaultBoard = []
         const defaultBoardStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
-        const defaultBoardArr = Decoder.decodeBoard(defaultBoardStr)
-        for (let i = 0; i < 8; i++) {
-            defaultBoard.push(this.convertRow(defaultBoardArr[i]))
-        }
+        const defaultBoard = Decoder.decodeBoard(defaultBoardStr)
         return defaultBoard
-    }
-
-    // methods for converting board notation into objects
-
-    static convertRow(rowArray) {
-        for (let i = 0; i < rowArray.length; i++) {
-            rowArray[i] = Board.convertPiece(rowArray[i])
-        }
-        return rowArray
-    }
-
-    static convertPiece(name) {
-        switch(name) {
-            case "B":
-                return new Bishop("white")
-            case "b":
-                return new Bishop("black")
-            case "K":
-                return new King("white")
-            case "k":
-                return new King("black")
-            case "N":
-                return new Knight("white")
-            case "n":
-                return new Knight("black")
-            case "P":
-                return new Pawn("white")
-            case "p":
-                return new Pawn("black")
-            case "Q":
-                return new Queen("white")
-            case "q":
-                return new Queen("black")
-            case "R":
-                return new Rook("white")
-            case "r":
-                return new Rook('black')
-            default:
-                return false
-        }
     }
 
     static createBlankBoard() {

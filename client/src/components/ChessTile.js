@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import King from "../assets/classes/Pieces/King"
+import pieceConverter from "../services/pieceConverter"
 
 const ChessTile = ({color, selectedTile, select, rowId, columnId, boardState, selectedPieceMoves}) => {
 
@@ -21,7 +21,7 @@ const ChessTile = ({color, selectedTile, select, rowId, columnId, boardState, se
     let image = ""
     if (boardState.boardModel[rowId][columnId]) {
         const piece = boardState.boardModel[rowId][columnId]
-        image = <img src={piece.image} />
+        image = <img src={pieceConverter[piece].image} />
     }
 
 
