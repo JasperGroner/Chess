@@ -19,7 +19,7 @@ class Board {
 
     handleClick(row, column, turn) {
         if (this.canMove(row, column)) {
-            this.updateCapturedPieces (this.boardModel[row][column])
+            this.updateCapturedPieces(this.boardModel[row][column])
             this.boardModel[row][column] = this.selectedPiece
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
             this.selectedPieceLocation = {row, column}
@@ -27,7 +27,7 @@ class Board {
             let check = this.isCheck()
             let checkmate = this.inCheckmate(check)
             this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate}
+            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces}
         } else if (this.boardModel[row][column]) {
             const piece = this.boardModel[row][column]
             if ((this.selectedPieceLocation.row === row && 

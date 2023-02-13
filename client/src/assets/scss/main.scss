@@ -24,14 +24,17 @@ img {
 
 .page-container {
   display: flex;
+  justify-content: space-between;
 }
 
 .captured-display {
-  max-width: 19%
+  margin-top: 5%;
+  width: 19%;
+  text-align: center;
 }
 
-.game-displayu {
-  max-width: 60%
+.game-display {
+  width: 60%
 }
 
 .container {
@@ -48,7 +51,6 @@ img {
 .square {
   width: $square-dimension;
   height: $square-dimension;
-  border: 1px solid black;
   margin: 0px;
   display: inline-block;
 }
