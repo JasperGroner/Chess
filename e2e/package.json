@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "Chess-e2e",
+  "name": "chess-e2e",
   "version": "0.0.1",
   "scripts": {
     "e2e:open": "NODE_ENV=e2e ./node_modules/.bin/cypress open",

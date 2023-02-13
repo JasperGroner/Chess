@@ -7,14 +7,14 @@
     "e2e"
   ],
   "scripts": {
-    "build:client": "yarn workspace Chess-client build",
-    "dev": "yarn workspace Chess-server dev",
-    "dev:debug": "yarn workspace Chess-server dev:debug",
-    "heroku-postbuild": "yarn workspace Chess-client build",
-    "start": "yarn workspace Chess-server start",
-    "dev:cypress": "yarn workspace Chess-server dev:e2e",
-    "e2e:open": "yarn workspace Chess-e2e e2e:open",
-    "e2e:run": "yarn workspace Chess-e2e e2e:run"
+    "build:client": "yarn workspace chess-client build",
+    "dev": "yarn workspace chess-server dev",
+    "dev:debug": "yarn workspace chess-server dev:debug",
+    "heroku-postbuild": "yarn workspace chess-client build",
+    "start": "yarn workspace chess-server start",
+    "dev:cypress": "yarn workspace chess-server dev:e2e",
+    "e2e:open": "yarn workspace chess-e2e e2e:open",
+    "e2e:run": "yarn workspace chess-e2e e2e:run"
   },
   "engines": {
     "node": "^16.18"

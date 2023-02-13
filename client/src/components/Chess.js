@@ -77,7 +77,7 @@ const Chess = props => {
     return (
         <div className="page-container">
             <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
-            <div classNmae="game-display">
+            <div className="game-display">
                 <TurnDisplay turn={turn} />
                 <div className ="container grid-container">
                     {rows}
