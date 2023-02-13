@@ -2,8 +2,8 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
-$square-dimension: 10vh;
-$board-dimension: 82vh;
+$square-dimension: 8vmin;
+$board-dimension: 66vmin;
 $board-border: 2px solid black;
 
 *,
@@ -51,25 +51,17 @@ img {
   width: $square-dimension;
   height: $square-dimension;
   margin: 0px;
-  display: inline-block;
-  box-sizing: content-box;  
+  display: inline-block;  
 }
 
 .square--black {
   background-color: grey;
+  border: 2px solid grey
 }
 
 .square--white {
   background-color: white;
-}
-
-.square--selected {
-  border: 2px solid red;
-}
-
-.square--valid-move {
-  background-color: lightblue;
-  border: 1px solid black;
+  border: 2px solid white;
 }
 
 .square--left {
@@ -86,6 +78,14 @@ img {
 
 .square--bottom {
   border-bottom: $board-border
+}
+
+.square--selected {
+  border-color: red;
+}
+
+.square--valid-move {
+  background-color: lightblue;
 }
 
 .info-display {
