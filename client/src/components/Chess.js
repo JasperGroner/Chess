@@ -15,7 +15,7 @@ const Chess = props => {
 
     const [ boardState, setBoardState ] = useState(new ActualBoard())
 
-    const [ turn, setTurn ] = useState("white")
+    const [ turn, setTurn ] = useState("")
 
     const [ check, setCheck ] = useState({})
 
@@ -25,6 +25,10 @@ const Chess = props => {
         white: [],
         black: []
     })
+
+    useEffect(() => {
+        setTurn(boardState.turn)
+    }, [])
 
     const setUpChessRows = () => {
         const rows = []
@@ -49,7 +53,7 @@ const Chess = props => {
     }
 
     const select = (row, column) => {
-        const handleClickResponse = boardState.handleClick(row, column, turn)
+        const handleClickResponse = boardState.handleClick(row, column)
         setSelectedPieceMoves(handleClickResponse.moves)
         if ((selectedTile.row === row && selectedTile.column === column) ||
             handleClickResponse.unselect === true) {

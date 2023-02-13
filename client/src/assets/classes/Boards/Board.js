@@ -5,19 +5,28 @@ import pieceConverter from "../../../services/pieceConverter"
 class Board {
     constructor() {
         this.boardModel = []
+        this.turn = ""
+        this.canCastle = {
+            whiteKingSide: false,
+            whiteQueenSide: false,
+            blackKingSide: false,
+            blackQueenSide: false
+        }
+        this.enPassantSquare = null
+        this.halfmoveClock = 0
+        this.fullmoves = 1
         this.selectedPiece = null
         this.selectedPieceLocation = {row: null, column: null}
         this.selectedPieceMoves = []
-        this.turn = ""
         this.capturedPieces = {
             white: [],
             black: []
         }
     }
 
-    // method for handling user input - can turn parameter be deleted?
+    // method for handling user input
 
-    handleClick(row, column, turn) {
+    handleClick(row, column) {
         if (this.canMove(row, column)) {
             this.updateCapturedPieces(this.boardModel[row][column])
             this.boardModel[row][column] = this.selectedPiece
@@ -32,7 +41,7 @@ class Board {
             const piece = this.boardModel[row][column]
             if ((this.selectedPieceLocation.row === row && 
                 this.selectedPieceLocation.column === column) ||
-                pieceConverter[piece].color !== turn) {
+                pieceConverter[piece].color !== this.turn) {
                 this.selectedPiece = null
                 this.selectedPieceLocation = {}
                 return {moves: []}
@@ -200,19 +209,23 @@ class Board {
         } 
     }
 
-    // method for getting default board
+    // method for loading board
 
-    static getDefaultBoard() {
-        const defaultBoardStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
-        const defaultBoard = Decoder.decodeBoard(defaultBoardStr)
-        return defaultBoard
+    loadGame(encodedGame) {
+        const game = Decoder.decodeGame(encodedGame)
+        this.boardModel = game.board
+        this.turn = game.turn
+        this.canCastle = game.canCastle
+        this.enPassantSquare = game.enPassantSquare
+        this.halfmoveClock = game.halfmoveClock
+        this.fullmoves = game.fullmoves
     }
 
-    static createBlankBoard() {
-        const blankBoard = []
-        for(let i = 0; i < 8; i++) {
-            blankBoard.push(new Array(8))
-        }
+    // method for getting default board
+
+    static get defaultBoard() {
+        const defaultBoardStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        return defaultBoardStr
     }
 }
 

@@ -5,8 +5,7 @@ import HypotheticalBoard from "./HypotheticalBoard"
 class ActualBoard extends Board {
     constructor() {
         super()
-        this.boardModel = Board.getDefaultBoard()
-        this.turn = "white"
+        this.loadGame(Board.defaultBoard)
     }
 
     isValidMove({row, column, move, piece, hypothetical}) {
