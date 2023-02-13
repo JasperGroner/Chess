@@ -11,7 +11,7 @@ class Decoder {
           board[i].push(character)
         } else {
           for (let k = 0; k < character; k++) {
-            board[i].push(null)
+            board[i].push(false)
           }
         }
       }
@@ -44,7 +44,6 @@ class Decoder {
     }
     return encodedString
   }
-
 }
 
 export default Decoder
