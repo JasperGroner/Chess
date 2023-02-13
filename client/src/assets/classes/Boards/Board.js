@@ -192,7 +192,7 @@ class Board {
     static getDefaultBoard() {
         let defaultBoard = []
         const defaultBoardStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
-        const defaultBoardArr = Decoder.decode(defaultBoardStr)
+        const defaultBoardArr = Decoder.decodeBoard(defaultBoardStr)
         for (let i = 0; i < 8; i++) {
             defaultBoard.push(this.convertRow(defaultBoardArr[i]))
         }

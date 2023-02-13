@@ -1,5 +1,5 @@
 class Decoder {
-  static decode(encodedString) {
+  static decodeBoard(encodedString) {
     const board = []
     const encodedArray = encodedString.split(" ")
     const encodedBoard = encodedArray[0].split("/")
@@ -19,7 +19,7 @@ class Decoder {
     return board
   }
 
-  static encode(board) {
+  static encodeBoard(board) {
     let encodedString = ""
     for (let i = 0; i < board.length; i++) {
       let spaces = 0;
