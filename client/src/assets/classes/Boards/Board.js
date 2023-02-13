@@ -9,12 +9,17 @@ class Board {
         this.selectedPieceLocation = {row: null, column: null}
         this.selectedPieceMoves = []
         this.turn = ""
+        this.capturedPieces = {
+            white: [],
+            black: []
+        }
     }
 
     // method for handling user input - can turn parameter be deleted?
 
     handleClick(row, column, turn) {
         if (this.canMove(row, column)) {
+            this.updateCapturedPieces (this.boardModel[row][column])
             this.boardModel[row][column] = this.selectedPiece
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
             this.selectedPieceLocation = {row, column}
@@ -38,6 +43,16 @@ class Board {
             }
         }
         return {moves: []}
+    }
+
+    updateCapturedPieces(pieceAtMoveLocation) {
+        if (pieceAtMoveLocation) {
+            if (pieceConverter[pieceAtMoveLocation].color === "white") {
+                this.capturedPieces.white.push(pieceAtMoveLocation)
+            } else {
+                this.capturedPieces.black.push(pieceAtMoveLocation)
+            }
+        }
     }
 
     // method for determining whether the selected piece can move to a given tile

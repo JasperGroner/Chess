@@ -20,6 +20,11 @@ const Chess = props => {
 
     const [ checkmate, setCheckmate ] = useState(false)
 
+    const [ capturedPieces, setCapturedPieces ] = useState({
+        white: [],
+        black: []
+    })
+
     const setUpChessRows = () => {
         const rows = []
         for (let i = 0; i < 8; i++) {
@@ -66,13 +71,14 @@ const Chess = props => {
     let rows = setUpChessRows()
 
     return (
-    <div>
-        <TurnDisplay turn={turn} />
-        <div className ="container grid-container">
-            {rows}
+        <div>
+            <TurnDisplay turn={turn} />
+            <div className ="container grid-container">
+                {rows}
+            </div>
+            <CheckDipslay check={check} checkmate={checkmate}/>
         </div>
-        <CheckDipslay check={check} checkmate={checkmate}/>
-    </div>)
+    )
 }
 
 export default Chess

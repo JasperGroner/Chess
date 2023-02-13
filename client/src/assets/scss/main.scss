@@ -22,6 +22,18 @@ img {
   width: 99%
 }
 
+.page-container {
+  display: flex;
+}
+
+.captured-display {
+  max-width: 19%
+}
+
+.game-displayu {
+  max-width: 60%
+}
+
 .container {
   width: $board-dimension;
   margin: 25px auto;
