@@ -1,9 +1,4 @@
-import Bishop from "../Pieces/Bishop"
 import King from "../Pieces/King"
-import Knight from "../Pieces/Knight"
-import Pawn from "../Pieces/Pawn"
-import Queen from "../Pieces/Queen"
-import Rook from "../Pieces/Rook"
 import Decoder from "../Decoder"
 import pieceConverter from "../../../services/pieceConverter"
 
@@ -197,46 +192,6 @@ class Board {
         const defaultBoard = Decoder.decodeBoard(defaultBoardStr)
         return defaultBoard
     }
-
-    // methods for converting board notation into objects
-
-    // static convertRow(rowArray) {
-    //     for (let i = 0; i < rowArray.length; i++) {
-    //         rowArray[i] = Board.convertPiece(rowArray[i])
-    //     }
-    //     return rowArray
-    // }
-
-    // static convertPiece(name) {
-    //     switch(name) {
-    //         case "B":
-    //             return new Bishop("white")
-    //         case "b":
-    //             return new Bishop("black")
-    //         case "K":
-    //             return new King("white")
-    //         case "k":
-    //             return new King("black")
-    //         case "N":
-    //             return new Knight("white")
-    //         case "n":
-    //             return new Knight("black")
-    //         case "P":
-    //             return new Pawn("white")
-    //         case "p":
-    //             return new Pawn("black")
-    //         case "Q":
-    //             return new Queen("white")
-    //         case "q":
-    //             return new Queen("black")
-    //         case "R":
-    //             return new Rook("white")
-    //         case "r":
-    //             return new Rook('black')
-    //         default:
-    //             return false
-    //     }
-    // }
 
     static createBlankBoard() {
         const blankBoard = []
