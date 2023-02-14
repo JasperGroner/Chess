@@ -17,6 +17,16 @@ class Game extends Model {
       }
     }
   }
+
+  static get relationMappings() {
+    const { User } = require("index.js")
+
+    return {
+      user: {
+
+      }
+    }
+  }
 }
 
 module.exports = Game
