@@ -8,7 +8,7 @@
 exports.up = async (knex) => {
   return knex.schema.createTable("players", table => {
     table.bigIncrements("id")
-    table.string("color").notNullable()
+    table.string("color")
     table.bigInteger("userId").unsigned().notNullable().index().references("users.id").onDelete("CASCADE")
     table.bigInteger("gameId").unsigned().notNullable().index().references("games.id").onDelete("CASCADE")
     table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now())
