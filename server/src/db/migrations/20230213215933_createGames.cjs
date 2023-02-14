@@ -6,10 +6,12 @@
  * @param {Knex} knex
  */
 exports.up = async (knex) => {
-  return knex.schema.createTable("oneUserGames", table => {
+  return knex.schema.createTable("games", table => {
     table.bigIncrements("id");
     table.string("name").notNullable()
-    table.bigInteger("userId").unsigned().index().notNullable().references("users.id").onDelete("CASCADE")
+    table.bigInteger("firstUserId").unsigned().index().notNullable().references("users.id").onDelete("CASCADE")
+    table.string("firstUserColor").notNullable()
+    table.bigInteger("secondUserId").unsigned().index().references("users.id").onDelete("CASCADE")
     table.timestamp("createdAt").notNullable().defaultTo(knex.fn.now())
     table.timestamp("updatedAt").notNullable().defaultTo(knex.fn.now())
   })
@@ -19,5 +21,5 @@ exports.up = async (knex) => {
  * @param {Knex} knex
  */
 exports.down = (knex) => {
-  return knex.schema.dropTable("oneUserGames")
+  return knex.schema.dropTable("games")
 }
