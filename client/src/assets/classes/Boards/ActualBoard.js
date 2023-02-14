@@ -3,10 +3,13 @@ import HypotheticalBoard from "./HypotheticalBoard"
 
 
 class ActualBoard extends Board {
-    constructor() {
+    constructor(gameState) {
         super()
-        this.boardModel = Board.getDefaultBoard()
-        this.turn = "white"
+        if (!gameState) {
+            this.loadGame(Board.defaultBoard)
+        } else {
+            this.loadGame(gameState)
+        }
     }
 
     isValidMove({row, column, move, piece, hypothetical}) {
@@ -19,7 +22,7 @@ class ActualBoard extends Board {
         } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
             return false
         } else if (!hypothetical && this.wouldBeCheck({row, column, piece, move})) {
-            return false
+            return false // need to update to not break chain of repeating piece moves
         }
         return true
     }

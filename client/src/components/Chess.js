@@ -6,6 +6,13 @@ import CheckDipslay from "./CheckDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 
 const Chess = props => {
+    let gameState, game
+
+    if (props.location.state) {
+        gameState = props.location.state.gameState
+        game = props.location.state.game
+    }
+
     const [ selectedTile, setSelectedTile ] = useState({
         row: null,
         column: null
@@ -13,9 +20,9 @@ const Chess = props => {
 
     const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
 
-    const [ boardState, setBoardState ] = useState(new ActualBoard())
+    const [ boardState, setBoardState ] = useState(new ActualBoard(gameState))
 
-    const [ turn, setTurn ] = useState("white")
+    const [ turn, setTurn ] = useState("")
 
     const [ check, setCheck ] = useState({})
 
@@ -25,6 +32,10 @@ const Chess = props => {
         white: [],
         black: []
     })
+
+    useEffect(() => {
+        setTurn(boardState.turn)
+    }, [])
 
     const setUpChessRows = () => {
         const rows = []
@@ -49,7 +60,7 @@ const Chess = props => {
     }
 
     const select = (row, column) => {
-        const handleClickResponse = boardState.handleClick(row, column, turn)
+        const handleClickResponse = boardState.handleClick(row, column)
         setSelectedPieceMoves(handleClickResponse.moves)
         if ((selectedTile.row === row && selectedTile.column === column) ||
             handleClickResponse.unselect === true) {
