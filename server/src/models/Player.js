@@ -16,6 +16,30 @@ class Player extends Model {
       }
     }
   }
+
+  static get relationMappings() {
+    const { User, Game } = require("./index.js")
+
+    return {
+      user: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: "players.userId",
+          to: "user.id"
+        }
+      },
+
+      game: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Game,
+        join: {
+          from: "players.gameId",
+          to: "games.id"
+        }
+      }
+    }
+  }
 }
 
 module.exports = Player
