@@ -1,15 +1,9 @@
 import Board from "./Board"
-import HypotheticalBoard from "./HypotheticalBoard"
-
+import Decoder from "../Decoder"
 
 class ActualBoard extends Board {
     constructor(gameState) {
-        super()
-        if (!gameState) {
-            this.loadGame(Board.defaultBoard)
-        } else {
-            this.loadGame(gameState)
-        }
+        super(gameState)
     }
 
     isValidMove({row, column, move, piece, hypothetical}) {
@@ -28,7 +22,7 @@ class ActualBoard extends Board {
     }
 
     wouldBeCheck({row, column, piece, move}) {
-        const hypotheticalBoard = new HypotheticalBoard(this)
+        const hypotheticalBoard = new Board(Decoder.encodeGame(this))
         hypotheticalBoard.boardModel[row][column] = piece
         hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
         return hypotheticalBoard.opponentCanTakeKing()

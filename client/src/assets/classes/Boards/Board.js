@@ -3,26 +3,32 @@ import Decoder from "../Decoder"
 import pieceConverter from "../../../services/pieceConverter"
 
 class Board {
-    constructor() {
-        this.boardModel = []
-        this.turn = ""
-        this.canCastle = {
-            whiteKingSide: false,
-            whiteQueenSide: false,
-            blackKingSide: false,
-            blackQueenSide: false
+    constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves) {
+        if (!gameState) {
+            this.loadGame(Board.defaultBoard)
+        } else {
+            this.loadGame(gameState)
         }
-        this.enPassantSquare = null
-        this.halfmoveClock = 0
-        this.fullmoves = 1
-        this.selectedPiece = null
-        this.selectedPieceLocation = {row: null, column: null}
-        this.selectedPieceMoves = []
-        this.capturedPieces = {
+        this.selectedPiece = selectedPiece
+        this.selectedPieceLocation = selectedPieceLocation ? selectedPieceLocation : {row: null, column: null}
+        this.selectedPieceMoves = selectedPieceMoves ? selectedPieceMoves : []
+        this.capturedPieces = { // need to refactor to dynamically calculate
             white: [],
             black: []
         }
     }
+    
+    // method for loading board
+
+    loadGame(encodedGame) {
+        const game = Decoder.decodeGame(encodedGame)
+        this.boardModel = game.board
+        this.turn = game.turn
+        this.canCastle = game.canCastle
+        this.enPassantSquare = game.enPassantSquare
+        this.halfmoveClock = game.halfmoveClock
+        this.fullmoves = game.fullmoves
+    }    
 
     // method for handling user input
 
@@ -209,17 +215,30 @@ class Board {
         } 
     }
 
-    // method for loading board
+    // method for determining whether King has 
 
-    loadGame(encodedGame) {
-        const game = Decoder.decodeGame(encodedGame)
-        this.boardModel = game.board
-        this.turn = game.turn
-        this.canCastle = game.canCastle
-        this.enPassantSquare = game.enPassantSquare
-        this.halfmoveClock = game.halfmoveClock
-        this.fullmoves = game.fullmoves
+    opponentCanTakeKing() {
+        const kingLocation = this.getKingLocation(this.turn)
+        if (!kingLocation) return true
+        const pieceColor = this.turn === "white" ? "black" : "white"
+        for (let i = 0; i < this.boardModel.length; i++) {
+            for (let j = 0; j < this.boardModel.length; j++) { 
+                let piece = this.boardModel[i][j]
+                if (piece && pieceConverter[piece].color === pieceColor) {
+                    const validMoves = this.getPieceMoves(piece, i, j)
+                    for (const move of validMoves) {
+                        if (move.row === kingLocation.row &&
+                            move.column === kingLocation.column) {
+                            return true
+                        }
+                    }
+                }
+
+            }
+        }
+        return false
     }
+
 
     // method for getting default board
 

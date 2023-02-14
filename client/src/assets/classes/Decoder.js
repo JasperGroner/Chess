@@ -51,6 +51,30 @@ class Decoder {
     return board
   }
 
+  static encodeGame(game) {
+    let encodedString = this.encodeBoard(game.boardModel)
+    encodedString += game.turn === "white" ? " w " : " b "
+    if (game.canCastle.whiteKingSide) {
+      encodedString += "K"
+    }
+    if (game.canCastle.whiteQueenSide) {
+      encodedString += "Q"
+    }
+    if (game.canCastle.blackKingSide) {
+      encodedString += "k"
+    }
+    if (game.canCastle.whiteQueenSide) {
+      encodedString += "q"
+    }
+    if (encodedString[encodedString.length - 1] === " ") {
+      encodedString += "-"
+    }
+    encodedString += game.enPassantSquare ? ` ${game.enPassantSquare}` : " -"
+    encodedString += ` ${game.halfmoveClock}`
+    encodedString += ` ${game.fullmoves}`
+    return encodedString
+  }
+
   static encodeBoard(board) {
     let encodedString = ""
     for (let i = 0; i < board.length; i++) {
