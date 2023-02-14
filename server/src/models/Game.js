@@ -8,22 +8,9 @@ class Game extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["name", "firstUserId", "firstUserColor"],
+      required: ["name"],
       properties: {
-        name: {type: "string", minLength: 3, maxLength: 20},
-        firtUserId: { type: ["string", "integer"]},
-        firstUserColor: {type: "string" },
-        secondUserId: { type: "string" }
-      }
-    }
-  }
-
-  static get relationMappings() {
-    const { User } = require("index.js")
-
-    return {
-      user: {
-
+        name: {type: "string", minLength: 3, maxLength: 20}
       }
     }
   }
