@@ -8,9 +8,10 @@ class Game extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["name", "type"],
+      required: ["name", "gameType"],
       properties: {
-        name: {type: "string", minLength: 3, maxLength: 20}
+        name: {type: "string", minLength: 3, maxLength: 20},
+        gameType: {type: "string"}
       }
     }
   }

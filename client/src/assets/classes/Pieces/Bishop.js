@@ -9,7 +9,6 @@ const moveSet = [
     {vertical: -1, horizontal: 1, repeating: true}
 ]
 
-
 class Bishop extends Piece {
     constructor(color) {
         super(color, blackImage, whiteImage, moveSet)
