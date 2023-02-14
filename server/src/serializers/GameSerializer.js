@@ -6,7 +6,7 @@ class GameSerializer extends Serializer {
   static async getSummaryByUser(games, userId) {
     const serializedGames = []
     for (const game of games) {
-      if (userPlayedGame(game, userId)) {
+      if (await userPlayedGame(game, userId)) {
         const serializedGame = this.serialize(game, ["id", "name", "gameType"]) 
         serializedGames.push(serializedGame)
       }
@@ -15,7 +15,7 @@ class GameSerializer extends Serializer {
   }
 
   static async getDetail(game, userId) {
-    if (!userPlayedGame(game, userId)) {
+    if (!(await userPlayedGame(game, userId))) {
       return {}
     }
     const serializedGame = this.serialize(game, ["id", "name", "gameType"])
