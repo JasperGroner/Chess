@@ -4,14 +4,19 @@ import Board from "../assets/classes/Boards/Board"
 import TurnDisplay from "./TurnDisplay"
 import CheckDipslay from "./CheckDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
+import NewGameForm from "./NewGameForm"
 
 const Chess = props => {
-    let gameState, game
+    let gameState, gameData
+
+    const { currentUser } = props
 
     if (props.location.state) {
         gameState = props.location.state.gameState
-        game = props.location.state.game
+        gameData = props.location.state.game
     }
+
+    const [ game, setGame ] = useState(gameData)
 
     const [ selectedTile, setSelectedTile ] = useState({
         row: null,
@@ -85,19 +90,25 @@ const Chess = props => {
 
     let rows = setUpChessRows()
 
-    return (
-        <div className="page-container">
-            <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
-            <div className="game-display">
-                <TurnDisplay turn={turn} />
-                <div className ="container grid-container">
-                    {rows}
+    if (!currentUser || game) {
+        return (
+            <div className="page-container">
+                <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
+                <div className="game-display">
+                    <TurnDisplay turn={turn} />
+                    <div className ="container grid-container">
+                        {rows}
+                    </div>
+                    <CheckDipslay check={check} checkmate={checkmate}/>
                 </div>
-                <CheckDipslay check={check} checkmate={checkmate}/>
+                <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
             </div>
-            <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
-        </div>
-    )
+        )
+    } else {
+        return (
+            <NewGameForm setGame={setGame} />
+        )
+    }
 }
 
 export default Chess

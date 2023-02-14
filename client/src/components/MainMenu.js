@@ -21,7 +21,7 @@ const Menu = ({ currentUser }) => {
   }
 
   return (
-    <div className="main-menu">
+    <div className="centered-content">
       <Link to="/chess">New Game</Link><br />
       {loadGameLink}
       {gameList}
