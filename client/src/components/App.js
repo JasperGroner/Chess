@@ -32,7 +32,9 @@ const App = (props) => {
         <Route exact path="/">
           <MainMenu currentUser={currentUser} />
         </Route>
-        <Route exact path="/chess" component={Chess} />
+        <Route exact path="/chess" 
+          render={props => <Chess {...props} currentUser={currentUser} />} 
+        />
         <Route exact path="/users/new" component={RegistrationForm} />
         <Route exact path="/user-sessions/new" component={SignInForm} />
       </Switch>
