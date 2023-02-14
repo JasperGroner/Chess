@@ -14,6 +14,21 @@ class Game extends Model {
       }
     }
   }
+
+  static get relationMappings() {
+    const { GameState } = require("./index.js")
+
+    return {
+      gameStates: {
+        relation: Model.HasManyRelation,
+        modelClass: GameState,
+        join: {
+          from: "games.id",
+          to: "gameStates.gameId"
+        }
+      }
+    }
+  }
 }
 
 module.exports = Game
