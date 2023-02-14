@@ -26,7 +26,7 @@ class Player extends Model {
         modelClass: User,
         join: {
           from: "players.userId",
-          to: "user.id"
+          to: "users.id"
         }
       },
 

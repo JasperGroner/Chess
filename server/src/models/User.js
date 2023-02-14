@@ -36,6 +36,34 @@ class User extends uniqueFunc(Model) {
     };
   }
 
+  static get relationMappings() {
+    const { Player, Game } = require("./index.js")
+
+    return {
+      players: {
+        relation: Model.HasManyRelation,
+        modelClass: Player,
+        join: {
+          from: "users.id",
+          to: "players.userId"
+        }
+      },
+
+      games: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Game,
+        join: {
+          from: "users.id",
+          through: {
+            from: "players.userId",
+            to: "players.gameId"
+          },
+          to: "games.id"
+        }
+      }
+    }
+  }
+
   $formatJson(json) {
     const serializedJson = super.$formatJson(json);
 
