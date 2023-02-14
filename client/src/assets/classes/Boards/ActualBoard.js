@@ -22,7 +22,7 @@ class ActualBoard extends Board {
         } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
             return false
         } else if (!hypothetical && this.wouldBeCheck({row, column, piece, move})) {
-            return false
+            return false // need to update to not break chain of repeating piece moves
         }
         return true
     }
