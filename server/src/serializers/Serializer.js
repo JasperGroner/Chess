@@ -1,11 +1,10 @@
 class Serializer {
   static serialize(data, allowedAttributes) {
-    const serializedData = []
+    const serializedData = {}
 
     for (const attribute of allowedAttributes) {
       serializedData[attribute] = data[attribute]
     }
-
     return serializedData
   }
 }

@@ -20,8 +20,27 @@ const GameList = props => {
     getGames()
   }, [])
 
+  const loadGameClickHandler = async (event) => {
+    event.preventDefault()
+    const gameId = event.target.id
+    await loadGame(gameId)
+  }
+
+  const loadGame = async (gameId) => {
+    try {
+      const response = await fetch(`/api/v1/games/${gameId}/load`)
+      if (!response.ok) {
+        throw new Error(`${response.status} (${response.statusText})`)
+      }
+      const body = await response.json()
+      console.log(body.serializedGame)
+    } catch(error) {
+      error(error)
+    }
+  }
+
   const gameListReact = gameListData.map(game => {
-    return <li key={game.id}><a href="#">{game.name}</a></li>
+    return <li key={game.id}><a href="#" id={game.id} onClick={loadGameClickHandler}>{game.name}</a></li>
   })
 
   return (
