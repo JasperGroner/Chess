@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 
 const GameList = props => {
   const [ gameListData, setGameListData ] = useState([])
+  const [ shouldRedirect, setShouldRedirect ] = useState(false)
+  const [ game, setGame ] = useState({})
 
   const getGames = async () => {
     try {
@@ -33,10 +36,23 @@ const GameList = props => {
         throw new Error(`${response.status} (${response.statusText})`)
       }
       const body = await response.json()
-      console.log(body.serializedGame)
+      setGame(body.game)
+      setShouldRedirect(true)
     } catch(error) {
-      error(error)
+      console.error(`Error in fetch: ${error.message}`)
     }
+  }
+
+  if (shouldRedirect) {
+    return (
+      <Redirect to={{
+        pathname: '/chess',
+        state: { 
+          game: game,
+          gameState: game.gameState.encodedState
+        }
+      }}/>
+    )
   }
 
   const gameListReact = gameListData.map(game => {

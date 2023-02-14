@@ -3,9 +3,13 @@ import HypotheticalBoard from "./HypotheticalBoard"
 
 
 class ActualBoard extends Board {
-    constructor() {
+    constructor(gameState) {
         super()
-        this.loadGame(Board.defaultBoard)
+        if (!gameState) {
+            this.loadGame(Board.defaultBoard)
+        } else {
+            this.loadGame(gameState)
+        }
     }
 
     isValidMove({row, column, move, piece, hypothetical}) {
