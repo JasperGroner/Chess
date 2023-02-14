@@ -3,7 +3,7 @@ import Decoder from "../Decoder"
 import pieceConverter from "../../../services/pieceConverter"
 
 class Board {
-    constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves) {
+    constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical) {
         if (!gameState) {
             this.loadGame(Board.defaultBoard)
         } else {
@@ -12,6 +12,7 @@ class Board {
         this.selectedPiece = selectedPiece
         this.selectedPieceLocation = selectedPieceLocation ? selectedPieceLocation : {row: null, column: null}
         this.selectedPieceMoves = selectedPieceMoves ? selectedPieceMoves : []
+        this.hypothetical = hypothetical
         this.capturedPieces = { // need to refactor to dynamically calculate
             white: [],
             black: []
@@ -118,20 +119,20 @@ class Board {
         return this.selectedPieceMoves
     }
 
-    getPieceMoves(piece, pieceRow, pieceColumn, hypothetical) {
+    getPieceMoves(piece, pieceRow, pieceColumn) {
         const pieceMoves = []
         const moveSet = pieceConverter[piece].moveSet
         moveSet.forEach(move => {
             let row = pieceRow + move.vertical
             let column = pieceColumn + move.horizontal
             if (move.repeating) {
-                while (this.isValidMove({row, column, move, piece, hypothetical})) {
+                while (this.isValidMove({row, column, move, piece})) {
                     pieceMoves.push({row, column})
                     row += move.vertical
                     column += move.horizontal
                 }
             } else {
-                if (this.isValidMove({row, column, move, piece, hypothetical})) {
+                if (this.isValidMove({row, column, move, piece})) {
                     pieceMoves.push({row, column})
                 }
             }
@@ -142,7 +143,7 @@ class Board {
 
     // methods for determining if move is valid
 
-    isValidMove({row, column, move, piece}) {
+    isValidMove({row, column, move, piece }) {
         if (this.offBoard(row, column)) {
             return false
         } else if (this.occupiedByAlly(row, column, piece)) {
@@ -150,6 +151,8 @@ class Board {
         } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal, piece)) {
             return false
         } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
+            return false
+        } else if (!this.hypothetical && this.wouldBeCheck({row, column, piece, move})) {
             return false
         }
         return true
@@ -178,12 +181,12 @@ class Board {
         const check = {black: false, white: false}
         const whiteKingLocation = this.getKingLocation("white")
         const blackKingLocation = this.getKingLocation("black")
+        this.hypothetical = true
         for (let i = 0; i < this.boardModel.length; i++) {
             for (let j = 0; j < this.boardModel.length; j++) { 
-                // maybe make "getAllPieces" function to handle this
                 let piece = this.boardModel[i][j]
                 if (piece) {
-                    const validMoves = this.getPieceMoves(piece, i, j, true)
+                    const validMoves = this.getPieceMoves(piece, i, j)
                     validMoves.forEach(move => {
                         if (pieceConverter[piece].color === "white" && 
                             move.row === blackKingLocation.row &&
@@ -197,9 +200,9 @@ class Board {
                         }
                     })
                 }
-
             }
         }
+        this.hypothetical = false
         return check
     }
 
@@ -215,7 +218,14 @@ class Board {
         } 
     }
 
-    // method for determining whether King has 
+    // methods for determining whether move would put you in check
+
+    wouldBeCheck({row, column, piece, move}) {
+        const hypotheticalBoard = new Board(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
+        hypotheticalBoard.boardModel[row][column] = piece
+        hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
+        return hypotheticalBoard.opponentCanTakeKing()
+    }
 
     opponentCanTakeKing() {
         const kingLocation = this.getKingLocation(this.turn)
@@ -238,7 +248,6 @@ class Board {
         }
         return false
     }
-
 
     // method for getting default board
 
