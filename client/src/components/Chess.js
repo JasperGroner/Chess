@@ -51,41 +51,65 @@ const Chess = props => {
             } else {
                 firstTile = "black"
             }
-            rows.push(<ChessRow 
-                    firstTile={firstTile} 
-                    selectedTile={selectedTile}
-                    select={select}
-                    boardState={boardState}
-                    selectedPieceMoves={selectedPieceMoves}
-                    rowId={i} 
-                    key={i}
-                />)
+            rows.push(
+              <ChessRow 
+                firstTile={firstTile} 
+                selectedTile={selectedTile}
+                select={select}
+                boardState={boardState}
+                selectedPieceMoves={selectedPieceMoves}
+                rowId={i} 
+                key={i}
+              />
+            )
         }
         return rows
     }
 
-    const select = (row, column) => {
-        const handleClickResponse = boardState.handleClick(row, column)
-        setSelectedPieceMoves(handleClickResponse.moves)
-        if ((selectedTile.row === row && selectedTile.column === column) ||
-            handleClickResponse.unselect === true) {
-            setSelectedTile({row: null, column: null})
+    const select = async (row, column) => {
+      const handleClickResponse = boardState.handleClick(row, column)
+      setSelectedPieceMoves(handleClickResponse.moves)
+      if ((selectedTile.row === row && selectedTile.column === column) ||
+          handleClickResponse.unselect === true) {
+          setSelectedTile({row: null, column: null})
+      } else {
+          setSelectedTile({row, column})
+      }
+      if (handleClickResponse.turnSwitch) {
+          setTurn(handleClickResponse.turnSwitch)
+          if (currentUser) {
+              await saveGameState(handleClickResponse.encodedState)
+          }
+      }
+      if (handleClickResponse.check) {
+          setCheck(handleClickResponse.check)
+      }
+      if (handleClickResponse.checkmate) {
+          setCheckmate(handleClickResponse.checkmate)
+      }
+      if (handleClickResponse.capturedPieces) {
+          setCapturedPieces(handleClickResponse.capturedPieces)
+      }
+      setBoardState(boardState)
+    }
+
+    const saveGameState = async (encodedState) => {
+      try {
+        const response = await fetch(`/api/v1/games/${game.id}/gameState`, {
+          method: "POST",
+          headers: new Headers({
+            "Content-Type": "application/json"
+          }),
+          body: JSON.stringify({encodedState})
+        })
+        if (!response.ok) {
+          throw new Error(`${response.status} (${response.statusText})`)
         } else {
-            setSelectedTile({row, column})
+          return true
         }
-        if (handleClickResponse.turnSwitch) {
-            setTurn(handleClickResponse.turnSwitch)
-        }
-        if (handleClickResponse.check) {
-            setCheck(handleClickResponse.check)
-        }
-        if (handleClickResponse.checkmate) {
-            setCheckmate(handleClickResponse.checkmate)
-        }
-        if (handleClickResponse.capturedPieces) {
-            setCapturedPieces(handleClickResponse.capturedPieces)
-        }
-        setBoardState(boardState)
+      } catch(error) {
+          console.error(`Error in fetch: ${error.message}`)
+      }
     }
 
     let rows = setUpChessRows()

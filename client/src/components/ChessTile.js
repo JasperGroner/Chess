@@ -26,8 +26,8 @@ const ChessTile = ({color, selectedTile, select, rowId, columnId, boardState, se
         }
     })
 
-    const selectTile = () => {
-        select(rowId, columnId)
+    const selectTile = async () => {
+        await select(rowId, columnId)
     }
     
     let image = ""

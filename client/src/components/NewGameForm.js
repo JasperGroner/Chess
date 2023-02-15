@@ -9,7 +9,7 @@ const NewGameForm = ({setGame}) => {
 
   const createNewGame = async(nameString) => {
     try {
-      const response = await fetch("/api/v1/games/hot-seat", {
+      const response = await fetch("/api/v1/games/hotSeat", {
         method: "POST",
         headers: new Headers({
           "Content-Type": "application/json"
