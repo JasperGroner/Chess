@@ -40,10 +40,11 @@ class Board {
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
             this.selectedPieceLocation = {row, column}
             this.switchTurn()
-            let check = this.isCheck()
-            let checkmate = this.inCheckmate(check)
+            const check = this.isCheck()
+            const checkmate = this.inCheckmate(check)
+            const encodedState = Decoder.encodeGame(this)
             this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces}
+            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
         } else if (this.boardModel[row][column]) {
             const piece = this.boardModel[row][column]
             if ((this.selectedPieceLocation.row === row && 
