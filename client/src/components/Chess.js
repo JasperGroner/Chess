@@ -5,6 +5,7 @@ import TurnDisplay from "./TurnDisplay"
 import CheckDipslay from "./CheckDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import NewGameForm from "./NewGameForm"
+import PopupDisplay from "./PopupDisplay"
 
 const Chess = props => {
     let gameState, gameData
@@ -118,6 +119,7 @@ const Chess = props => {
                 <div className="game-display">
                     <TurnDisplay turn={turn} />
                     <div className ="container grid-container">
+                        <PopupDisplay content="testing" selfDestructing={true}/>
                         {rows}
                     </div>
                     <CheckDipslay check={check} checkmate={checkmate}/>

@@ -106,3 +106,16 @@ img {
   margin: 0;
   background-color: lightgrey;
 }
+
+.popup-display {
+  position: absolute;
+  z-index: 1;
+  height: $square-dimension * 5;
+  width: $square-dimension * 5;
+  background-color: lightgrey;
+  border: 3px solid black;
+  border-radius: 10px;
+  margin: $square-dimension * 1.5;
+  text-align: center;
+  padding: 2rem
+}
