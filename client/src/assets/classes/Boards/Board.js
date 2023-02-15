@@ -279,7 +279,6 @@ class Board {
                     this.canCastle["k"] = false
             }
         }
-        console.log(this.canCastle)
     }
 
     // method for getting default board
