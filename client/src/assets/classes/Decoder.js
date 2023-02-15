@@ -29,6 +29,7 @@ class Decoder {
       null : encodedGameArray[3]
     game.halfmoveClock = encodedGameArray[4]
     game.fullmoves = encodedGameArray[5]
+    game.capturedPieces = this.getCapturedPieces(encodedGameArray[0])
     return game
   }
 
@@ -49,6 +50,22 @@ class Decoder {
       }
     }
     return board
+  }
+
+  static getCapturedPieces(encodedBoard) {
+    const capturedPieces = {}
+    capturedPieces.black = ["k", "q", "r", "r", "b", "b", "n", "n", "p", "p", "p", "p", "p", "p", "p", "p"] 
+    capturedPieces.white = ["K", "Q", "R", "R", "B", "B", "N", "N", "P", "P", "P", "P", "P", "P", "P", "P"]
+    for (let i = 0; i < encodedBoard.length; i++) {
+      const piece = encodedBoard[i]
+      for (const color in capturedPieces) {
+        const index = capturedPieces[color].indexOf(piece)
+        if (index > -1) {
+          capturedPieces[color].splice(index, 1)
+        }
+      }
+    }
+    return capturedPieces
   }
 
   static encodeGame(game) {
