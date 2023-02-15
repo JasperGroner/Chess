@@ -12,15 +12,15 @@ const Board = props => {
   const { currentUser } = props
 
   if (props.location.state) {
-      gameState = props.location.state.gameState
-      gameData = props.location.state.game
+    gameState = props.location.state.gameState
+    gameData = props.location.state.game
   }
 
   const [ game, setGame ] = useState(gameData)
 
   const [ selectedTile, setSelectedTile ] = useState({
-      row: null,
-      column: null
+    row: null,
+    column: null
   })
 
   const [ selectable, setSelectable ] = useState(true)
@@ -42,32 +42,32 @@ const Board = props => {
   const [ popupState, setPopupState ] = useState(false)
 
   useEffect(() => {
-      setTurn(boardState.turn)
+    setTurn(boardState.turn)
   }, [])
 
   const setUpChessRows = () => {
-      const rows = []
-      for (let i = 0; i < 8; i++) {
-          let firstTile
-          if (i % 2 === 0) {
-              firstTile = "white"
-          } else {
-              firstTile = "black"
-          }
-          rows.push(
-            <BoardRow 
-              firstTile={firstTile} 
-              selectedTile={selectedTile}
-              select={select}
-              selectable={selectable}
-              boardState={boardState}
-              selectedPieceMoves={selectedPieceMoves}
-              rowId={i} 
-              key={i}
-            />
-          )
+    const rows = []
+    for (let i = 0; i < 8; i++) {
+      let firstTile
+      if (i % 2 === 0) {
+        firstTile = "white"
+      } else {
+        firstTile = "black"
       }
-      return rows
+      rows.push(
+        <BoardRow 
+          firstTile={firstTile} 
+          selectedTile={selectedTile}
+          select={select}
+          selectable={selectable}
+          boardState={boardState}
+          selectedPieceMoves={selectedPieceMoves}
+          rowId={i} 
+          key={i}
+        />
+      )
+    }
+    return rows
   }
 
   const select = async (row, column) => {
