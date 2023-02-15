@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import ChessRow from "./ChessRow"
+import BoardRow from "./BoardRow"
 import Chess from "../assets/classes/Chess"
 import TurnDisplay from "./TurnDisplay"
 import CheckDisplay from "./CheckDisplay"
@@ -50,7 +50,7 @@ const Board = props => {
                 firstTile = "black"
             }
             rows.push(
-              <ChessRow 
+              <BoardRow 
                 firstTile={firstTile} 
                 selectedTile={selectedTile}
                 select={select}

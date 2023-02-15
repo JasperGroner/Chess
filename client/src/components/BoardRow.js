@@ -1,7 +1,7 @@
 import React from "react"
-import ChessTile from "./ChessTile"
+import BoardTile from "./BoardTile"
 
-const ChessRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves} ) => {
+const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves} ) => {
     let squareColors = []
     if (firstTile === "white") {
         squareColors = ["white", "black"]
@@ -14,7 +14,7 @@ const ChessRow = ( {firstTile, rowId, selectedTile, select, boardState, selected
         for (let i = 0; i < 8; i++) {
             let color = squareColors[i % 2]
             row.push(
-                <ChessTile 
+                <BoardTile 
                     color={color} 
                     key={i}
                     columnId={i}
@@ -33,4 +33,4 @@ const ChessRow = ( {firstTile, rowId, selectedTile, select, boardState, selected
     return <div className="row grid-x">{row}</div>
 }
 
-export default ChessRow
+export default BoardRow

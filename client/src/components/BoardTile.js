@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import pieceConverter from "../services/pieceConverter"
 
-const ChessTile = ({color, selectedTile, select, rowId, columnId, boardState, selectedPieceMoves}) => {
+const BoardTile = ({color, selectedTile, select, rowId, columnId, boardState, selectedPieceMoves}) => {
 
     let classes=`cell small-1.5 square square--${color}`
     
@@ -31,4 +31,4 @@ const ChessTile = ({color, selectedTile, select, rowId, columnId, boardState, se
     </div>)
 }
 
-export default ChessTile
+export default BoardTile
