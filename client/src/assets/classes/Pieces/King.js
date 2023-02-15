@@ -4,7 +4,7 @@ import whiteImage from "../../images/king-white.png"
 
 class King extends Piece {
     constructor(color) {
-        const canCastleKingside = ({board, row, check}) => {
+        const canCastleKingside = ({board, row}) => {
             let piece
             if (color === "white") {
                 piece = "K"
@@ -17,8 +17,11 @@ class King extends Piece {
             if (board.boardModel[row][5] || board.boardModel[row][6]) {
                 return false
             }
-            if (check.black || check.white) {
-                return false
+            if (!board.hypothetical) {
+                const check = board.isCheck()
+                if (check.black || check.white) {
+                    return false
+                }
             }
             for (let i = 5; i <= 6; i++) {
                 const move = {vertical: 0, horizontal: (i - 4)}
@@ -29,7 +32,7 @@ class King extends Piece {
             return true
         }
 
-        const canCastleQueenside = ({board, row, check}) => {
+        const canCastleQueenside = ({board, row}) => {
             let piece, side
             if (color === "white") {
                 piece = "K"
@@ -44,8 +47,11 @@ class King extends Piece {
             if (board.boardModel[row][1] || board.boardModel[row][2] || board.boardModel[row][3]) {
                 return false
             }
-            if (check.black || check.white) {
-                return false
+            if (!board.hypothetical) {
+                const check = board.isCheck()
+                if (check.black || check.white) {
+                    return false
+                }
             }
             for (let i = 3; i >= 2; i--) {
                 const move = {vertical: 0, horizontal: (i - 4)}

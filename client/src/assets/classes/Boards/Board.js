@@ -151,17 +151,13 @@ class Board {
     // methods for determining if move is valid
 
     isValidMove({row, column, move, piece }) {
-        let check = {black: false, white: false}
-        if (!this.hypothetical) {
-            check = this.isCheck()
-        }
         if (this.offBoard(row, column)) {
             return false
         } else if (this.occupiedByAlly(row, column, piece)) {
             return false
         } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal, piece)) {
             return false
-        } else if (move.specialConditions && !move.specialConditions({board: this, row, column, check})) {
+        } else if (move.specialConditions && !move.specialConditions({board: this, row, column})) {
             return false
         }
         return true
