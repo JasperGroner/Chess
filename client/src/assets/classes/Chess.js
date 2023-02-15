@@ -1,11 +1,11 @@
-import King from "../Pieces/King"
-import Decoder from "../Decoder"
-import pieceConverter from "../../../services/pieceConverter"
+import King from "./Pieces/King"
+import Decoder from "./Decoder"
+import pieceConverter from "../../services/pieceConverter"
 
-class Board {
+class Chess {
     constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical) {
         if (!gameState) {
-            this.loadGame(Board.defaultBoard)
+            this.loadGame(Chess.defaultBoard)
         } else {
             this.loadGame(gameState)
         }
@@ -57,12 +57,13 @@ class Board {
         this.moveRookIfCastled(column)
         this.updateCastling()
         this.selectedPieceLocation = {row, column}
+        const pawnUpgrade = this.isPawnUpgrade(row, column)
         this.switchTurn()
         const check = this.isCheck()
         const checkmate = this.inCheckmate(check)
         const encodedState = Decoder.encodeGame(this)
         this.selectedPiece = null
-        return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
+        return {moves: [], turnSwitch: this.turn, unselect: true, pawnUpgrade, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
     }
 
     updateCapturedPieces(pieceAtMoveLocation) {
@@ -229,7 +230,7 @@ class Board {
         if (this.hypothetical) {
             return true
         }
-        const hypotheticalBoard = new Board(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
+        const hypotheticalBoard = new Chess(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
         hypotheticalBoard.boardModel[row][column] = piece
         hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
         return !hypotheticalBoard.opponentCanTakeKing()
@@ -309,6 +310,24 @@ class Board {
         }
     }
 
+    // pawn upgrade methods
+
+    isPawnUpgrade(row, column) {
+        if (this.selectedPiece === "P" && row === 0) {
+            return { display: true, turn: "white", row, column }
+        } else if (this.selectedPiece === "p" && row === 0) {
+            return { display: true, turn: "black", row, column }
+        }
+        return false
+    }
+
+    upgradePawn(row, column, piece) {
+        this.boardModel[row][column] = piece
+        const check = this.isCheck()
+        const checkmate = this.inCheckmate(check)
+        return {check, checkmate}
+    }
+
     // method for getting default board
 
     static get defaultBoard() {
@@ -317,4 +336,4 @@ class Board {
     }
 }
 
-export default Board
+export default Chess

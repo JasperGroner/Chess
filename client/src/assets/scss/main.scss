@@ -2,8 +2,8 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
-$square-dimension: 8vmin;
-$board-dimension: 66vmin;
+$square-dimension: 9vmin;
+$board-dimension: $square-dimension * 8;
 $board-border: 2px solid black;
 
 *,
@@ -18,8 +18,12 @@ $board-border: 2px solid black;
 }
 
 img {
-  height: 99%;
-  width: 99%
+  height: 100%;
+  width: 100%
+}
+
+.button {
+  border-radius: 10px;
 }
 
 .page-container {
@@ -38,7 +42,10 @@ img {
 }
 
 .container {
+  box-sizing: content-box;
   width: $board-dimension;
+  border: 3px solid black;
+  border-radius: 5px;
   margin: 25px auto;
   padding: 0px;
 }
@@ -64,22 +71,6 @@ img {
   border: 2px solid white;
 }
 
-.square--left {
-  border-left: $board-border
-}
-
-.square--right {
-  border-right: $board-border
-}
-
-.square--top {
-  border-top: $board-border
-}
-
-.square--bottom {
-  border-bottom: $board-border
-}
-
 .square--selected {
   border-color: red;
 }
@@ -94,6 +85,10 @@ img {
   text-align: center;
 }
 
+.popup-message {
+  text-align: center;
+}
+
 .centered-content {
   width: 60%;
   margin: 0 auto;
@@ -105,4 +100,39 @@ img {
   padding: 0;
   margin: 0;
   background-color: lightgrey;
+}
+
+.popup-display {
+  position: absolute;
+  z-index: 1;
+  width: $square-dimension * 7;
+  background-color: lightgrey;
+  border: 3px solid black;
+  border-radius: 10px;
+
+  left: 0;
+  right: 0;
+  margin: 25vh auto;
+  text-align: center;
+  padding: 2rem
+}
+
+.popup-button {
+  background-color: #AAAAAA;
+  border: 3px solid black;
+}
+
+.popup-message {
+  text-align: center;
+}
+
+.upgrade-piece {
+  width: $square-dimension;
+  height: $square-dimension;
+  margin: 0px;
+  display: inline-block;  
+}
+
+.upgrade-piece:hover {
+  background-color: lightblue;
 }
