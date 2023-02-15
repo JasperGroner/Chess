@@ -5,33 +5,33 @@ import whiteImage from "../../images/pawn-white.png"
 
 class Pawn extends Piece {
     constructor(color) {
-        const isWhiteAndNoEnemy = (board, row, column) => {
+        const isWhiteAndNoEnemy = ({board, row, column}) => {
             return (this.color === "white" &&
-                !board[row][column])
+                !board.boardModel[row][column])
         }
-        const isBlackAndNoEnemy = (board, row, column) => {
+        const isBlackAndNoEnemy = ({board, row, column}) => {
             return(this.color === "black" &&
-                !board[row][column])
+                !board.boardModel[row][column])
         }
-        const isWhiteAndEnemy = (board, row, column) => {
+        const isWhiteAndEnemy = ({board, row, column}) => {
             return(this.color === "white" &&
-                board[row][column])
+                board.boardModel[row][column])
         }
-        const isBlackAndEnemy = (board, row, column) => {
+        const isBlackAndEnemy = ({board, row, column}) => {
             return(this.color === "black" &&
-                board[row][column])
+                board.boardModel[row][column])
         }
-        const whiteInitialPlaceAndNoEnemy = (board, row, column) => {
+        const whiteInitialPlaceAndNoEnemy = ({board, row, column}) => {
             return(this.color === "white" &&
-                row === board.length - 4 &&
-                !board[row][column] &&
-                !board[row + 1][column])
+                row === board.boardModel.length - 4 &&
+                !board.boardModel[row][column] &&
+                !board.boardModel[row + 1][column])
         }
-        const blackInitialPlaceAndNoEnemy = (board, row, column) => {
+        const blackInitialPlaceAndNoEnemy = ({board, row, column}) => {
             return(this.color === "black" &&
             row === 3 &&
-            !board[row][column] &&
-            !board[row - 1][column])
+            !board.boardModel[row][column] &&
+            !board.boardModel[row - 1][column])
         }
         const moveSet = [
             {vertical: 1, horizontal: 0, specialConditions: isBlackAndNoEnemy},

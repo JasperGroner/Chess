@@ -13,18 +13,11 @@ class Decoder {
     const encodedGameArray = encodedGame.split(" ")
     game.board = Decoder.decodeBoard(encodedGameArray[0])
     game.turn = encodedGameArray[1] === "w" ? "white" : "black"
-    if (encodedGameArray[2].includes("K")) {
-      game.canCastle.whiteKingSide = true
-    }
-    if (encodedGameArray[2].includes("Q")) {
-      game.canCastle.whiteQueenSide = true
-    }
-    if (encodedGameArray[2].includes("k")) {
-      game.canCastle.blackKingSide = true
-    }
-    if (encodedGameArray[2].includes("q")) {
-      game.canCastle.blackQueenSide = true
-    }
+    game.canCastle = {}
+    const castlingArray = encodedGameArray[2].split("")
+    castlingArray.forEach(castling => {
+      game.canCastle[castling] = true
+    })
     game.enPassantSquare = encodedGameArray[3] === "-" ? 
       null : encodedGameArray[3]
     game.halfmoveClock = encodedGameArray[4]
@@ -71,17 +64,10 @@ class Decoder {
   static encodeGame(game) {
     let encodedString = this.encodeBoard(game.boardModel)
     encodedString += game.turn === "white" ? " w " : " b "
-    if (game.canCastle.whiteKingSide) {
-      encodedString += "K"
-    }
-    if (game.canCastle.whiteQueenSide) {
-      encodedString += "Q"
-    }
-    if (game.canCastle.blackKingSide) {
-      encodedString += "k"
-    }
-    if (game.canCastle.whiteQueenSide) {
-      encodedString += "q"
+    for (const castling in game.canCastle) {
+      if (game.canCastle[castling]) {
+        encodedString += castling
+      }
     }
     if (encodedString[encodedString.length - 1] === " ") {
       encodedString += "-"
