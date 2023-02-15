@@ -151,7 +151,7 @@ class Board {
     // methods for determining if move is valid
 
     isValidMove({row, column, move, piece }) {
-        let check = {black: false, black: false}
+        let check = {black: false, white: false}
         if (!this.hypothetical) {
             check = this.isCheck()
         }
