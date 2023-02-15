@@ -153,7 +153,7 @@ class Board {
             return false
         } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal, piece)) {
             return false
-        } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
+        } else if (move.specialConditions && !move.specialConditions(this, row, column)) {
             return false
         }
         return true
