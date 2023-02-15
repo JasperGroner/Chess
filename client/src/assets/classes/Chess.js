@@ -33,16 +33,7 @@ class Chess {
 
     handleClick(row, column) {
         if (this.canMove(row, column)) {
-            this.updateCapturedPieces(this.boardModel[row][column])
-            this.boardModel[row][column] = this.selectedPiece
-            this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
-            this.selectedPieceLocation = {row, column}
-            this.switchTurn()
-            const check = this.isCheck()
-            const checkmate = this.inCheckmate(check)
-            const encodedState = Decoder.encodeGame(this)
-            this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
+            return this.handleMove(row, column)
         } else if (this.boardModel[row][column]) {
             const piece = this.boardModel[row][column]
             if ((this.selectedPieceLocation.row === row && 
@@ -58,6 +49,20 @@ class Chess {
             }
         }
         return {moves: []}
+    }
+
+    handleMove(row, column) {
+        this.boardModel[row][column] = this.selectedPiece
+        this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
+        this.moveRookIfCastled(column)
+        this.updateCastling()
+        this.selectedPieceLocation = {row, column}
+        this.switchTurn()
+        const check = this.isCheck()
+        const checkmate = this.inCheckmate(check)
+        const encodedState = Decoder.encodeGame(this)
+        this.selectedPiece = null
+        return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
     }
 
     updateCapturedPieces(pieceAtMoveLocation) {
@@ -152,7 +157,7 @@ class Chess {
             return false
         } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal, piece)) {
             return false
-        } else if (move.specialConditions && !move.specialConditions(this.boardModel, row, column)) {
+        } else if (move.specialConditions && !move.specialConditions({board: this, row, column})) {
             return false
         }
         return true
@@ -183,7 +188,7 @@ class Chess {
         const blackKingLocation = this.getKingLocation("black")
         this.hypothetical = true
         for (let i = 0; i < this.boardModel.length; i++) {
-            for (let j = 0; j < this.boardModel.length; j++) { 
+            for (let j = 0; j < this.boardModel.length; j++) {
                 let piece = this.boardModel[i][j]
                 if (piece) {
                     const validMoves = this.getPieceMoves(piece, i, j)
@@ -250,6 +255,58 @@ class Chess {
             }
         }
         return false
+    }
+
+    // castling methods
+
+    updateCastling() {
+        if (this.selectedPiece === "K" && (this.canCastle["K"] === true || this.canCastle["Q"] === true)) {
+            this.canCastle["K"] = false
+            this.canCastle["Q"] = false
+        } else if (this.selectedPiece === "k" && (this.canCastle["k"] === true || this.canCastle["q"] === true)) {
+            this.canCastle["k"] = false
+            this.canCastle["q"] = false
+        } else if (this.selectedPiece === "R") {
+            if (this.canCastle["Q"] && 
+                this.selectedPieceLocation.column === 0) {
+                    this.canCastle["Q"] = false
+            } else if (this.canCastle["K"] && 
+                this.selectedPieceLocation.column === 7) {
+                    this.canCastle["K"] = false
+            }
+        } else if (this.selectedPiece === "r") {
+            if (this.canCastle["q"] && 
+                this.selectedPieceLocation.column === 0) {
+                    this.canCastle["q"] = false
+            } else if (this.canCastle["k"] && 
+                this.selectedPieceLocation.column === 7) {
+                    this.canCastle["k"] = false
+            }
+        }
+    }
+
+    moveRookIfCastled(column) {
+        if (this.selectedPiece === "k" &&
+            this.selectedPieceLocation.row === 0 &&
+            this.selectedPieceLocation.column === 4) {
+            if (column === 6) {
+                this.boardModel[0][7] = false
+                this.boardModel[0][5] = "r"
+            } else if (column === 2) {
+                this.boardModel[0][0] = false
+                this.boardModel[0][3] = "r"
+            }
+        } else if (this.selectedPiece === "K" &&
+            this.selectedPieceLocation.row === 7 &&
+            this.selectedPieceLocation.column === 4) {
+            if (column === 6) {
+                this.boardModel[7][7] = false
+                this.boardModel[7][5] = "R"
+            } else if (column === 2) {
+                this.boardModel[7][0] = false
+                this.boardModel[7][3] = "R"
+            }
+        }
     }
 
     // method for getting default board
