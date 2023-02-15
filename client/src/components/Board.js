@@ -39,10 +39,10 @@ const Board = props => {
 
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
 
+  const [ popupState, setPopupState ] = useState(false)
+
   useEffect(() => {
       setTurn(boardState.turn)
-      boardState.boardModel[0][0] = false
-      boardState.boardModel[1][0] = "P"
   }, [])
 
   const setUpChessRows = () => {
@@ -87,20 +87,25 @@ const Board = props => {
     }
     if (handleClickResponse.check) {
       setCheck(handleClickResponse.check)
+      if (handleClickResponse.check.black || handleClickResponse.check.white) {
+        setPopupState(true)
+      }
     }
     if (handleClickResponse.checkmate) {
       setCheckmate(handleClickResponse.checkmate)
+      setPopupState(true)
     }
     if (handleClickResponse.capturedPieces) {
       setCapturedPieces(handleClickResponse.capturedPieces)
     }
     if (handleClickResponse.pawnUpgrade) {
       setPawnUpgrade(handleClickResponse.pawnUpgrade)
+      if (handleClickResponse.pawnUpgrade.display) {
+        setPopupState(true)
+      }
     }
     setBoardState(boardState)
   }
-
-  console.log(pawnUpgrade)
 
   const saveGameState = async (encodedState) => {
     try {
@@ -124,15 +129,21 @@ const Board = props => {
   let rows = setUpChessRows()
 
   let popup = ""
-  if (check.black || check.white || checkmate || pawnUpgrade.display) {
+  if (popupState) {
     popup = (
       <PopupDisplay 
-        check={check} 
-        checkmate={checkmate} 
+        check={check}
+        setCheck={setCheck}
+        checkmate={checkmate}
+        setCheckmate={setCheckmate} 
         pawnUpgrade={pawnUpgrade} 
         setSelectable={setSelectable}
+        boardState={boardState}
+        setPopupState={setPopupState}
       />
     )
+  } else {
+    popup = ""
   }
 
   if (!currentUser || game) {

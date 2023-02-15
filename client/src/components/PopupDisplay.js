@@ -2,31 +2,29 @@ import React, { useState, useEffect } from "react"
 import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
 import CheckDisplay from "./CheckDisplay"
 
-const PopupDisplay = props => {
-  const { pawnUpgrade, check, checkmate, setSelectable } = props
-
-  const [ deleteSelf, setDeleteSelf ] = useState(false)
-  const [ update, setUpdate ] = useState(true)
-
-  useEffect(() => {
-    setSelectable(false)
-  }, [])
-
+const PopupDisplay = ({ pawnUpgrade, check, setCheck, checkmate, setCheckmate, setSelectable, boardState, setBoardState, setPopupState })  => {
   const selfDestruct = event => {
     setSelectable(true)
-    setDeleteSelf(true)
+    setPopupState(false)
   }
 
   let content
   if (pawnUpgrade.display) {
-    content= (
+    content = (
       <>    
-        <PawnUpgradeDisplay pawnUpgrade={pawnUpgrade} />
-        <button onClick={selfDestruct} className="popup-button button">Okay</button>
+        <PawnUpgradeDisplay 
+          pawnUpgrade={pawnUpgrade} 
+          boardState={boardState}
+          setBoardState={setBoardState}
+          selfDestruct={selfDestruct}
+          check={check}
+          setCheck={setCheck}
+          checkmate={checkmate}
+          setCheckmate={setCheckmate}
+        />
       </>
     )
-  }
-  
+  } 
   if (check.black || check.white || checkmate) {
     content = (
       <> 
@@ -34,10 +32,6 @@ const PopupDisplay = props => {
         <button onClick={selfDestruct} className="popup-button button">Okay</button>
       </>
     )
-  }
-
-  if (deleteSelf) {
-    return <></>
   }
 
   return (

@@ -321,6 +321,13 @@ class Chess {
         return false
     }
 
+    upgradePawn(row, column, piece) {
+        this.boardModel[row][column] = piece
+        const check = this.isCheck()
+        const checkmate = this.inCheckmate(check)
+        return {check, checkmate}
+    }
+
     // method for getting default board
 
     static get defaultBoard() {
