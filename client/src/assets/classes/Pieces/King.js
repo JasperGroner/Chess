@@ -4,56 +4,52 @@ import whiteImage from "../../images/king-white.png"
 
 class King extends Piece {
     constructor(color) {
-        const canCastleKingside = (board, row, column) => {
-            let checkRow, piece
+        const canCastleKingside = ({board, row, check}) => {
+            let piece
             if (color === "white") {
                 piece = "K"
-                checkRow = 7
             } else {
                 piece = "k"
-                checkRow = 0
             }
             if (!board.canCastle[piece]) {
                 return false
             }
-            if (board.boardModel[checkRow][5] || board.boardModel[checkRow][6]) {
+            if (board.boardModel[row][5] || board.boardModel[row][6]) {
                 return false
             }
-            // if (board.isCheck()) {
-            //     return false
-            // }
-            for (let i = 4; i <= 6; i++) {
+            if (check.black || check.white) {
+                return false
+            }
+            for (let i = 5; i <= 6; i++) {
                 const move = {vertical: 0, horizontal: (i - 4)}
-                if (board.wouldBeCheck({row, column, piece, move})) {
+                if (!(board.wouldNotBeCheck({row, column: i, piece, move}))) {
                     return false
                 }
             }
             return true
         }
 
-        const canCastleQueenside = (board, row, column) => {
-            let checkRow, piece, side
+        const canCastleQueenside = ({board, row, check}) => {
+            let piece, side
             if (color === "white") {
                 piece = "K"
                 side = "Q"
-                checkRow = 7
             } else {
                 piece = "k"
                 side = "q"
-                checkRow = 0
             }
             if (!board.canCastle[side]) {
                 return false
             }
-            if (board.boardModel[checkRow][1] || board.boardModel[checkRow][2] || board.boardModel) {
+            if (board.boardModel[row][1] || board.boardModel[row][2] || board.boardModel[row][3]) {
                 return false
             }
-            // if (board.isCheck()) {
-            //     return false
-            // }
-            for (let i = 4; i >= 1; i--) {
+            if (check.black || check.white) {
+                return false
+            }
+            for (let i = 3; i >= 2; i--) {
                 const move = {vertical: 0, horizontal: (i - 4)}
-                if (board.wouldBeCheck({row, column, piece, move})) {
+                if (!(board.wouldNotBeCheck({row, column: i, piece, move}))) {
                     return false
                 }
             }
@@ -70,7 +66,7 @@ class King extends Piece {
             {vertical: -1, horizontal: 0},
             {vertical: -1, horizontal: 1},
             {vertical: 0, horizontal: 2, specialConditions: canCastleKingside},
-            {vertical: 0, horizontal: -3, specialConditions: canCastleQueenside}
+            {vertical: 0, horizontal: -2, specialConditions: canCastleQueenside}
         ]
         super(color, blackImage, whiteImage, moveSet)
     }

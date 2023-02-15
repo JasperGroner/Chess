@@ -33,17 +33,7 @@ class Board {
 
     handleClick(row, column) {
         if (this.canMove(row, column)) {
-            this.updateCapturedPieces(this.boardModel[row][column])
-            this.boardModel[row][column] = this.selectedPiece
-            this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
-            this.updateCastling()
-            this.selectedPieceLocation = {row, column}
-            this.switchTurn()
-            const check = this.isCheck()
-            const checkmate = this.inCheckmate(check)
-            const encodedState = Decoder.encodeGame(this)
-            this.selectedPiece = null
-            return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
+            return this.handleMove(row, column)
         } else if (this.boardModel[row][column]) {
             const piece = this.boardModel[row][column]
             if ((this.selectedPieceLocation.row === row && 
@@ -59,6 +49,20 @@ class Board {
             }
         }
         return {moves: []}
+    }
+
+    handleMove(row, column) {
+        this.boardModel[row][column] = this.selectedPiece
+        this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
+        this.moveRookIfCastled(column)
+        this.updateCastling()
+        this.selectedPieceLocation = {row, column}
+        this.switchTurn()
+        const check = this.isCheck()
+        const checkmate = this.inCheckmate(check)
+        const encodedState = Decoder.encodeGame(this)
+        this.selectedPiece = null
+        return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
     }
 
     updateCapturedPieces(pieceAtMoveLocation) {
@@ -127,7 +131,7 @@ class Board {
             let column = pieceColumn + move.horizontal
             if (move.repeating) {
                 while (this.isValidMove({row, column, move, piece})) {
-                    if (!this.wouldBeCheck({row, column, move, piece})) {
+                    if (this.wouldNotBeCheck({row, column, move, piece})) {
                         pieceMoves.push({row, column})
                     }
                     row += move.vertical
@@ -135,7 +139,7 @@ class Board {
                 }
             } else {
                 if (this.isValidMove({row, column, move, piece}) && 
-                    !this.wouldBeCheck({row, column, move, piece})) {
+                    this.wouldNotBeCheck({row, column, move, piece})) {
                     pieceMoves.push({row, column})
                 }
             }
@@ -147,13 +151,17 @@ class Board {
     // methods for determining if move is valid
 
     isValidMove({row, column, move, piece }) {
+        let check = {black: false, black: false}
+        if (!this.hypothetical) {
+            check = this.isCheck()
+        }
         if (this.offBoard(row, column)) {
             return false
         } else if (this.occupiedByAlly(row, column, piece)) {
             return false
         } else if (this.occupiedByEnemy(row - move.vertical, column - move.horizontal, piece)) {
             return false
-        } else if (move.specialConditions && !move.specialConditions(this, row, column)) {
+        } else if (move.specialConditions && !move.specialConditions({board: this, row, column, check})) {
             return false
         }
         return true
@@ -184,7 +192,7 @@ class Board {
         const blackKingLocation = this.getKingLocation("black")
         this.hypothetical = true
         for (let i = 0; i < this.boardModel.length; i++) {
-            for (let j = 0; j < this.boardModel.length; j++) { 
+            for (let j = 0; j < this.boardModel.length; j++) {
                 let piece = this.boardModel[i][j]
                 if (piece) {
                     const validMoves = this.getPieceMoves(piece, i, j)
@@ -221,14 +229,14 @@ class Board {
 
     // methods for determining whether move would put you in check
 
-    wouldBeCheck({row, column, piece, move}) {
+    wouldNotBeCheck({row, column, piece, move}) {
         if (this.hypothetical) {
             return true
         }
         const hypotheticalBoard = new Board(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
         hypotheticalBoard.boardModel[row][column] = piece
         hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
-        return hypotheticalBoard.opponentCanTakeKing()
+        return !hypotheticalBoard.opponentCanTakeKing()
     }
 
     opponentCanTakeKing() {
@@ -277,6 +285,30 @@ class Board {
             } else if (this.canCastle["k"] && 
                 this.selectedPieceLocation.column === 7) {
                     this.canCastle["k"] = false
+            }
+        }
+    }
+
+    moveRookIfCastled(column) {
+        if (this.selectedPiece === "k" &&
+            this.selectedPieceLocation.row === 0 &&
+            this.selectedPieceLocation.column === 4) {
+            if (column === 6) {
+                this.boardModel[0][7] = false
+                this.boardModel[0][5] = "r"
+            } else if (column === 2) {
+                this.boardModel[0][0] = false
+                this.boardModel[0][3] = "r"
+            }
+        } else if (this.selectedPiece === "K" &&
+            this.selectedPieceLocation.row === 7 &&
+            this.selectedPieceLocation.column === 4) {
+            if (column === 6) {
+                this.boardModel[7][7] = false
+                this.boardModel[7][5] = "R"
+            } else if (column === 2) {
+                this.boardModel[7][0] = false
+                this.boardModel[7][3] = "R"
             }
         }
     }
