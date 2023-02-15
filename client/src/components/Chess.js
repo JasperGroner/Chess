@@ -33,10 +33,7 @@ const Chess = props => {
 
     const [ checkmate, setCheckmate ] = useState(false)
 
-    const [ capturedPieces, setCapturedPieces ] = useState({
-        white: [],
-        black: []
-    })
+    const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
 
     useEffect(() => {
         setTurn(boardState.turn)

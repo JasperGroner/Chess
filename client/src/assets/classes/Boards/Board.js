@@ -13,10 +13,7 @@ class Board {
         this.selectedPieceLocation = selectedPieceLocation ? selectedPieceLocation : {row: null, column: null}
         this.selectedPieceMoves = selectedPieceMoves ? selectedPieceMoves : []
         this.hypothetical = hypothetical
-        this.capturedPieces = { // need to refactor to dynamically calculate
-            white: [],
-            black: []
-        }
+
     }
     
     // method for loading board
@@ -29,6 +26,7 @@ class Board {
         this.enPassantSquare = game.enPassantSquare
         this.halfmoveClock = game.halfmoveClock
         this.fullmoves = game.fullmoves
+        this.capturedPieces = game.capturedPieces
     }    
 
     // method for handling user input
