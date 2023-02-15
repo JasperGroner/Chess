@@ -7,7 +7,7 @@ const SignOutButton = () => {
   const signOut = async (event) => {
     event.preventDefault()
     try {
-        const response = await fetch("/api/v1/user-sessions", {
+      const response = await fetch("/api/v1/user-sessions", {
         method: "delete",
         headers: new Headers({
           "Content-Type": "application/json",
