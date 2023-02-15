@@ -125,3 +125,14 @@ img {
 .popup-message {
   text-align: center;
 }
+
+.upgrade-piece {
+  width: $square-dimension;
+  height: $square-dimension;
+  margin: 0px;
+  display: inline-block;  
+}
+
+.upgrade-piece:hover {
+  background-color: lightblue;
+}

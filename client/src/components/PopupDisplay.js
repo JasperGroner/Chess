@@ -1,16 +1,29 @@
 import React, {useState} from "react"
+import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
+import CheckDisplay from "./CheckDisplay"
 
 const PopupDisplay = props => {
-  const { selfDestructing } = props
+  const { pawnUpgrade, check, checkmate } = props
+
   const [ deleteSelf, setDeleteSelf ] = useState(false)
+  const [ update, setUpdate ] = useState(true)
 
   const selfDestruct = event => {
     setDeleteSelf(true)
   }
 
-  let okayButton = ""
-  if (selfDestructing) {
-    okayButton = <button onClick={selfDestruct} className="popup-button button">Okay</button>
+  let content
+  if (pawnUpgrade.display) {
+    content = <PawnUpgradeDisplay pawnUpgrade={pawnUpgrade} />
+  }
+  
+  if (check.black || check.white || checkmate) {
+    content = (
+      <> 
+        <CheckDisplay check={check} checkmate={checkmate} />
+        <button onClick={selfDestruct} className="popup-button button">Okay</button>
+      </>
+    )
   }
 
   if (deleteSelf) {
@@ -19,8 +32,7 @@ const PopupDisplay = props => {
 
   return (
     <div className="popup-display">
-      {props.children}
-      {okayButton}
+      {content}
     </div>
   )
 }

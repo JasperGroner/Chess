@@ -57,12 +57,13 @@ class Chess {
         this.moveRookIfCastled(column)
         this.updateCastling()
         this.selectedPieceLocation = {row, column}
+        const pawnUpgrade = this.isPawnUpgrade(row, column)
         this.switchTurn()
         const check = this.isCheck()
         const checkmate = this.inCheckmate(check)
         const encodedState = Decoder.encodeGame(this)
         this.selectedPiece = null
-        return {moves: [], turnSwitch: this.turn, unselect: true, check: check, checkmate: checkmate, capturedPieces: this.capturedPieces, encodedState: encodedState}
+        return {moves: [], turnSwitch: this.turn, unselect: true, pawnUpgrade, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
     }
 
     updateCapturedPieces(pieceAtMoveLocation) {
@@ -307,6 +308,17 @@ class Chess {
                 this.boardModel[7][3] = "R"
             }
         }
+    }
+
+    // pawn upgrade methods
+
+    isPawnUpgrade(row, column) {
+        if (this.selectedPiece === "P" && row === 0) {
+            return { display: true, turn: "white", row, column }
+        } else if (this.selectedPiece === "p" && row === 0) {
+            return { display: true, turn: "black", row, column }
+        }
+        return false
     }
 
     // method for getting default board
