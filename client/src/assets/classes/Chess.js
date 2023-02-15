@@ -73,6 +73,9 @@ class Chess {
       } else {
         this.capturedPieces.black.push(pieceAtMoveLocation)
       }
+      this.halfmoveClock = 0
+    } else {
+      this.halfmoveClock++
     }
   }
 
@@ -94,6 +97,9 @@ class Chess {
 
   switchTurn () {
     this.turn = this.turn === "white" ? "black" : "white"
+    if (this.turn === "white") {
+      this.fullmoves++
+    }
   }
   
   inCheckmate(check) {
