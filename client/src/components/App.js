@@ -7,7 +7,7 @@ import "../assets/scss/main.scss";
 import RegistrationForm from "./registration/RegistrationForm";
 import SignInForm from "./authentication/SignInForm";
 import TopBar from "./layout/TopBar";
-import Chess from "./Chess"
+import Board from "./Board"
 import MainMenu from "./MainMenu"
 
 const App = (props) => {
@@ -33,7 +33,7 @@ const App = (props) => {
           <MainMenu currentUser={currentUser} />
         </Route>
         <Route exact path="/chess" 
-          render={props => <Chess {...props} currentUser={currentUser} />} 
+          render={props => <Board {...props} currentUser={currentUser} />} 
         />
         <Route exact path="/users/new" component={RegistrationForm} />
         <Route exact path="/user-sessions/new" component={SignInForm} />

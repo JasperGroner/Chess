@@ -1,11 +1,11 @@
-import King from "../Pieces/King"
-import Decoder from "../Decoder"
-import pieceConverter from "../../../services/pieceConverter"
+import King from "./Pieces/King"
+import Decoder from "./Decoder"
+import pieceConverter from "../../services/pieceConverter"
 
-class Board {
+class Chess {
     constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical) {
         if (!gameState) {
-            this.loadGame(Board.defaultBoard)
+            this.loadGame(Chess.defaultBoard)
         } else {
             this.loadGame(gameState)
         }
@@ -224,7 +224,7 @@ class Board {
         if (this.hypothetical) {
             return true
         }
-        const hypotheticalBoard = new Board(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
+        const hypotheticalBoard = new Chess(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
         hypotheticalBoard.boardModel[row][column] = piece
         hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
         return !hypotheticalBoard.opponentCanTakeKing()
@@ -260,4 +260,4 @@ class Board {
     }
 }
 
-export default Board
+export default Chess

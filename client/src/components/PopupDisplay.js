@@ -1,12 +1,16 @@
 import React, {useState} from "react"
 
-const PopupDisplay = ({content, selfDestructing}) => {
+const PopupDisplay = props => {
+  const { selfDestructing } = props
   const [ deleteSelf, setDeleteSelf ] = useState(false)
 
   const selfDestruct = event => {
-    if (selfDestructing) {
-      setDeleteSelf(true)
-    }
+    setDeleteSelf(true)
+  }
+
+  let okayButton = ""
+  if (selfDestructing) {
+    okayButton = <button onClick={selfDestruct} className="popup-button button">Okay</button>
   }
 
   if (deleteSelf) {
@@ -14,8 +18,9 @@ const PopupDisplay = ({content, selfDestructing}) => {
   }
 
   return (
-    <div className="popup-display" onClick={selfDestruct}>
-      {content}
+    <div className="popup-display">
+      {props.children}
+      {okayButton}
     </div>
   )
 }

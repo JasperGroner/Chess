@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react"
 import ChessRow from "./ChessRow"
-import Board from "../assets/classes/Boards/Board"
+import Chess from "../assets/classes/Chess"
 import TurnDisplay from "./TurnDisplay"
-import CheckDipslay from "./CheckDisplay"
+import CheckDisplay from "./CheckDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import NewGameForm from "./NewGameForm"
 import PopupDisplay from "./PopupDisplay"
 
-const Chess = props => {
+const Board = props => {
     let gameState, gameData
 
     const { currentUser } = props
@@ -26,7 +26,7 @@ const Chess = props => {
 
     const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
 
-    const [ boardState, setBoardState ] = useState(new Board(gameState))
+    const [ boardState, setBoardState ] = useState(new Chess(gameState))
 
     const [ turn, setTurn ] = useState("")
 
@@ -112,17 +112,23 @@ const Chess = props => {
 
     let rows = setUpChessRows()
 
+    let popup = ""
+    if (check.black || check.white || checkmate) {
+        popup = (<PopupDisplay selfDestructing={true}>
+            <CheckDisplay check={check} checkmate={checkmate}/>
+        </PopupDisplay>)
+    }
+
     if (!currentUser || game) {
         return (
             <div className="page-container">
+                {popup}
                 <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
                 <div className="game-display">
                     <TurnDisplay turn={turn} />
                     <div className ="container grid-container">
-                        <PopupDisplay content="testing" selfDestructing={true}/>
                         {rows}
                     </div>
-                    <CheckDipslay check={check} checkmate={checkmate}/>
                 </div>
                 <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
             </div>
@@ -134,4 +140,4 @@ const Chess = props => {
     }
 }
 
-export default Chess
+export default Board
