@@ -125,7 +125,14 @@ const Board = props => {
 
   let popup = ""
   if (check.black || check.white || checkmate || pawnUpgrade.display) {
-    popup = (<PopupDisplay check={check} checkmate={checkmate} pawnUpgrade={pawnUpgrade}/>)
+    popup = (
+      <PopupDisplay 
+        check={check} 
+        checkmate={checkmate} 
+        pawnUpgrade={pawnUpgrade} 
+        setSelectable={setSelectable}
+      />
+    )
   }
 
   if (!currentUser || game) {
