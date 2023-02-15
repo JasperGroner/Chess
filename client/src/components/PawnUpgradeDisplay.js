@@ -3,7 +3,7 @@ import pieceConverter from "../services/pieceConverter"
 import CheckDisplay from "./CheckDisplay";
 
 const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, check, setCheck, checkmate, setCheckmate }) => {
-  const [ followUpMessage, setFollowUpMessage ] = useState(false)
+  const [ enteredCheck, setEnteredCheck ] = useState(false)
 
   const upgrade = event => {
     event.preventDefault()
@@ -11,13 +11,13 @@ const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, check, setCh
     if (result.check.black || result.check.white || result.checkmate) {
       setCheck(result.check)
       setCheckmate(result.checkmate)
-      setFollowUpMessage(true)
+      setEnteredCheck(true)
     } else {
       selfDestruct()
     }
   }
 
-  if (!followUpMessage) {
+  if (!enteredCheck) {
     let upgradeList
     if (pawnUpgrade.turn === "white") {
       upgradeList = ["Q", "B", "R", "N"].map((piece, index) => {
