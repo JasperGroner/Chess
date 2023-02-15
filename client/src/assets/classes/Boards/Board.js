@@ -36,6 +36,7 @@ class Board {
             this.updateCapturedPieces(this.boardModel[row][column])
             this.boardModel[row][column] = this.selectedPiece
             this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
+            this.updateCastling()
             this.selectedPieceLocation = {row, column}
             this.switchTurn()
             const check = this.isCheck()
@@ -250,6 +251,35 @@ class Board {
             }
         }
         return false
+    }
+
+    // castling methods
+
+    updateCastling() {
+        if (this.selectedPiece === "K" && (this.canCastle["K"] === true || this.canCastle["Q"] === true)) {
+            this.canCastle["K"] = false
+            this.canCastle["Q"] = false
+        } else if (this.selectedPiece === "k" && (this.canCastle["k"] === true || this.canCastle["q"] === true)) {
+            this.canCastle["k"] = false
+            this.canCastle["q"] = false
+        } else if (this.selectedPiece === "R") {
+            if (this.canCastle["Q"] && 
+                this.selectedPieceLocation.column === 0) {
+                    this.canCastle["Q"] = false
+            } else if (this.canCastle["K"] && 
+                this.selectedPieceLocation.column === 7) {
+                    this.canCastle["K"] = false
+            }
+        } else if (this.selectedPiece === "r") {
+            if (this.canCastle["q"] && 
+                this.selectedPieceLocation.column === 0) {
+                    this.canCastle["q"] = false
+            } else if (this.canCastle["k"] && 
+                this.selectedPieceLocation.column === 7) {
+                    this.canCastle["k"] = false
+            }
+        }
+        console.log(this.canCastle)
     }
 
     // method for getting default board
