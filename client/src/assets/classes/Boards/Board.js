@@ -127,7 +127,7 @@ class Board {
             let column = pieceColumn + move.horizontal
             if (move.repeating) {
                 while (this.isValidMove({row, column, move, piece})) {
-                    if (this.wouldNotBeCheck({row, column, move, piece})) {
+                    if (!this.wouldBeCheck({row, column, move, piece})) {
                         pieceMoves.push({row, column})
                     }
                     row += move.vertical
@@ -135,7 +135,7 @@ class Board {
                 }
             } else {
                 if (this.isValidMove({row, column, move, piece}) && 
-                    this.wouldNotBeCheck({row, column, move, piece})) {
+                    !this.wouldBeCheck({row, column, move, piece})) {
                     pieceMoves.push({row, column})
                 }
             }
@@ -221,14 +221,14 @@ class Board {
 
     // methods for determining whether move would put you in check
 
-    wouldNotBeCheck({row, column, piece, move}) {
+    wouldBeCheck({row, column, piece, move}) {
         if (this.hypothetical) {
             return true
         }
         const hypotheticalBoard = new Board(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
         hypotheticalBoard.boardModel[row][column] = piece
         hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
-        return !hypotheticalBoard.opponentCanTakeKing()
+        return hypotheticalBoard.opponentCanTakeKing()
     }
 
     opponentCanTakeKing() {
