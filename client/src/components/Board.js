@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import BoardRow from "./BoardRow"
-import Chess from "../assets/classes/Chess"
+import Chess from "../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import NewGameForm from "./NewGameForm"

@@ -1,6 +1,6 @@
 import King from "./Pieces/King"
 import GameDecoder from "./GameDecoder"
-import pieceConverter from "../../services/pieceConverter"
+import pieceConverter from "../services/pieceConverter"
 import SquareDecoder from "./SquareDecoder"
 
 class Chess {

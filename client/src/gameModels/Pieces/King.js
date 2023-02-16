@@ -1,6 +1,6 @@
 import Piece from "./Piece"
-import blackImage from "../../images/king-black.png"
-import whiteImage from "../../images/king-white.png"
+import blackImage from "../../assets/images/king-black.png"
+import whiteImage from "../../assets/images/king-white.png"
 
 class King extends Piece {
   constructor(color) {
