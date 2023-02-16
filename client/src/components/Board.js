@@ -88,12 +88,12 @@ const Board = props => {
     if (handleClickResponse.check) {
       setCheck(handleClickResponse.check)
       if (handleClickResponse.check.black || handleClickResponse.check.white) {
-        setPopupState(true)
+        showPopup()
       }
     }
     if (handleClickResponse.checkmate) {
       setCheckmate(handleClickResponse.checkmate)
-      setPopupState(true)
+      showPopup()
     }
     if (handleClickResponse.capturedPieces) {
       setCapturedPieces(handleClickResponse.capturedPieces)
@@ -101,10 +101,15 @@ const Board = props => {
     if (handleClickResponse.pawnUpgrade) {
       setPawnUpgrade(handleClickResponse.pawnUpgrade)
       if (handleClickResponse.pawnUpgrade.display) {
-        setPopupState(true)
+        showPopup()
       }
     }
     setBoardState(boardState)
+  }
+
+  const showPopup = () => {
+    setPopupState(true)
+    setSelectable(false)
   }
 
   const saveGameState = async (encodedState) => {
