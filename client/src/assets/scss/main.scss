@@ -79,6 +79,10 @@ a:hover, a:active, a:focus {
   font-weight: 400px;
 }
 
+.top-bar .button {
+  margin: 0 auto;
+}
+
 .button {
   border-radius: 10px;
   background-color: $board-dark;
