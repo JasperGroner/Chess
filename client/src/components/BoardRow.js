@@ -3,10 +3,10 @@ import BoardTile from "./BoardTile"
 
 const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves, selectable} ) => {
   let squareColors = []
-  if (firstTile === "white") {
-    squareColors = ["white", "black"]
+  if (firstTile === "light") {
+    squareColors = ["light", "dark"]
   } else {
-    squareColors = ["black", "white"]
+    squareColors = ["dark", "light"]
   }
 
   const setUpRow = () => {

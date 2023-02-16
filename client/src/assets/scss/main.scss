@@ -2,15 +2,22 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
-$square-dimension: 9vmin;
+$square-dimension: 10vmin;
 $board-dimension: $square-dimension * 8;
 $board-border: 2px solid black;
+$board-dark: #a66b41;
+$board-light: #f9deb3;
+$board-select: #4c853e;
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
+
+// body {
+//   display: flex;
+// }
 
 :root {
   -moz-tab-size: 4;
@@ -22,29 +29,57 @@ img {
   width: 100%
 }
 
+a {
+  color: $board-dark;
+}
+
+a:hover {
+  color: $board-select
+}
+
 .button {
   border-radius: 10px;
+  background-color: $board-dark;
+}
+
+.button:hover {
+  background-color: $board-select;
 }
 
 .page-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .captured-display {
-  margin-top: 5%;
-  width: 19%;
+  min-width: 19%;
   text-align: center;
 }
 
+.pieces-display {
+  width: $square-dimension * 2.1;
+  height: $square-dimension * 8.1;
+  background-color: $board-light;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pieces-square {
+  width: $square-dimension;
+  height: $square-dimension;
+  margin: 0px;
+  justify-self: flex-start;
+}
+
 .game-display {
-  width: 60%
+  min-width: 45%;
 }
 
 .container {
   box-sizing: content-box;
   width: $board-dimension;
-  border: 3px solid black;
   border-radius: 5px;
   margin: 25px auto;
   padding: 0px;
@@ -58,25 +93,25 @@ img {
   width: $square-dimension;
   height: $square-dimension;
   margin: 0px;
-  display: inline-block;  
+  display: inline-block; 
 }
 
-.square--black {
-  background-color: grey;
-  border: 2px solid grey
+.square--dark {
+  background-color: $board-dark;
+  border: 4px solid $board-dark;
 }
 
-.square--white {
-  background-color: white;
-  border: 2px solid white;
+.square--light {
+  background-color: $board-light;
+  border: 4px solid $board-light;
 }
 
 .square--selected {
-  border-color: red;
+  border-color: $board-select;
 }
 
 .square--valid-move {
-  background-color: lightblue;
+  background-color: $board-select;
 }
 
 .info-display {
@@ -109,16 +144,15 @@ img {
   background-color: lightgrey;
   border: 3px solid black;
   border-radius: 10px;
-
   left: 0;
   right: 0;
-  margin: 25vh auto;
+  margin: 25vmin auto;
   text-align: center;
   padding: 2rem
 }
 
 .popup-button {
-  background-color: #AAAAAA;
+  background-color: $board-light;
   border: 3px solid black;
 }
 
@@ -134,5 +168,40 @@ img {
 }
 
 .upgrade-piece:hover {
-  background-color: lightblue;
+  background-color: $board-light;
 }
+
+.main-heading {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 5vmin;
+}
+
+.sub-heading {
+  font-size: 3vmin;
+  margin: 1.3rem;
+}
+
+.grid-container {
+  margin-top: 0.2rem
+}
+
+.top-bar {
+  width: 100%;
+  background-color: $board-light
+}
+
+.top-bar ul {
+ background-color: $board-light; 
+}
+
+.main-menu--header {
+  padding-top: 1rem;
+  font-size: 48px;
+}
+
+.main-menu--item {
+  font-size: 36px;
+  margin: 0.5rem;
+}
+

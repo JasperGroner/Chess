@@ -45,10 +45,10 @@ const NewGameForm = ({setGame}) => {
 
   return (
     <div className="centered-content">
-      <h1>Add New Game</h1>
+      <h1 className="main-menu--header">Add New Game</h1>
       <form onSubmit={handleSubmit}>
         <ErrorList errors={errors} />
-        <label htmlFor="name">Name</label>
+        <label htmlFor="name" className="main-menu--item">Name</label>
         <input 
           type="text"
           name="name"

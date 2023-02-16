@@ -56,7 +56,7 @@ const GameList = props => {
   }
 
   const gameListReact = gameListData.map(game => {
-    return <li key={game.id}><a href="#" id={game.id} onClick={loadGameClickHandler}>{game.name}</a></li>
+    return <li key={game.id} className="main-menu--item"><a href="#" id={game.id} onClick={loadGameClickHandler}>{game.name}</a></li>
   })
 
   return (

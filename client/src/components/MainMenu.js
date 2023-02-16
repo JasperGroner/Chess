@@ -12,7 +12,7 @@ const Menu = ({ currentUser }) => {
 
   let loadGameLink
   if (currentUser) {
-    loadGameLink = <a href="#" onClick={loadGame}>Load Game</a>
+    loadGameLink = <a href="#" onClick={loadGame} className="main-menu--item">Load Game</a>
   }
 
   let gameList
@@ -22,7 +22,8 @@ const Menu = ({ currentUser }) => {
 
   return (
     <div className="centered-content">
-      <Link to="/chess">New Game</Link><br />
+      <h1 className="main-menu--header">Welcome to the Chess App!</h1>
+      <Link to="/chess" className="main-menu--item">New Game</Link><br />
       {loadGameLink}
       {gameList}
     </div>

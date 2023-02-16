@@ -50,9 +50,9 @@ const Board = props => {
     for (let i = 0; i < 8; i++) {
       let firstTile
       if (i % 2 === 0) {
-        firstTile = "white"
+        firstTile = "light"
       } else {
-        firstTile = "black"
+        firstTile = "dark"
       }
       rows.push(
         <BoardRow 
