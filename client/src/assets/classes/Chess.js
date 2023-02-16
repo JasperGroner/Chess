@@ -1,6 +1,7 @@
 import King from "./Pieces/King"
-import Decoder from "./Decoder"
+import GameDecoder from "./GameDecoder"
 import pieceConverter from "../../services/pieceConverter"
+import SquareDecoder from "./SquareDecoder"
 
 class Chess {
   constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical) {
@@ -19,7 +20,7 @@ class Chess {
   // method for loading board
 
   loadGame(encodedGame) {
-    const game = Decoder.decodeGame(encodedGame)
+    const game = GameDecoder.decodeGame(encodedGame)
     this.boardModel = game.board
     this.turn = game.turn
     this.canCastle = game.canCastle
@@ -52,27 +53,36 @@ class Chess {
   }
 
   handleMove(row, column) {
+    this.updateCapturedPieces(this.boardModel[row][column])
+    this.enPassantCapture(row, column)
+    console.log(this.selectedPiece)
     this.boardModel[row][column] = this.selectedPiece
     this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
     this.moveRookIfCastled(column)
     this.updateCastling()
+    this.updateEnPassant(row, column)
     this.selectedPieceLocation = {row, column}
     const pawnUpgrade = this.isPawnUpgrade(row, column)
     this.switchTurn()
     const check = this.isCheck()
     const checkmate = this.inCheckmate(check)
-    const encodedState = Decoder.encodeGame(this)
+    const encodedState = GameDecoder.encodeGame(this)
     this.selectedPiece = null
+    console.log(this.enPassantSquare)
     return {moves: [], turnSwitch: this.turn, unselect: true, pawnUpgrade, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
   }
 
   updateCapturedPieces(pieceAtMoveLocation) {
+    console.log(pieceAtMoveLocation)
     if (pieceAtMoveLocation) {
       if (pieceConverter[pieceAtMoveLocation].color === "white") {
         this.capturedPieces.white.push(pieceAtMoveLocation)
       } else {
         this.capturedPieces.black.push(pieceAtMoveLocation)
       }
+      this.halfmoveClock = 0
+    } else {
+      this.halfmoveClock++
     }
   }
 
@@ -94,6 +104,9 @@ class Chess {
 
   switchTurn () {
     this.turn = this.turn === "white" ? "black" : "white"
+    if (this.turn === "white") {
+      this.fullmoves++
+    }
   }
   
   inCheckmate(check) {
@@ -230,7 +243,7 @@ class Chess {
     if (this.hypothetical) {
       return true
     }
-    const hypotheticalBoard = new Chess(Decoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
+    const hypotheticalBoard = new Chess(GameDecoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
     hypotheticalBoard.boardModel[row][column] = piece
     hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
     return !hypotheticalBoard.opponentCanTakeKing()
@@ -326,6 +339,40 @@ class Chess {
     const check = this.isCheck()
     const checkmate = this.inCheckmate(check)
     return {check, checkmate}
+  }
+
+  // en passant update method
+
+  enPassantCapture(row, column) {
+    if (!this.enPassantSquare) {
+      return false
+    }
+    const decodedEnPassantSquare = SquareDecoder.decodeSquare(this.enPassantSquare)
+    if (["P", "p"].includes(this.selectedPiece) && 
+      decodedEnPassantSquare.row === row &&
+      decodedEnPassantSquare.column === column) {
+        if (this.selectedPiece === "p") {
+          this.capturedPieces.white.push(this.boardModel[row - 1][column])
+          this.boardModel[row - 1][column] = false
+        } else {
+          this.capturedPieces.black.push(this.boardModel[row + 1][column])
+          this.boardModel[row + 1][column] = false 
+        }
+    }
+  }
+
+  updateEnPassant(row, column) {
+    if (this.selectedPiece === "p" && 
+      this.selectedPieceLocation.row === 1 &&
+      row === 3) {
+        this.enPassantSquare = SquareDecoder.encodeSquare(2, column)
+    } else if (this.selectedPiece === "P" &&
+      this.selectedPieceLocation.row === 6 &&
+      row === 4) {
+        this.enPassantSquare = SquareDecoder.encodeSquare(5, column)
+    } else {
+      this.enPassantSquare = null
+    }
   }
 
   // method for getting default board
