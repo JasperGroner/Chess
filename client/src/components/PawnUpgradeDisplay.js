@@ -28,7 +28,7 @@ const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, check, setCh
         )
       })
     } else {
-      upgradeList = ["Q", "B", "R", "N"].map((piece, index) => {
+      upgradeList = ["q", "b", "r", "n"].map((piece, index) => {
         return (
           <button key={index} id={piece} onClick={upgrade}>
             <img src={pieceConverter[piece].image} className="upgrade-piece"/>

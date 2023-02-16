@@ -14,7 +14,6 @@ class Chess {
     this.selectedPieceLocation = selectedPieceLocation ? selectedPieceLocation : {row: null, column: null}
     this.selectedPieceMoves = selectedPieceMoves ? selectedPieceMoves : []
     this.hypothetical = hypothetical
-
   }
   
   // method for loading board
@@ -109,7 +108,7 @@ class Chess {
   inCheckmate(check) {
     if (!check.black && !check.white) {
       return false 
-      } else {
+    } else {
       const checkedColor = check.black ? "black" : "white"
       for (let row = 0; row < this.boardModel.length; row++) {
         for (let column = 0; column < this.boardModel.length; column++) {
