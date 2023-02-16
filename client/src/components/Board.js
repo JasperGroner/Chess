@@ -148,12 +148,12 @@ const Board = props => {
 
   if (!currentUser || game) {
     return (
-      <div className="page-container">
+      <div className="chess-page-container">
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
           <TurnDisplay turn={turn} />
-          <div className ="container grid-container">
+          <div className ="container">
             {rows}
           </div>
         </div>

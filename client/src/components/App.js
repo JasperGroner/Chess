@@ -11,7 +11,9 @@ import Board from "./Board"
 import MainMenu from "./MainMenu"
 
 const App = (props) => {
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const [ currentUser, setCurrentUser ] = useState(undefined);
+  const [ menuHidden, setMenuHidden ] = useState(true);
+
   const fetchCurrentUser = async () => {
     try {
       const user = await getCurrentUser()
@@ -25,9 +27,15 @@ const App = (props) => {
     fetchCurrentUser()
   }, [])
 
+  const swapMenuDisplay = () => {
+    menuHidden === false ? setMenuHidden(true) : setMenuHidden(false)
+  }
+
   return (
     <Router>
-      <TopBar user={currentUser} />
+      <div className="page-container">
+      <button className="button menu-show-hide" onClick={swapMenuDisplay}><i class="fa-solid fa-bars"></i></button>
+      <TopBar user={currentUser} hidden={menuHidden}/>
       <Switch>
         <Route exact path="/">
           <MainMenu currentUser={currentUser} />
@@ -38,6 +46,7 @@ const App = (props) => {
         <Route exact path="/users/new" component={RegistrationForm} />
         <Route exact path="/user-sessions/new" component={SignInForm} />
       </Switch>
+      </div>
     </Router>
   );
 };

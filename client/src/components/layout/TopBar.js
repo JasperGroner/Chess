@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SignOutButton from "../authentication/SignOutButton";
 
-const TopBar = ({ user }) => {
+const TopBar = ({ user, hidden }) => {
   const unauthenticatedListItems = [
     <li key="sign-in">
       <Link to="/user-sessions/new">Sign In</Link>
@@ -20,11 +20,16 @@ const TopBar = ({ user }) => {
     </li>,
   ];
 
+  let barClass="top-bar"
+  if (hidden) {
+    barClass+=" top-bar--hidden"
+  }
+
   return (
-    <div className="top-bar">
+    <div className={barClass}>
       <div className="top-bar-left">
         <ul className="menu">
-          <li className="menu-text">App</li>
+          <li className="menu-text">Chess</li>
           <li>
             <Link to="/">Home</Link>
           </li>

@@ -15,10 +15,6 @@ $board-select: #4c853e;
   box-sizing: border-box;
 }
 
-// body {
-//   display: flex;
-// }
-
 :root {
   -moz-tab-size: 4;
   tab-size: 4;
@@ -33,8 +29,47 @@ a {
   color: $board-dark;
 }
 
-a:hover {
+a:hover, a:active, a:focus {
   color: $board-select
+}
+
+.page-container {
+  display: flex;
+  justify-content:space-between;
+  height: 100vh
+}
+
+.menu-show-hide {
+  z-index: 2;
+  position: absolute;
+  width: 2rem;
+  top: 90vh;
+  margin: 0 3rem;
+  padding: 0.3rem
+}
+
+.top-bar {
+  background-color: $board-light;
+  padding: 0 10px;
+  display: block;
+  height: 100vh;
+  padding-top: 3rem;
+  width: 8rem;
+  text-align: center; 
+  transition: margin 1000ms;
+}
+
+.top-bar--hidden {
+  margin: 0 -8rem;
+}
+
+.top-bar ul {
+  background-color: $board-light; 
+  display: block;
+}
+
+.top-bar .menu .menu-text {
+  font-weight: 400px;
 }
 
 .button {
@@ -42,11 +77,13 @@ a:hover {
   background-color: $board-dark;
 }
 
-.button:hover {
+.button:hover, .button:active, .button:focus {
   background-color: $board-select;
 }
 
-.page-container {
+
+.chess-page-container {
+  width: 100vw;
   display: flex;
   justify-content: space-evenly;
 }
@@ -134,15 +171,16 @@ a:hover {
   list-style: none;
   padding: 0;
   margin: 0;
-  background-color: lightgrey;
+  background-color: $board-light;
+  border-radius: 10px;
 }
 
 .popup-display {
   position: absolute;
   z-index: 1;
   width: $square-dimension * 7;
-  background-color: lightgrey;
-  border: 3px solid black;
+  background-color: $board-light;
+  border: 3px solid $board-dark;
   border-radius: 10px;
   left: 0;
   right: 0;
@@ -152,8 +190,7 @@ a:hover {
 }
 
 .popup-button {
-  background-color: $board-light;
-  border: 3px solid black;
+  background-color: $board-dark;
 }
 
 .popup-message {
@@ -183,16 +220,8 @@ a:hover {
 }
 
 .grid-container {
+  width: 60%;
   margin-top: 0.2rem
-}
-
-.top-bar {
-  width: 100%;
-  background-color: $board-light
-}
-
-.top-bar ul {
- background-color: $board-light; 
 }
 
 .main-menu--header {
@@ -204,4 +233,5 @@ a:hover {
   font-size: 36px;
   margin: 0.5rem;
 }
+
 
