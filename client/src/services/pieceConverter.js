@@ -1,9 +1,9 @@
-import Bishop from "../assets/classes/Pieces/Bishop"
-import King from "../assets/classes/Pieces/King"
-import Knight from "../assets/classes/Pieces/Knight"
-import Pawn from "../assets/classes/Pieces/Pawn"
-import Queen from "../assets/classes/Pieces/Queen"
-import Rook from "../assets/classes/Pieces/Rook"
+import Bishop from "../gameModels/Pieces/Bishop"
+import King from "../gameModels/Pieces/King"
+import Knight from "../gameModels/Pieces/Knight"
+import Pawn from "../gameModels/Pieces/Pawn"
+import Queen from "../gameModels/Pieces/Queen"
+import Rook from "../gameModels/Pieces/Rook"
 
 const pieceConverter = {
   b: new Bishop("black"),

@@ -1,6 +1,6 @@
 import Piece from "./Piece"
-import blackImage from "../../images/pawn-black.png"
-import whiteImage from "../../images/pawn-white.png"
+import blackImage from "../../assets/images/pawn-black.png"
+import whiteImage from "../../assets/images/pawn-white.png"
 import SquareDecoder from "../SquareDecoder"
 
 class Pawn extends Piece {

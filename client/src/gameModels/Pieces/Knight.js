@@ -1,6 +1,6 @@
 import Piece from "./Piece"
-import blackImage from "../../images/knight-black.png"
-import whiteImage from "../../images/knight-white.png"
+import blackImage from "../../assets/images/knight-black.png"
+import whiteImage from "../../assets/images/knight-white.png"
 
 const moveSet = [
   {vertical: 2, horizontal: -1},
