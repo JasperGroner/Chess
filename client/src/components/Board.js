@@ -23,6 +23,8 @@ const Board = props => {
     column: null
   })
 
+  const [ popupState, setPopupState ] = useState(false)
+
   const [ selectable, setSelectable ] = useState(true)
 
   const [ pawnUpgrade, setPawnUpgrade ] = useState({display: false})
@@ -38,8 +40,6 @@ const Board = props => {
   const [ checkmate, setCheckmate ] = useState(false)
 
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
-
-  const [ popupState, setPopupState ] = useState(false)
 
   useEffect(() => {
     setTurn(boardState.turn)

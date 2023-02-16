@@ -12,7 +12,7 @@ class Pawn extends Piece {
     }
 
     const isBlackAndNoEnemy = ({board, row, column}) => {
-      return(this.color === "black" &&
+      return (this.color === "black" &&
         !board.boardModel[row][column])
     }
 

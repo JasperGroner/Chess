@@ -7,10 +7,13 @@ import "./boot.js";
 import configuration from "./config.js";
 import addMiddlewares from "./middlewares/addMiddlewares.js";
 import rootRouter from "./routes/rootRouter.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
+
 import hbsMiddleware from "express-handlebars";
+
 app.set("views", path.join(__dirname, "../views"));
 app.engine(
   "hbs",
