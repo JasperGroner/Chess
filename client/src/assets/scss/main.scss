@@ -39,13 +39,20 @@ a:hover, a:active, a:focus {
   height: 100vh
 }
 
-.menu-show-hide {
-  z-index: 2;
+.button-menu {
+  z-index: 1;
   position: absolute;
   width: 2rem;
-  top: 90vh;
-  margin: 0 3rem;
-  padding: 0.3rem
+  padding: 0.3rem;
+  transition: margin 1000ms;
+}
+
+.button-menu--hide {
+  margin: 1rem 3rem;
+}
+
+.button-menu--show {
+  margin: 1rem;
 }
 
 .top-bar {
@@ -80,7 +87,6 @@ a:hover, a:active, a:focus {
 .button:hover, .button:active, .button:focus {
   background-color: $board-select;
 }
-
 
 .chess-page-container {
   width: 100vw;

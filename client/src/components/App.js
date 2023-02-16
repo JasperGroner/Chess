@@ -31,10 +31,15 @@ const App = (props) => {
     menuHidden === false ? setMenuHidden(true) : setMenuHidden(false)
   }
 
+  let showHide="button-menu--show"
+  if (!menuHidden) {
+    showHide="button-menu--hide"
+  }
+
   return (
     <Router>
       <div className="page-container">
-      <button className="button menu-show-hide" onClick={swapMenuDisplay}><i class="fa-solid fa-bars"></i></button>
+      <button className={`button button-menu ${showHide}`} onClick={swapMenuDisplay}><i class="fa-solid fa-bars"></i></button>
       <TopBar user={currentUser} hidden={menuHidden}/>
       <Switch>
         <Route exact path="/">
