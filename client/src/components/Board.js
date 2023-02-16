@@ -5,6 +5,9 @@ import TurnDisplay from "./TurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import NewGameForm from "./NewGameForm"
 import PopupDisplay from "./PopupDisplay"
+import { io } from "socket.io-client"
+
+const socket = io()
 
 const Board = props => {
   let gameState, gameData
@@ -43,6 +46,10 @@ const Board = props => {
 
   useEffect(() => {
     setTurn(boardState.turn)
+
+    socket.on("connect", () => {
+      console.log(socket.id)
+    })
   }, [])
 
   const setUpChessRows = () => {
@@ -82,7 +89,7 @@ const Board = props => {
     if (handleClickResponse.turnSwitch) {
       setTurn(handleClickResponse.turnSwitch)
       if (currentUser) {
-        await saveGameState(handleClickResponse.encodedState)
+        saveGameState(handleClickResponse.encodedState)
       }
     }
     if (handleClickResponse.check) {
@@ -112,23 +119,8 @@ const Board = props => {
     setSelectable(false)
   }
 
-  const saveGameState = async (encodedState) => {
-    try {
-      const response = await fetch(`/api/v1/games/${game.id}/gameState`, {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json"
-        }),
-        body: JSON.stringify({encodedState})
-      })
-      if (!response.ok) {
-        throw new Error(`${response.status} (${response.statusText})`)
-      } else {
-        return true
-      }
-    } catch(error) {
-        console.error(`Error in fetch: ${error.message}`)
-    }
+  const saveGameState = (encodedState) => {
+    socket.emit("game state", {gameId: game.id, encodedState})
   }
 
   let rows = setUpChessRows()
