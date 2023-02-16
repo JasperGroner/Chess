@@ -50,9 +50,9 @@ const Board = props => {
     for (let i = 0; i < 8; i++) {
       let firstTile
       if (i % 2 === 0) {
-        firstTile = "white"
+        firstTile = "light"
       } else {
-        firstTile = "black"
+        firstTile = "dark"
       }
       rows.push(
         <BoardRow 
@@ -148,12 +148,12 @@ const Board = props => {
 
   if (!currentUser || game) {
     return (
-      <div className="page-container">
+      <div className="chess-page-container">
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
           <TurnDisplay turn={turn} />
-          <div className ="container grid-container">
+          <div className ="container">
             {rows}
           </div>
         </div>

@@ -9,7 +9,7 @@ const TurnDisplay = ({turn}) => {
 
     return (
         <div className = "info-display">
-            <h1>{turnString}</h1>
+            <h1 className = "main-heading">{turnString}</h1>
         </div>
     )
 }

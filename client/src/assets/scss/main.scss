@@ -2,9 +2,12 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
-$square-dimension: 9vmin;
+$square-dimension: 5vw;
 $board-dimension: $square-dimension * 8;
 $board-border: 2px solid black;
+$board-dark: #a66b41;
+$board-light: #f9deb3;
+$board-select: #4c853e;
 
 *,
 *::before,
@@ -22,29 +25,111 @@ img {
   width: 100%
 }
 
-.button {
-  border-radius: 10px;
+a {
+  color: $board-dark;
+}
+
+a:hover, a:active, a:focus {
+  color: $board-select
 }
 
 .page-container {
   display: flex;
-  justify-content: space-between;
+  justify-content:space-between;
+  height: 100vh
 }
 
-.captured-display {
-  margin-top: 5%;
-  width: 19%;
+.button-menu {
+  z-index: 1;
+  position: absolute;
+  width: 2rem;
+  padding: 0.3rem;
+  transition: margin 1000ms;
+}
+
+.button-menu--hide {
+  margin: 1rem 3rem;
+}
+
+.button-menu--show {
+  margin: 1rem;
+}
+
+.top-bar {
+  background-color: $board-light;
+  padding: 0 10px;
+  display: block;
+  height: 100vh;
+  padding-top: 3rem;
+  width: 8rem;
+  text-align: center; 
+  transition: margin 1000ms;
+}
+
+.top-bar--hidden {
+  margin: 0 -8rem;
+}
+
+.top-bar ul {
+  background-color: $board-light; 
+  display: block;
+}
+
+.top-bar .menu .menu-text {
+  font-weight: 400px;
+}
+
+.button {
+  border-radius: 10px;
+  background-color: $board-dark;
+}
+
+.button:hover, .button:active, .button:focus {
+  background-color: $board-select;
+}
+
+.centered-content {
+  width: 60%;
+  margin: 0 auto;
   text-align: center;
 }
 
+.chess-page-container {
+  width: 100vw;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .game-display {
-  width: 60%
+  width: 40vw;
+}
+
+.captured-display {
+  width: 20vw;
+  text-align: center;
+  padding-top: 2vh;
+}
+
+.pieces-display {
+  width: $square-dimension * 2.1;
+  height: $square-dimension * 8.1;
+  background-color: $board-light;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pieces-square {
+  width: $square-dimension;
+  height: $square-dimension;
+  margin: 0px;
+  justify-self: flex-start;
 }
 
 .container {
   box-sizing: content-box;
   width: $board-dimension;
-  border: 3px solid black;
   border-radius: 5px;
   margin: 25px auto;
   padding: 0px;
@@ -58,68 +143,54 @@ img {
   width: $square-dimension;
   height: $square-dimension;
   margin: 0px;
-  display: inline-block;  
+  display: inline-block; 
 }
 
-.square--black {
-  background-color: grey;
-  border: 2px solid grey
+.square--dark {
+  background-color: $board-dark;
+  border: 4px solid $board-dark;
 }
 
-.square--white {
-  background-color: white;
-  border: 2px solid white;
+.square--light {
+  background-color: $board-light;
+  border: 4px solid $board-light;
 }
 
 .square--selected {
-  border-color: red;
+  border-color: $board-select;
 }
 
 .square--valid-move {
-  background-color: lightblue;
+  background-color: $board-select;
 }
 
-.info-display {
-  width: $board-dimension;
-  margin: 10px auto;
+
+.popup-display {
+  position: absolute;
+  z-index: 1;
+  width: $square-dimension * 7;
+  background-color: $board-light;
+  border: 3px solid $board-dark;
+  border-radius: 10px;
+  left: 0;
+  right: 0;
+  margin: 25vmin auto;
   text-align: center;
+  padding: 2rem
+}
+
+.popup-button {
+  background-color: $board-dark;
 }
 
 .popup-message {
   text-align: center;
 }
 
-.centered-content {
-  width: 60%;
-  margin: 0 auto;
+.info-display {
+  width: $board-dimension;
+  margin: 10px auto;
   text-align: center;
-}
-
-.game-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background-color: lightgrey;
-}
-
-.popup-display {
-  position: absolute;
-  z-index: 1;
-  width: $square-dimension * 7;
-  background-color: lightgrey;
-  border: 3px solid black;
-  border-radius: 10px;
-
-  left: 0;
-  right: 0;
-  margin: 25vh auto;
-  text-align: center;
-  padding: 2rem
-}
-
-.popup-button {
-  background-color: #AAAAAA;
-  border: 3px solid black;
 }
 
 .popup-message {
@@ -134,5 +205,40 @@ img {
 }
 
 .upgrade-piece:hover {
-  background-color: lightblue;
+  background-color: $board-light;
 }
+
+.main-heading {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 2.5vw;
+}
+
+.sub-heading {
+  font-size: 1.5vw;
+  margin: 1.3rem;
+}
+
+.grid-container {
+  width: 60%;
+  margin-top: 0.2rem
+}
+
+.main-menu--header {
+  padding-top: 1rem;
+  font-size: 48px;
+}
+
+.main-menu--item {
+  font-size: 36px;
+  margin: 0.5rem;
+}
+
+.game-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: $board-light;
+  border-radius: 10px;
+}
+
