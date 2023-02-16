@@ -2,7 +2,7 @@
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
 
-$square-dimension: 10vmin;
+$square-dimension: 5vw;
 $board-dimension: $square-dimension * 8;
 $board-border: 2px solid black;
 $board-dark: #a66b41;
@@ -88,15 +88,26 @@ a:hover, a:active, a:focus {
   background-color: $board-select;
 }
 
+.centered-content {
+  width: 60%;
+  margin: 0 auto;
+  text-align: center;
+}
+
 .chess-page-container {
   width: 100vw;
   display: flex;
   justify-content: space-evenly;
 }
 
+.game-display {
+  width: 40vw;
+}
+
 .captured-display {
-  min-width: 19%;
+  width: 20vw;
   text-align: center;
+  padding-top: 2vh;
 }
 
 .pieces-display {
@@ -114,10 +125,6 @@ a:hover, a:active, a:focus {
   height: $square-dimension;
   margin: 0px;
   justify-self: flex-start;
-}
-
-.game-display {
-  min-width: 45%;
 }
 
 .container {
@@ -157,29 +164,6 @@ a:hover, a:active, a:focus {
   background-color: $board-select;
 }
 
-.info-display {
-  width: $board-dimension;
-  margin: 10px auto;
-  text-align: center;
-}
-
-.popup-message {
-  text-align: center;
-}
-
-.centered-content {
-  width: 60%;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.game-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background-color: $board-light;
-  border-radius: 10px;
-}
 
 .popup-display {
   position: absolute;
@@ -203,6 +187,16 @@ a:hover, a:active, a:focus {
   text-align: center;
 }
 
+.info-display {
+  width: $board-dimension;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.popup-message {
+  text-align: center;
+}
+
 .upgrade-piece {
   width: $square-dimension;
   height: $square-dimension;
@@ -217,11 +211,11 @@ a:hover, a:active, a:focus {
 .main-heading {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  font-size: 5vmin;
+  font-size: 2.5vw;
 }
 
 .sub-heading {
-  font-size: 3vmin;
+  font-size: 1.5vw;
   margin: 1.3rem;
 }
 
@@ -240,4 +234,11 @@ a:hover, a:active, a:focus {
   margin: 0.5rem;
 }
 
+.game-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: $board-light;
+  border-radius: 10px;
+}
 
