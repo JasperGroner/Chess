@@ -39,7 +39,7 @@ const App = (props) => {
   return (
     <Router>
       <div className="page-container">
-      <button className={`button button-menu ${showHide}`} onClick={swapMenuDisplay}><i class="fa-solid fa-bars"></i></button>
+      <button className={`button button-menu ${showHide}`} onClick={swapMenuDisplay}><i className="fa-solid fa-bars"></i></button>
       <TopBar user={currentUser} hidden={menuHidden}/>
       <Switch>
         <Route exact path="/">
