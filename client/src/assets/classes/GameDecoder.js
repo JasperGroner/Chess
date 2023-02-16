@@ -1,4 +1,4 @@
-class Decoder {
+class GameDecoder {
   static decodeGame(encodedGame) {
       const game = {
         board: [],
@@ -11,7 +11,7 @@ class Decoder {
         }
       }
       const encodedGameArray = encodedGame.split(" ")
-      game.board = Decoder.decodeBoard(encodedGameArray[0])
+      game.board = GameDecoder.decodeBoard(encodedGameArray[0])
       game.turn = encodedGameArray[1] === "w" ? "white" : "black"
       game.canCastle = {}
       const castlingArray = encodedGameArray[2].split("")
@@ -105,4 +105,4 @@ class Decoder {
   }
 }
 
-export default Decoder
+export default GameDecoder
