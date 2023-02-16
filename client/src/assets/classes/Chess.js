@@ -55,7 +55,6 @@ class Chess {
   handleMove(row, column) {
     this.updateCapturedPieces(this.boardModel[row][column])
     this.enPassantCapture(row, column)
-    console.log(this.selectedPiece)
     this.boardModel[row][column] = this.selectedPiece
     this.boardModel[this.selectedPieceLocation.row][this.selectedPieceLocation.column] = false
     this.moveRookIfCastled(column)
@@ -68,12 +67,10 @@ class Chess {
     const checkmate = this.inCheckmate(check)
     const encodedState = GameDecoder.encodeGame(this)
     this.selectedPiece = null
-    console.log(this.enPassantSquare)
     return {moves: [], turnSwitch: this.turn, unselect: true, pawnUpgrade, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
   }
 
   updateCapturedPieces(pieceAtMoveLocation) {
-    console.log(pieceAtMoveLocation)
     if (pieceAtMoveLocation) {
       if (pieceConverter[pieceAtMoveLocation].color === "white") {
         this.capturedPieces.white.push(pieceAtMoveLocation)
