@@ -49,6 +49,14 @@ const Board = props => {
 
     socket.on("connect", () => {
       console.log("connected to back end")
+      if (game.id) {
+        socket.emit("load game", ({gameId: game.id}))
+      }
+    })
+
+    socket.on("load game", ({game}) => {
+      setGame(game)
+      setBoardState(new Chess(game.encodedState))
     })
 
     socket.on("turn switch", ({handleClickResponse}) => {
@@ -59,6 +67,7 @@ const Board = props => {
     return(() => {
       socket.off("connect")
       socket.off("turn switch")
+      socket.off("load game")
     })
   }, [])
 
