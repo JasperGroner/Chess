@@ -39,7 +39,8 @@ gamesRouter.post("/hotSeat", async (req, res) => {
     const newGame = await Game.query().insertAndFetch(formPayload)
     const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id})
     const newGameState = await GameState.query().insertAndFetch({gameId: newGame.id, encodedState: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})
-    return res.status(200).json({game: newGame})
+    const serializedGame = await GameSerializer.getDetail(newGame, userId)
+    return res.status(200).json({game: serializedGame})
   } catch(error) {
     if (error instanceof ValidationError) {
       return res.status(422).json({ errors: error.data })

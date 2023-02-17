@@ -1,10 +1,12 @@
 import React, { useState } from "react"
+import { Redirect } from "react-router-dom"
 import ErrorList from "./layout/ErrorList"
 import translateServerErrors from "../services/translateServerErrors"
 
-const NewGameForm = ({setGame}) => {
+const NewGameForm = props => {
   const [ name, setName ] = useState("")
-
+  const [ shouldRedirect, setShouldRedirect ] = useState(false)
+  const [ game, setGame ] = useState({})
   const [ errors, setErrors ] = useState({})
 
   const createNewGame = async(nameString) => {
@@ -41,6 +43,18 @@ const NewGameForm = ({setGame}) => {
     event.preventDefault()
     const gameData = await createNewGame(name)
     setGame(gameData)
+    setShouldRedirect(true)
+  }
+
+  if (shouldRedirect) {
+    return (
+      <Redirect to={{
+        pathname: '/chess',
+        state: { 
+          game: game
+        }
+      }}/>
+    )
   }
 
   return (

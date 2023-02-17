@@ -33,6 +33,10 @@ class Chess {
 
   handleClick(row, column) {
     if (this.canMove(row, column)) {
+      const pawnUpgrade = this.isPawnUpgrade(row, column)
+      if (pawnUpgrade) {
+        return { pawnUpgrade, moves: [] }
+      }
       return this.handleMove(row, column)
     } else if (this.boardModel[row][column]) {
       const piece = this.boardModel[row][column]
@@ -60,13 +64,12 @@ class Chess {
     this.updateCastling()
     this.updateEnPassant(row, column)
     this.selectedPieceLocation = {row, column}
-    const pawnUpgrade = this.isPawnUpgrade(row, column)
     this.switchTurn()
     const check = this.isCheck()
     const checkmate = this.inCheckmate(check)
     const encodedState = GameDecoder.encodeGame(this)
     this.selectedPiece = null
-    return {moves: [], turnSwitch: this.turn, unselect: true, pawnUpgrade, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
+    return {moves: [], turnSwitch: this.turn, unselect: true, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
   }
 
   updateCapturedPieces(pieceAtMoveLocation) {
@@ -324,17 +327,14 @@ class Chess {
   isPawnUpgrade(row, column) {
     if (this.selectedPiece === "P" && row === 0) {
       return { display: true, turn: "white", row, column }
-    } else if (this.selectedPiece === "p" && row === 0) {
+    } else if (this.selectedPiece === "p" && row === 7) {
       return { display: true, turn: "black", row, column }
     }
     return false
   }
 
-  upgradePawn(row, column, piece) {
-    this.boardModel[row][column] = piece
-    const check = this.isCheck()
-    const checkmate = this.inCheckmate(check)
-    return {check, checkmate}
+  upgradePawn(piece) {
+    this.selectedPiece = piece
   }
 
   // en passant update method
