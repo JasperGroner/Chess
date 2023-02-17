@@ -4,7 +4,7 @@ import configuration from "../config.js";
 const addExpressSession = (app) => {
   app.use(
     session({
-      name: "Chess-session",
+      name: "chess-session",
       keys: [configuration.session.secret],
       resave: true,
       maxAge: configuration.maxAge,

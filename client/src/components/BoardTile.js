@@ -22,7 +22,8 @@ const BoardTile = ({color, selectedTile, select, rowId, columnId, boardState, se
   }
   
   let image = ""
-  if (boardState.boardModel[rowId][columnId]) {
+  if (boardState.boardModel &&
+    boardState.boardModel[rowId][columnId]) {
     const piece = boardState.boardModel[rowId][columnId]
     image = <img src={pieceConverter[piece].image} />
   }

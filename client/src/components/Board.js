@@ -10,12 +10,11 @@ import { io } from "socket.io-client"
 const socket = io()
 
 const Board = props => {
-  let gameState, gameData
+  let gameData
 
   const { currentUser } = props
 
   if (props.location.state) {
-    gameState = props.location.state.gameState
     gameData = props.location.state.game
   }
 
@@ -34,7 +33,7 @@ const Board = props => {
 
   const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
 
-  const [ boardState, setBoardState ] = useState(new Chess(gameState))
+  const [ boardState, setBoardState ] = useState(new Chess())
 
   const [ turn, setTurn ] = useState("")
 
@@ -45,20 +44,31 @@ const Board = props => {
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
 
   useEffect(() => {
-    setTurn(boardState.turn)
-
     socket.on("connect", () => {
       console.log("connected to back end")
     })
 
+    if (game && game.id) {
+      socket.emit("load game", ({gameId: game.id}))
+    }
+
+    socket.on("load game", ({game}) => {
+      const loadedGame = new Chess(game.encodedState)
+      setBoardState(loadedGame)
+      setCapturedPieces(loadedGame.capturedPieces)
+      setTurn(loadedGame.turn)
+    })
+
     socket.on("turn switch", ({handleClickResponse}) => {
       boardState.loadGame(handleClickResponse.encodedState)
+      saveGameState(handleClickResponse.encodedState)
       handleTurnSwitch(handleClickResponse)
     })
 
     return(() => {
       socket.off("connect")
       socket.off("turn switch")
+      socket.off("load game")
     })
   }, [])
 
@@ -103,15 +113,13 @@ const Board = props => {
       }
     } else if (handleClickResponse.turnSwitch) {
       socket.emit("turn switch", {handleClickResponse})
+      saveGameState(handleClickResponse.encodedState)
       handleTurnSwitch(handleClickResponse)
     }
   }
 
   const handleTurnSwitch = (handleClickResponse) => {
     setTurn(handleClickResponse.turnSwitch)
-    if (currentUser) {
-      saveGameState(handleClickResponse.encodedState)
-    }  
     if (handleClickResponse.check) {
       setCheck(handleClickResponse.check)
       if (handleClickResponse.check.black || handleClickResponse.check.white) {
@@ -171,11 +179,7 @@ const Board = props => {
         <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
       </div>
     )
-  } else {
-    return (
-      <NewGameForm setGame={setGame} />
-    )
-  }
+  } 
 }
 
 export default Board

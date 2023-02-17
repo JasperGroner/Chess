@@ -19,8 +19,6 @@ class GameSerializer extends Serializer {
       return {}
     }
     const serializedGame = this.serialize(game, ["id", "name", "gameType"])
-    const gameStates = await game.$relatedQuery("gameStates")
-    serializedGame.gameState = GameStateSerializer.getMostRecentDetail(gameStates)
     return serializedGame
   }
 }

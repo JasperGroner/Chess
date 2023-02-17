@@ -10,7 +10,8 @@ import rootRouter from "./routes/rootRouter.js"
 import hbsMiddleware from "express-handlebars"
 import { createServer } from "http"
 import { Server } from "socket.io"
-import { GameState } from "./models/index.js"
+import { Game, GameState } from "./models/index.js"
+import GameStateSerializer from "./serializers/GameStateSerializer.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -40,8 +41,17 @@ addMiddlewares(app)
 app.use(rootRouter)
 
 io.on("connection", (socket) => {
-  console.log(socket.id)
+  console.log("user connected: " + socket.id)
+
+  socket.on("load game", async ({gameId}) => {
+    const game = await Game.query().findById(gameId)
+    const gameStates = await game.$relatedQuery("gameStates")
+    const serializedGame = GameStateSerializer.getMostRecentDetail(gameStates)
+    socket.emit("load game", ({game: serializedGame}))
+  })
+
   socket.on("game state", async ({ gameId, encodedState }) => {
+    console.log()
     const body = {gameId, encodedState}
     const newGameState = await GameState.query().insert(body)
   })
