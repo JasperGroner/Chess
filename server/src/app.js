@@ -41,7 +41,7 @@ addMiddlewares(app)
 app.use(rootRouter)
 
 io.on("connection", (socket) => {
-  console.log(socket.id)
+  console.log("user connected: " + socket.id)
 
   socket.on("load game", async ({gameId}) => {
     const game = await Game.query().findById(gameId)
@@ -51,6 +51,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("game state", async ({ gameId, encodedState }) => {
+    console.log()
     const body = {gameId, encodedState}
     const newGameState = await GameState.query().insert(body)
   })

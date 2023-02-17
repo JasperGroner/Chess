@@ -49,7 +49,6 @@ const GameList = props => {
         pathname: '/chess',
         state: { 
           game: game,
-          gameState: game.gameState.encodedState
         }
       }}/>
     )
