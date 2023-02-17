@@ -18,13 +18,23 @@ gamesRouter.get("/", async (req, res) => {
   }
 })
 
-gamesRouter.get("/:gameId/load", async (req, res) => {
-  const userId= req.user.id
+gamesRouter.get("/:gameId", async (req, res) => {
+  const userId = req.user.id
   const gameId = req.params.gameId
   try {
     const game = await Game.query().findById(gameId)
     const serializedGame = await GameSerializer.getDetail(game, userId)
     res.status(200).json({ game: serializedGame })
+  } catch(error) {
+    res.status(500).json({ errors: error })
+  }
+})
+
+gamesRouter.delete("/:gameId", async(req, res) => {
+  const gameId = req.params.gameId
+  try {
+    const deletedGame = await Game.query().deleteById(gameId)
+    res.status(200).json({ gameId })
   } catch(error) {
     res.status(500).json({ errors: error })
   }

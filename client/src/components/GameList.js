@@ -19,19 +19,9 @@ const GameList = props => {
     }
   }
 
-  useEffect(() => {
-    getGames()
-  }, [])
-
-  const loadGameClickHandler = async (event) => {
-    event.preventDefault()
-    const gameId = event.target.id
-    await loadGame(gameId)
-  }
-
   const loadGame = async (gameId) => {
     try {
-      const response = await fetch(`/api/v1/games/${gameId}/load`)
+      const response = await fetch(`/api/v1/games/${gameId}`)
       if (!response.ok) {
         throw new Error(`${response.status} (${response.statusText})`)
       }
@@ -41,6 +31,40 @@ const GameList = props => {
     } catch(error) {
       console.error(`Error in fetch: ${error.message}`)
     }
+  }
+
+  const deleteGame = async (gameId) => {
+    try {
+      const response = await fetch(`/api/v1/games/${gameId}`, {
+        method: "DELETE",
+        headers: new Headers({
+          "Content-Type": "application/json"
+        })
+      })
+      if (!response.ok) {
+        throw new Error(`${response.status} (${response.statusText})`)
+      }
+      const body = await response.json()
+      setGameListData(gameListData.filter(game => game.id !== body.gameId))
+    } catch(error) {
+      console.error(`Error in fetch: ${error.message}`)
+    }
+  }
+
+  useEffect(() => {
+    getGames()
+  }, [])
+
+  const loadGameClickHandler = async (event) => {
+    event.preventDefault()
+    const gameId = event.currentTarget.id
+    await loadGame(gameId)
+  }
+
+  const deleteGameHandler = async(event) => {
+    event.preventDefault()
+    const gameId = event.currentTarget.id
+    await deleteGame(gameId)
   }
 
   if (shouldRedirect) {
@@ -55,11 +79,17 @@ const GameList = props => {
   }
 
   const gameListReact = gameListData.map(game => {
-    return <li key={game.id} className="main-menu--item"><a href="#" id={game.id} onClick={loadGameClickHandler}>{game.name}</a></li>
+    return (
+      <li key={game.id} className="main-menu--item">
+        <a href="#" id={game.id} onClick={loadGameClickHandler}>{game.name}</a>
+        <i className="fa-solid fa-trash delete-icon" onClick={deleteGameHandler} id={game.id}></i>
+      </li>
+    )
   })
 
   return (
     <ul className="game-list">
+      <h2>Available Games</h2>
       {gameListReact}
     </ul>
   )

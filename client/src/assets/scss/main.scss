@@ -240,9 +240,17 @@ a:hover, a:active, a:focus {
 
 .game-list {
   list-style: none;
-  padding: 0;
+  padding: 10px 0 0;
   margin: 0;
   background-color: $board-light;
   border-radius: 10px;
 }
 
+.delete-icon {
+  float: right;
+  margin-right: 1rem;
+}
+
+.delete-icon:hover {
+  cursor: pointer;
+}
