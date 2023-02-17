@@ -42,8 +42,10 @@ const NewGameForm = props => {
   const handleSubmit = async(event) => {
     event.preventDefault()
     const gameData = await createNewGame(name)
-    setGame(gameData)
-    setShouldRedirect(true)
+    if(gameData) {
+      setGame(gameData)
+      setShouldRedirect(true)
+    }
   }
 
   if (shouldRedirect) {

@@ -23,8 +23,8 @@ const GameList = props => {
     try {
       const response = await fetch(`/api/v1/games/${gameId}`)
       if (!response.ok) {
-        throw new Error(`${response.status} (${response.statusText})`)
-      }
+        throw new Error(`OH NO: ${response.status} (${response.statusText})`)
+      } 
       const body = await response.json()
       setGame(body.game)
       setShouldRedirect(true)
@@ -81,8 +81,8 @@ const GameList = props => {
   const gameListReact = gameListData.map(game => {
     return (
       <li key={game.id} className="main-menu--item">
-        <a href="#" id={game.id} onClick={loadGameClickHandler}>{game.name}</a>
-        <i className="fa-solid fa-trash delete-icon" onClick={deleteGameHandler} id={game.id}></i>
+        <a href="#" id={game.id} onClick={loadGameClickHandler} className="load-game">{game.name}</a>
+        <i className="fa-solid fa-trash delete-game" onClick={deleteGameHandler} id={game.id}></i>
       </li>
     )
   })
