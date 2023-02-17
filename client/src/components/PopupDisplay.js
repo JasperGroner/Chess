@@ -24,16 +24,17 @@ const PopupDisplay = ({ pawnUpgrade, check, setCheck, checkmate, setCheckmate, s
         />
       </>
     )
-  } 
-  if (check.black || check.white || checkmate) {
+  } else if (check.black || check.white || checkmate) {
     content = (
       <> 
         <CheckDisplay check={check} checkmate={checkmate} />
         <button onClick={selfDestruct} className="popup-button button">Okay</button>
       </>
     )
+  } else {
+    selfDestruct()
   }
-
+  
   return (
     <div className="popup-display">
       {content}
