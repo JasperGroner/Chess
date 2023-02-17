@@ -3,7 +3,6 @@ import BoardRow from "./BoardRow"
 import Chess from "../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
-import NewGameForm from "./NewGameForm"
 import PopupDisplay from "./PopupDisplay"
 import { io } from "socket.io-client"
 
@@ -59,10 +58,10 @@ const Board = props => {
       setTurn(loadedGame.turn)
     })
 
-    socket.on("turn switch", ({handleClickResponse}) => {
-      boardState.loadGame(handleClickResponse.encodedState)
-      saveGameState(handleClickResponse.encodedState)
-      handleTurnSwitch(handleClickResponse)
+    socket.on("turn switch", ({response}) => {
+      boardState.loadGame(response.encodedState)
+      saveGameState(response.encodedState)
+      handleTurnSwitch(response)
     })
 
     return(() => {
@@ -98,40 +97,46 @@ const Board = props => {
   }
 
   const select = (row, column) => {
-    const handleClickResponse = boardState.handleClick(row, column)
-    setSelectedPieceMoves(handleClickResponse.moves)
+    const response = boardState.handleClick(row, column)
+    handleResponse(response, row, column)
+  }
+
+  const handleResponse = (response, row, column) => {
+    setSelectedPieceMoves(response.moves)
+    if (response.capturedPieces) {
+      setCapturedPieces(response.capturedPieces)
+    }
     if ((selectedTile.row === row && selectedTile.column === column) ||
-      handleClickResponse.unselect === true) {
+      response.unselect === true) {
       setSelectedTile({row: null, column: null})
     } else {
       setSelectedTile({row, column})
     }
-    if (handleClickResponse.pawnUpgrade) {
-      setPawnUpgrade(handleClickResponse.pawnUpgrade)
-      if (handleClickResponse.pawnUpgrade.display) {
-        showPopup()
-      }
-    } else if (handleClickResponse.turnSwitch) {
-      socket.emit("turn switch", {handleClickResponse})
-      saveGameState(handleClickResponse.encodedState)
-      handleTurnSwitch(handleClickResponse)
+    if (response.pawnUpgrade) {
+      setPawnUpgrade(response.pawnUpgrade)
+      showPopup()
+      setBoardState(boardState)
+    } else if (response.turnSwitch) {
+      socket.emit("turn switch", {response})
+      saveGameState(response.encodedState)
+      handleTurnSwitch(response)
     }
   }
 
-  const handleTurnSwitch = (handleClickResponse) => {
-    setTurn(handleClickResponse.turnSwitch)
-    if (handleClickResponse.check) {
-      setCheck(handleClickResponse.check)
-      if (handleClickResponse.check.black || handleClickResponse.check.white) {
+  const handleTurnSwitch = (response) => {
+    setTurn(response.turnSwitch)
+    if (response.check) {
+      setCheck(response.check)
+      if (response.check.black || response.check.white) {
         showPopup()
       }
     }
-    if (handleClickResponse.checkmate) {
-      setCheckmate(handleClickResponse.checkmate)
+    if (response.checkmate) {
+      setCheckmate(response.checkmate)
       showPopup()
     }
-    if (handleClickResponse.capturedPieces) {
-      setCapturedPieces(handleClickResponse.capturedPieces)
+    if (response.capturedPieces) {
+      setCapturedPieces(response.capturedPieces)
     }
     setBoardState(boardState)
   }
@@ -147,18 +152,22 @@ const Board = props => {
 
   let rows = setUpChessRows()
 
+  const selfDestruct = event => {
+    setSelectable(true)
+    setPopupState(false)
+  }
+
   let popup = ""
   if (popupState) {
     popup = (
       <PopupDisplay 
         check={check}
-        setCheck={setCheck}
         checkmate={checkmate}
-        setCheckmate={setCheckmate} 
         pawnUpgrade={pawnUpgrade} 
-        setSelectable={setSelectable}
+        selfDestruct={selfDestruct}
         boardState={boardState}
-        setPopupState={setPopupState}
+        handleResponse={handleResponse}
+        setPawnUpgrade={setPawnUpgrade}
       />
     )
   } else {

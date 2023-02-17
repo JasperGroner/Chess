@@ -51,13 +51,12 @@ io.on("connection", (socket) => {
   })
 
   socket.on("game state", async ({ gameId, encodedState }) => {
-    console.log()
     const body = {gameId, encodedState}
     const newGameState = await GameState.query().insert(body)
   })
 
-  socket.on("turn switch",({ handleClickResponse }) => {
-    socket.broadcast.emit("turn switch", {handleClickResponse})
+  socket.on("turn switch",({ response }) => {
+    socket.broadcast.emit("turn switch", {response})
   })
 })
 

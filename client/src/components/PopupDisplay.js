@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react"
 import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
 import CheckDisplay from "./CheckDisplay"
 
-const PopupDisplay = ({ pawnUpgrade, check, setCheck, checkmate, setCheckmate, setSelectable, boardState, setBoardState, setPopupState })  => {
-  const selfDestruct = event => {
-    setSelectable(true)
-    setPopupState(false)
-  }
+const PopupDisplay = ({ pawnUpgrade, check, checkmate, boardState, handleResponse, setPawnUpgrade, selfDestruct })  => {
 
   let content
   if (pawnUpgrade.display) {
@@ -15,12 +11,10 @@ const PopupDisplay = ({ pawnUpgrade, check, setCheck, checkmate, setCheckmate, s
         <PawnUpgradeDisplay 
           pawnUpgrade={pawnUpgrade} 
           boardState={boardState}
-          setBoardState={setBoardState}
-          selfDestruct={selfDestruct}
           check={check}
-          setCheck={setCheck}
-          checkmate={checkmate}
-          setCheckmate={setCheckmate}
+          selfDestruct={selfDestruct}
+          handleResponse={handleResponse}
+          setPawnUpgrade={setPawnUpgrade}
         />
       </>
     )
@@ -34,7 +28,7 @@ const PopupDisplay = ({ pawnUpgrade, check, setCheck, checkmate, setCheckmate, s
   } else {
     selfDestruct()
   }
-  
+
   return (
     <div className="popup-display">
       {content}
