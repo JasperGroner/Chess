@@ -6,6 +6,7 @@ import { fileURLToPath } from "url"
 import "./boot.js"
 import configuration from "./config.js"
 import addMiddlewares from "./middlewares/addMiddlewares.js"
+import addMiddlewaresIO from "./middlewares/addMiddlewaresIO.js"
 import rootRouter from "./routes/rootRouter.js"
 import hbsMiddleware from "express-handlebars"
 import { createServer } from "http"
@@ -40,8 +41,10 @@ app.use(bodyParser.json())
 addMiddlewares(app)
 app.use(rootRouter)
 
+addMiddlewaresIO(io)
+
 io.on("connection", (socket) => {
-  console.log("user connected: " + socket.id)
+  console.log(socket.request.user)
 
   socket.on("load game", async ({gameId}) => {
     const game = await Game.query().findById(gameId)
