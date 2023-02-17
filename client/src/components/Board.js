@@ -7,7 +7,7 @@ import NewGameForm from "./NewGameForm"
 import PopupDisplay from "./PopupDisplay"
 import { io } from "socket.io-client"
 
-const socket = io ()
+const socket = io()
 
 const Board = props => {
   let gameData
