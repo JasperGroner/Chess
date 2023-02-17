@@ -41,9 +41,13 @@ app.use(rootRouter)
 
 io.on("connection", (socket) => {
   console.log(socket.id)
-  socket.on("game state", async ({gameId, encodedState}) => {
+  socket.on("game state", async ({ gameId, encodedState }) => {
     const body = {gameId, encodedState}
     const newGameState = await GameState.query().insert(body)
+  })
+
+  socket.on("turn switch",({ handleClickResponse }) => {
+    socket.broadcast.emit("turn switch", {handleClickResponse})
   })
 })
 

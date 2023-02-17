@@ -48,7 +48,17 @@ const Board = props => {
     setTurn(boardState.turn)
 
     socket.on("connect", () => {
-      console.log(socket.id)
+      console.log("connected to back end")
+    })
+
+    socket.on("turn switch", ({handleClickResponse}) => {
+      boardState.loadGame(handleClickResponse.encodedState)
+      handleTurnSwitch(handleClickResponse)
+    })
+
+    return(() => {
+      socket.off("connect")
+      socket.off("turn switch")
     })
   }, [])
 
@@ -77,7 +87,7 @@ const Board = props => {
     return rows
   }
 
-  const select = async (row, column) => {
+  const select = (row, column) => {
     const handleClickResponse = boardState.handleClick(row, column)
     setSelectedPieceMoves(handleClickResponse.moves)
     if ((selectedTile.row === row && selectedTile.column === column) ||
@@ -86,12 +96,22 @@ const Board = props => {
     } else {
       setSelectedTile({row, column})
     }
-    if (handleClickResponse.turnSwitch) {
-      setTurn(handleClickResponse.turnSwitch)
-      if (currentUser) {
-        saveGameState(handleClickResponse.encodedState)
+    if (handleClickResponse.pawnUpgrade) {
+      setPawnUpgrade(handleClickResponse.pawnUpgrade)
+      if (handleClickResponse.pawnUpgrade.display) {
+        showPopup()
       }
+    } else if (handleClickResponse.turnSwitch) {
+      socket.emit("turn switch", {handleClickResponse})
+      handleTurnSwitch(handleClickResponse)
     }
+  }
+
+  const handleTurnSwitch = (handleClickResponse) => {
+    setTurn(handleClickResponse.turnSwitch)
+    if (currentUser) {
+      saveGameState(handleClickResponse.encodedState)
+    }  
     if (handleClickResponse.check) {
       setCheck(handleClickResponse.check)
       if (handleClickResponse.check.black || handleClickResponse.check.white) {
@@ -104,12 +124,6 @@ const Board = props => {
     }
     if (handleClickResponse.capturedPieces) {
       setCapturedPieces(handleClickResponse.capturedPieces)
-    }
-    if (handleClickResponse.pawnUpgrade) {
-      setPawnUpgrade(handleClickResponse.pawnUpgrade)
-      if (handleClickResponse.pawnUpgrade.display) {
-        showPopup()
-      }
     }
     setBoardState(boardState)
   }

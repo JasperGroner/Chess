@@ -9,7 +9,6 @@ class GameStateSerializer extends Serializer {
         latestTimestamp = gameStates[i].createdAt
         latestIndex = i
       }
-      console.log(latestTimestamp)
     }
     return this.getDetail(gameStates[latestIndex])
   }

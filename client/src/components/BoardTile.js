@@ -17,7 +17,7 @@ const BoardTile = ({color, selectedTile, select, rowId, columnId, boardState, se
 
   const selectTile = async () => {
     if (selectable) {
-      await select(rowId, columnId)
+      select(rowId, columnId)
     }
   }
   
