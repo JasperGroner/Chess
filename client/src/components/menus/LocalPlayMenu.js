@@ -12,7 +12,7 @@ const LocalPlayMenu = ({ currentUser }) => {
 
   let loadGameLink
   if (currentUser) {
-    loadGameLink = <a href="#" onClick={loadGames} className="main-menu--item">Load Game</a>
+    loadGameLink = <a href="#" onClick={loadGames} className="main-menu--item">Resume a Game</a>
   }
 
   let gameList
@@ -21,13 +21,23 @@ const LocalPlayMenu = ({ currentUser }) => {
   }
 
   let newGameLink="/chess"
+  let gameType
   if (currentUser) {
-    newGameLink="/chess/new"
+    newGameLink="/chess/new"  
+    gameType="hot seat"
   }
 
   return (
-    <div className="centered-content">
-      <Link to={newGameLink} className="main-menu--item">New Game</Link>
+    <div className="main-menu--submenu">
+      <Link 
+        className="main-menu--item"
+        to={{
+          pathname: newGameLink,
+          state: { gameType: gameType }
+        }}
+      >
+          Create a New Game
+      </Link>
       {loadGameLink}
       {gameList}
     </div>

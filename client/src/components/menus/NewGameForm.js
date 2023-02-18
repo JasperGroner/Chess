@@ -4,14 +4,22 @@ import ErrorList from "../layout/ErrorList"
 import translateServerErrors from "../../services/translateServerErrors"
 
 const NewGameForm = props => {
+  const gameType = props.location.state.gameType
+  let pathname
+  if (gameType === "hot seat") {
+    pathname = "/chess"
+  } else {
+    pathname = "/lobby"
+  }
+
   const [ name, setName ] = useState("")
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ game, setGame ] = useState({})
   const [ errors, setErrors ] = useState({})
 
-  const createNewGame = async(nameString) => {
+  const createNewGame = async (nameString) => {
     try {
-      const response = await fetch("/api/v1/games/hotSeat", {
+      const response = await fetch(`/api/v1/games/${gameType}`, {
         method: "POST",
         headers: new Headers({
           "Content-Type": "application/json"
@@ -43,6 +51,11 @@ const NewGameForm = props => {
     event.preventDefault()
     const gameData = await createNewGame(name)
     if(gameData) {
+      if (gameType === "hot seat") {
+        pathname = "/chess"
+      } else {
+        pathname = "/lobby"
+      }
       setGame(gameData)
       setShouldRedirect(true)
     }
@@ -51,7 +64,7 @@ const NewGameForm = props => {
   if (shouldRedirect) {
     return (
       <Redirect to={{
-        pathname: '/chess',
+        pathname: pathname,
         state: { 
           game: game
         }

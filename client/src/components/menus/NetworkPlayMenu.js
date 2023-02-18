@@ -16,8 +16,14 @@ const NetworkPlayMenu = props => {
   }
 
   return (
-    <div className="centered-content">
-      <Link to={"/chess/new"} className="main-menu--item">
+    <div className="main-menu--submenu">
+      <Link 
+        className="main-menu--item"
+        to={{
+          pathname: "/chess/new",
+          state: {gameType: "network"}
+        }}
+      >
         Create a New Game
       </Link>
       <Link to={"/chess/join"} className="main-menu--item">

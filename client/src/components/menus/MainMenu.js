@@ -22,15 +22,22 @@ const MainMenu = ({currentUser}) => {
     subMenu=<NetworkPlayMenu />
   }
 
+  let onlineLink
+  if (currentUser) {
+    onlineLink = (
+      <a href="#" onClick={showNetworkMenu} className="main-menu--item">
+        Play an Online Opponent
+      </a>
+    )
+  }
+
   return (
     <div className="centered-content">
       <h1 className="main-menu--header">Welcome to the Chess App!</h1>
       <a href="#" onClick={showSoloMenu} className="main-menu--item">
         Play a Local Game
       </a>
-      <a href="#" onClick={showNetworkMenu} className="main-menu--item">
-        Play an Online Opponent
-      </a>
+      {onlineLink}
       {subMenu}
     </div>
   )

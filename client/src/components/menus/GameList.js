@@ -80,7 +80,7 @@ const GameList = ({gameType}) => {
 
   const gameListReact = gameListData.map(game => {
     return (
-      <li key={game.id} className="main-menu--item">
+      <li key={game.id} className="main-menu--game-list--item">
         <a href="#" id={game.id} onClick={loadGameClickHandler} className="load-game">{game.name}</a>
         <i className="fa-solid fa-trash delete-game" onClick={deleteGameHandler} id={game.id}></i>
       </li>
@@ -88,10 +88,12 @@ const GameList = ({gameType}) => {
   })
 
   return (
-    <ul className="game-list">
+    <div className="main-menu--game-list--header">
       <h2>Available Games</h2>
-      {gameListReact}
-    </ul>
+      <ul className="main-menu--game-list">
+        {gameListReact}
+      </ul>
+    </div>
   )
 }
 

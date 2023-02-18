@@ -41,11 +41,11 @@ gamesRouter.delete("/:gameId", async(req, res) => {
   }
 })
 
-gamesRouter.post("/hotSeat", async (req, res) => {
+gamesRouter.post("/:gameType", async (req, res) => {
   const userId = req.user.id
   const { body } = req
-  body.gameType = "hot seat"
-  body.status = "playing"
+  body.gameType = req.params.gameType
+  body.status = "looking"
   const formPayload = cleanUserInput(body)
   try {
     const newGame = await Game.query().insertAndFetch(formPayload)
