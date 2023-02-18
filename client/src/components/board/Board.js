@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import BoardRow from "./BoardRow"
-import Chess from "../gameModels/Chess"
+import Chess from "../../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
-import PopupDisplay from "./PopupDisplay"
+import PopupDisplay from "../PopupDisplay"
 import { io } from "socket.io-client"
 
 const socket = io({

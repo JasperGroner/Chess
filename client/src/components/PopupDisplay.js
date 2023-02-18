@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
-import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
-import CheckDisplay from "./CheckDisplay"
+import PawnUpgradeDisplay from "./board/PawnUpgradeDisplay"
+import CheckDisplay from "./board/CheckDisplay"
 
 const PopupDisplay = ({ pawnUpgrade, check, checkmate, boardState, handleResponse, setPawnUpgrade, selfDestruct })  => {
 

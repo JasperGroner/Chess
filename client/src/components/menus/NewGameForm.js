@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Redirect } from "react-router-dom"
-import ErrorList from "./layout/ErrorList"
-import translateServerErrors from "../services/translateServerErrors"
+import ErrorList from "../layout/ErrorList"
+import translateServerErrors from "../../services/translateServerErrors"
 
 const NewGameForm = props => {
   const [ name, setName ] = useState("")

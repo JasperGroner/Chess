@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import pieceConverter from "../services/pieceConverter"
+import pieceConverter from "../../services/pieceConverter"
 
 const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, handleResponse, setPawnUpgrade}) => {
 

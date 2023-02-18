@@ -7,9 +7,9 @@ import "../assets/scss/main.scss";
 import RegistrationForm from "./registration/RegistrationForm";
 import SignInForm from "./authentication/SignInForm";
 import TopBar from "./layout/TopBar";
-import Board from "./Board"
-import MainMenu from "./MainMenu"
-import NewGameForm from "./NewGameForm";
+import Board from "./board/Board"
+import MainMenu from "./menus/MainMenu"
+import NewGameForm from "./menus/NewGameForm";
 
 const App = (props) => {
   const [ currentUser, setCurrentUser ] = useState(undefined);

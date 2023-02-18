@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import pieceConverter from "../services/pieceConverter"
+import React from "react"
+import pieceConverter from "../../services/pieceConverter"
 
 const BoardTile = ({color, selectedTile, select, rowId, columnId, boardState, selectedPieceMoves, selectable}) => {
 
