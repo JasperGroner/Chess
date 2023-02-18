@@ -1,38 +1,26 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import GameList from "./GameList";
+import MainMenuSolo from "./MainMenuSolo";
 
-const Menu = ({ currentUser }) => {
-  const [ showGameList, setShowGameList ] = useState(false)
+const MainMenu = ({currentUser}) => {
+  const [ showSubMenu, setShowSubMenu ] = useState(false)
 
-  const loadGame = event => {
+  const showSoloMenu = event => {
     event.preventDefault()
-    setShowGameList(true)
+    showSubMenu !== "solo" ? setShowSubMenu("solo") : setShowSubMenu(false)
   }
 
-  let loadGameLink
-  if (currentUser) {
-    loadGameLink = <a href="#" onClick={loadGame} className="main-menu--item">Load Game</a>
-  }
-
-  let gameList
-  if (showGameList) {
-    gameList = <GameList />
-  }
-
-  let newGameLink="/chess"
-  if (currentUser) {
-    newGameLink="/chess/new"
+  let subMenu
+  if (showSubMenu === "solo") {
+    subMenu=<MainMenuSolo currentUser={currentUser} />
   }
 
   return (
     <div className="centered-content">
       <h1 className="main-menu--header">Welcome to the Chess App!</h1>
-      <Link to={newGameLink} className="main-menu--item">New Game</Link><br />
-      {loadGameLink}
-      {gameList}
+      <a href="#" onClick={showSoloMenu} className="main-menu--item">Play Solo</a>
+      {subMenu}
     </div>
   )
 }
 
-export default Menu
+export default MainMenu
