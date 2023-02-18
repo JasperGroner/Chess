@@ -144,7 +144,7 @@ class Chess {
       let column = pieceColumn + move.horizontal
       if (move.repeating) {
         while (this.isValidMove({row, column, move, piece})) {
-          if (this.wouldNotBeCheck({row, column, move, piece})) {
+          if (this.wouldNotBeCheck({row, column, move, piece, pieceRow, pieceColumn})) {
             pieceMoves.push({row, column})
           }
           row += move.vertical
@@ -152,7 +152,7 @@ class Chess {
         }
       } else {
         if (this.isValidMove({row, column, move, piece}) && 
-          this.wouldNotBeCheck({row, column, move, piece})) {
+          this.wouldNotBeCheck({row, column, move, piece, pieceRow, pieceColumn})) {
           pieceMoves.push({row, column})
         }
       }
@@ -238,13 +238,13 @@ class Chess {
 
   // methods for determining whether move would put you in check
 
-  wouldNotBeCheck({row, column, piece, move}) {
+  wouldNotBeCheck({row, column, piece, move, pieceRow, pieceColumn}) {
     if (this.hypothetical) {
       return true
     }
     const hypotheticalBoard = new Chess(GameDecoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
     hypotheticalBoard.boardModel[row][column] = piece
-    hypotheticalBoard.boardModel[row - move.vertical][column - move.horizontal] = false
+    hypotheticalBoard.boardModel[pieceRow][pieceColumn] = false
     return !hypotheticalBoard.opponentCanTakeKing()
   }
 

@@ -45,7 +45,6 @@ addMiddlewaresIO(io)
 
 io.on("connection", (socket) => {
   console.log(socket.id + " connected")
-  console.log(socket.request.user)
 
   socket.on("load game", async ({gameId}) => {
     const game = await Game.query().findById(gameId)
@@ -65,10 +64,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", async () => {
     console.log(socket.id + " disconnected")
-    const sockets = await io.fetchSockets()
-    for (const socket of sockets) {
-      console.log(socket.id)
-    }
   })
 })
 
