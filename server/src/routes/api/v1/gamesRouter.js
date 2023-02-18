@@ -44,10 +44,11 @@ gamesRouter.post("/hotSeat", async (req, res) => {
   const userId = req.user.id
   const { body } = req
   body.gameType = "hot seat"
+  body.status = "playing"
   const formPayload = cleanUserInput(body)
   try {
     const newGame = await Game.query().insertAndFetch(formPayload)
-    const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id})
+    const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id, color: "both"})
     const newGameState = await GameState.query().insertAndFetch({gameId: newGame.id, encodedState: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})
     const serializedGame = await GameSerializer.getDetail(newGame, userId)
     return res.status(200).json({game: serializedGame})
