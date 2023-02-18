@@ -46,11 +46,13 @@ addMiddlewaresIO(io)
 io.on("connection", (socket) => {
   console.log(socket.id + " connected")
 
-  socket.on("load game", async ({gameId}) => {
+  socket.on("load game", async ({ gameId }) => {
+    socket.join(gameId)
     const game = await Game.query().findById(gameId)
     const gameStates = await game.$relatedQuery("gameStates")
     const serializedGame = GameStateSerializer.getMostRecentDetail(gameStates)
-    socket.emit("load game", ({game: serializedGame}))
+    console.log(socket.rooms)
+    io.to(gameId).emit("load game", ({game: serializedGame}))
   })
 
   socket.on("game state", async ({ gameId, encodedState }) => {
@@ -58,8 +60,8 @@ io.on("connection", (socket) => {
     const newGameState = await GameState.query().insert(body)
   })
 
-  socket.on("turn switch",({ response }) => {
-    socket.broadcast.emit("turn switch", {response})
+  socket.on("turn switch",({ response, gameId }) => {
+    io.to(gameId).emit("turn switch", {response})
   })
 
   socket.on("disconnect", async () => {

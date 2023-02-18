@@ -62,6 +62,10 @@ const Board = props => {
         saveGameState(response.encodedState)
         handleTurnSwitch(response)
       })
+
+      socket.on("hi", () => {
+        console.log('hi')
+      })
     } else {
       setTurn("white")
       socket.disconnect()
@@ -123,7 +127,7 @@ const Board = props => {
       setBoardState(boardState)
     } else if (response.turnSwitch) {
       if (game) {
-        socket.emit("turn switch", {response})
+        socket.emit("turn switch", {response, gameId: game.id})
         saveGameState(response.encodedState)
       }
       handleTurnSwitch(response)
