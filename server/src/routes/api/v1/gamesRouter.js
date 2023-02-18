@@ -7,10 +7,11 @@ import { ValidationError } from "objection"
 
 const gamesRouter = new express.Router()
 
-gamesRouter.get("/", async (req, res) => {
+gamesRouter.get("/type/:gameType", async (req, res) => {
   const userId = req.user.id
+  const gameType = req.params.gameType
   try { 
-    const games = await Game.query()
+    const games = await Game.query().where("gameType", gameType)
     const serializedGames = await GameSerializer.getSummaryByUser(games, userId)
     res.status(200).json({games: serializedGames})
   } catch(error) {
