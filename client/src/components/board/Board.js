@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { Redirect } from "react-router-dom"
 import BoardRow from "./BoardRow"
 import Chess from "../../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
@@ -186,7 +187,7 @@ const Board = props => {
 
   if (!currentUser || game) {
     return (
-      <div className="chess-page-container">
+      <div className="sub-page-container">
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
@@ -198,7 +199,11 @@ const Board = props => {
         <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
       </div>
     )
-  } 
+  } else {
+    return (
+      <Redirect to ="/" />
+    )
+  }
 }
 
 export default Board

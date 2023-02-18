@@ -32,13 +32,15 @@ const MainMenu = ({currentUser}) => {
   }
 
   return (
-    <div className="centered-content">
-      <h1 className="main-menu--header">Welcome to the Chess App!</h1>
-      <a href="#" onClick={showSoloMenu} className="main-menu--item">
-        Play a Local Game
-      </a>
-      {onlineLink}
-      {subMenu}
+    <div className="sub-page-container">
+      <div className="centered-content">
+        <h1 className="main-menu--header">Welcome to the Chess App!</h1>
+        <a href="#" onClick={showSoloMenu} className="main-menu--item">
+          Play a Local Game
+        </a>
+        {onlineLink}
+        {subMenu}
+      </div>
     </div>
   )
 }

@@ -35,8 +35,8 @@ a:hover, a:active, a:focus {
 
 .page-container {
   display: flex;
-  justify-content:space-between;
-  height: 100vh
+  justify-content: space-between;
+  width: 100vw;
 }
 
 .button-menu {
@@ -98,7 +98,7 @@ a:hover, a:active, a:focus {
   text-align: center;
 }
 
-.chess-page-container {
+.sub-page-container {
   width: 100vw;
   display: flex;
   justify-content: space-evenly;
