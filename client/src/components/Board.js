@@ -49,25 +49,30 @@ const Board = props => {
 
     if (game && game.id) {
       socket.emit("load game", ({gameId: game.id}))
+
+      socket.on("load game", ({game}) => {
+        const loadedGame = new Chess(game.encodedState)
+        setBoardState(loadedGame)
+        setCapturedPieces(loadedGame.capturedPieces)
+        setTurn(loadedGame.turn)
+      })
+
+      socket.on("turn switch", ({response}) => {
+        boardState.loadGame(response.encodedState)
+        saveGameState(response.encodedState)
+        handleTurnSwitch(response)
+      })
+    } else {
+      setTurn("white")
+      socket.disconnect()
     }
 
-    socket.on("load game", ({game}) => {
-      const loadedGame = new Chess(game.encodedState)
-      setBoardState(loadedGame)
-      setCapturedPieces(loadedGame.capturedPieces)
-      setTurn(loadedGame.turn)
-    })
-
-    socket.on("turn switch", ({response}) => {
-      boardState.loadGame(response.encodedState)
-      saveGameState(response.encodedState)
-      handleTurnSwitch(response)
-    })
-
     return(() => {
-      socket.off("connect")
-      socket.off("turn switch")
-      socket.off("load game")
+      if (game & game.id) {
+        socket.off("connect")
+        socket.off("turn switch")
+        socket.off("load game")
+      }
     })
   }, [])
 
@@ -117,8 +122,10 @@ const Board = props => {
       showPopup()
       setBoardState(boardState)
     } else if (response.turnSwitch) {
-      socket.emit("turn switch", {response})
-      saveGameState(response.encodedState)
+      if (game) {
+        socket.emit("turn switch", {response})
+        saveGameState(response.encodedState)
+      }
       handleTurnSwitch(response)
     }
   }
