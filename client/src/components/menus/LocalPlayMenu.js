@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import GameList from "./GameList";
 
-const MainMenuSolo = ({ currentUser }) => {
+const LocalPlayMenu = ({ currentUser }) => {
   const [ showGameList, setShowGameList ] = useState(false)
 
   const loadGames = event => {
@@ -17,7 +17,7 @@ const MainMenuSolo = ({ currentUser }) => {
 
   let gameList
   if (showGameList) {
-    gameList = <GameList />
+    gameList = <GameList gameType={"hot seat"} />
   }
 
   let newGameLink="/chess"
@@ -27,11 +27,11 @@ const MainMenuSolo = ({ currentUser }) => {
 
   return (
     <div className="centered-content">
-      <Link to={newGameLink} className="main-menu--item">New Game</Link><br />
+      <Link to={newGameLink} className="main-menu--item">New Game</Link>
       {loadGameLink}
       {gameList}
     </div>
   )
 }
 
-export default MainMenuSolo
+export default LocalPlayMenu

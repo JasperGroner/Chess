@@ -11,7 +11,7 @@ import Board from "./board/Board"
 import MainMenu from "./menus/MainMenu"
 import NewGameForm from "./menus/NewGameForm";
 
-const App = (props) => {
+const App = props => {
   const [ currentUser, setCurrentUser ] = useState(undefined);
   const [ menuHidden, setMenuHidden ] = useState(true);
 
