@@ -6,7 +6,9 @@ import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import PopupDisplay from "./PopupDisplay"
 import { io } from "socket.io-client"
 
-const socket = io()
+const socket = io({
+  autoConnect: false
+})
 
 const Board = props => {
   let gameData
@@ -48,6 +50,8 @@ const Board = props => {
     })
 
     if (game && game.id) {
+      socket.connect()
+
       socket.emit("load game", ({gameId: game.id}))
 
       socket.on("load game", ({game}) => {
@@ -63,20 +67,15 @@ const Board = props => {
         handleTurnSwitch(response)
       })
 
-      socket.on("hi", () => {
-        console.log('hi')
-      })
     } else {
       setTurn("white")
-      socket.disconnect()
     }
 
     return(() => {
-      if (game & game.id) {
-        socket.off("connect")
-        socket.off("turn switch")
-        socket.off("load game")
-      }
+      socket.off("connect")
+      socket.off("turn switch")
+      socket.off("load game")
+      socket.disconnect()
     })
   }, [])
 
