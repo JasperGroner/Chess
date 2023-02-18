@@ -44,6 +44,7 @@ app.use(rootRouter)
 addMiddlewaresIO(io)
 
 io.on("connection", (socket) => {
+  console.log(socket.id + " connected")
   console.log(socket.request.user)
 
   socket.on("load game", async ({gameId}) => {
@@ -60,6 +61,14 @@ io.on("connection", (socket) => {
 
   socket.on("turn switch",({ response }) => {
     socket.broadcast.emit("turn switch", {response})
+  })
+
+  socket.on("disconnect", async () => {
+    console.log(socket.id + " disconnected")
+    const sockets = await io.fetchSockets()
+    for (const socket of sockets) {
+      console.log(socket.id)
+    }
   })
 })
 
