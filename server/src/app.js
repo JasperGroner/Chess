@@ -51,7 +51,6 @@ io.on("connection", (socket) => {
     const game = await Game.query().findById(gameId)
     const gameStates = await game.$relatedQuery("gameStates")
     const serializedGame = GameStateSerializer.getMostRecentDetail(gameStates)
-    console.log(socket.rooms)
     io.to(gameId).emit("load game", ({game: serializedGame}))
   })
 
