@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import { io } from "socket.io-client";
 
 const socket = io({
@@ -6,7 +7,14 @@ const socket = io({
 })
 
 const Lobby = props => {
+  let gameId
+  if (props.location.state) {
+    gameId = props.location.state.game.id
+  }
+
   const [ activeGameList, setActiveGameList ] = useState([])
+  const [ joinedGameId, setJoinedGameId ] = useState(gameId)
+  const [ startingGame, setStartingGame ] = useState({})
 
   useEffect(() => {
     socket.connect()
@@ -24,19 +32,40 @@ const Lobby = props => {
       setActiveGameList(games)
     })
 
+    socket.on("game starting", ({startingGame}) => {
+      setStartingGame(startingGame)
+    })
+
     return(() => {
       socket.emit("leave lobby")
       socket.off("available games")
+      socket.off("game starting")
     })
   }, [])
 
-  const activeGameReact = activeGameList.map(game => {
-    return <a href="#" onClick={joinGame} key={game.id} className="main-menu--item">{game.name}</a>
-  })
-
   const joinGame = event => {
     event.preventDefault()
+    const gameId = event.currentTarget.id
+    setJoinedGameId(gameId)
+    socket.emit("join game", {gameId, availableColor: "white"})
   }
+
+  const activeGameReact = activeGameList.map(game => {
+    return <a href="#" onClick={joinGame} key={game.id} id={game.id} className="main-menu--item">{game.name}</a>
+  })
+
+  if (joinedGameId && startingGame.id === joinedGameId) {
+    return (
+      <Redirect to={{
+        pathname: "/chess",
+        state: {
+          game: startingGame
+        }
+      }}/>
+    )
+  }
+
+
 
   return (
     <div className="sub-page-container">

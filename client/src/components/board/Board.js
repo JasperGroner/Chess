@@ -19,7 +19,7 @@ const Board = props => {
   if (props.location.state) {
     gameData = props.location.state.game
   }
-
+  
   const [ game, setGame ] = useState(gameData)
 
   const [ selectedTile, setSelectedTile ] = useState({
