@@ -75,8 +75,6 @@ const Lobby = props => {
     )
   }
 
-
-
   return (
     <div className="sub-page-container">
       <div className="centered-content">
