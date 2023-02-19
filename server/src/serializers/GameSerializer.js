@@ -1,5 +1,5 @@
 import Serializer from "./Serializer.js";
-import GameStateSerializer from "./GameStateSerializer.js";
+import PlayerSerializer from "./PlayerSerializer.js";
 import userPlayedGame from "../services/userPlayedGame.js";
 
 class GameSerializer extends Serializer {
@@ -18,6 +18,8 @@ class GameSerializer extends Serializer {
     const serializedGames = []
     for (const game of games) {
       const serializedGame = this.serialize(game, ["id", "name", "gameType", "status"])
+      const players = game.$relatedQuery("players")
+      serializedGame.players = await PlayerSerializer.getSummary(players)
       serializedGames.push(serializedGame)
     }
     return serializedGames
