@@ -1,8 +1,8 @@
 import Serializer from "./Serializer.js";
 
 class UserSerializer extends Serializer {
-  static async getDetailByPlayer(user) {
-    return this.serializer(user, ["username"])
+  static getDetail(user) {
+    return this.serialize(user, ["username"])
   }
 }
 

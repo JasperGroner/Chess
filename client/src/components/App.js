@@ -44,14 +44,16 @@ const App = props => {
         <button className={`button button-menu ${showHide}`} onClick={swapMenuDisplay}><i className="fa-solid fa-bars"></i></button>
         <TopBar user={currentUser} hidden={menuHidden}/>
           <Switch>
-            <Route exact path="/">
-              <MainMenu currentUser={currentUser} />
-            </Route>
+            <Route exact path="/"
+              render={props => <MainMenu {...props} currentUser={currentUser} />}
+            />
             <Route exact path="/chess" 
               render={props => <Board {...props} currentUser={currentUser} />} 
             />
             <Route exact path="/chess/new" component={NewGameForm}/>
-            <Route exact path="/lobby" component={Lobby} />
+            <Route exact path="/lobby"
+              render={props => <Lobby {...props} currentUser={currentUser} />}
+            />
             <Route exact path="/users/new" component={RegistrationForm} />
             <Route exact path="/user-sessions/new" component={SignInForm} />
           </Switch>

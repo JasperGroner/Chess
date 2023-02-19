@@ -18,7 +18,7 @@ class GameSerializer extends Serializer {
     const serializedGames = []
     for (const game of games) {
       const serializedGame = this.serialize(game, ["id", "name", "gameType", "status"])
-      const players = game.$relatedQuery("players")
+      const players = await game.$relatedQuery("players")
       serializedGame.players = await PlayerSerializer.getSummary(players)
       serializedGames.push(serializedGame)
     }

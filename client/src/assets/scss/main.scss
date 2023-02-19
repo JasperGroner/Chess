@@ -285,6 +285,12 @@ a:hover, a:active, a:focus {
 .lobby--active-game-display {
   background-color: white;
   border-radius: 10px;
+  color: $board-dark
+}
+
+.lobby--active-game-display--item {
+  font-size: 36px;
+  display: block;
 }
 
 .delete-game {

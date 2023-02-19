@@ -7,10 +7,13 @@ const socket = io({
 })
 
 const Lobby = props => {
+ 
   let gameId
   if (props.location.state) {
     gameId = props.location.state.game.id
   }
+
+  const { currentUser } = props
 
   const [ activeGameList, setActiveGameList ] = useState([])
   const [ joinedGameId, setJoinedGameId ] = useState(gameId)
@@ -51,7 +54,14 @@ const Lobby = props => {
   }
 
   const activeGameReact = activeGameList.map(game => {
-    return <a href="#" onClick={joinGame} key={game.id} id={game.id} className="main-menu--item">{game.name}</a>
+    if (!currentUser || game.players[0].userId !== currentUser.id) {
+      return (
+        <div key={game.id}>
+          <a href="#" onClick={joinGame}  id={game.id} className="lobby--active-game-display--item">{game.name}</a>
+          <p>Created by {game.players[0].username}, who will be playing {game.players[0].color}</p>
+        </div>
+      )
+    }
   })
 
   if (joinedGameId && startingGame.id === joinedGameId) {

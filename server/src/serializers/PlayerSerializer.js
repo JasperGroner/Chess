@@ -1,16 +1,17 @@
 import Serializer from "./Serializer.js"
-import UserSerializer from "./UserSerialzier.js"
+import UserSerializer from "./UserSerializer.js"
 
 class PlayerSerializer extends Serializer{
-  static async getSummaryByGame(players) {
+  static async getSummary(players) {
     const serializedPlayers = []
     for (const player of players) {
       const serializedPlayer = this.serialize(player, ["userId", "color"])
-      const user = player.$relatedQuery("user")
-      serializedPlayer.username = UserSerializer.getDetailUser(user).username
+      const user = await player.$relatedQuery("user")
+      const serializedUser = UserSerializer.getDetail(user)
+      serializedPlayer.username = serializedUser.username
       serializedPlayers.push(serializedPlayer)
     }
-    return players
+    return serializedPlayers
   }
 }
 
