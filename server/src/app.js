@@ -11,7 +11,7 @@ import rootRouter from "./routes/rootRouter.js"
 import hbsMiddleware from "express-handlebars"
 import { createServer, get } from "http"
 import { Server } from "socket.io"
-import { Game, GameState } from "./models/index.js"
+import { Game, GameState, Player } from "./models/index.js"
 import GameStateSerializer from "./serializers/GameStateSerializer.js"
 import GameSerializer from "./serializers/GameSerializer.js"
 import getAvailableGames from "./services/getAvailableGames.js"
@@ -49,6 +49,7 @@ io.on("connection", (socket) => {
   console.log(socket.id + " connected")
 
   socket.on("join lobby", async () => {
+    console.log("joining lobby")
     socket.join("lobby")
   })
 
@@ -64,14 +65,25 @@ io.on("connection", (socket) => {
     io.emit("available games", {games: await getAvailableGames()}) 
   })
 
+  socket.on("join game", async ({ gameId, availableColor }) => {
+    console.log("joining " + gameId)
+    const userId = socket.request.user.id
+    const game = await Game.query().patchAndFetchById(gameId, {
+      status: "playing"
+    })
+    const player = await Player.query().insert({gameId, userId, color: availableColor})
+    io.to("lobby").emit("game starting", ({startingGame: game}))
+  })
+
   socket.on("load game", async ({ gameId }) => {
+    console.log("loading " + gameId)
     socket.join(gameId)
     const game = await Game.query().patchAndFetchById(gameId, {
       status: "playing"
     })
     const gameStates = await game.$relatedQuery("gameStates")
-    const serializedGame = GameStateSerializer.getMostRecentDetail(gameStates)
-    io.to(gameId).emit("load game", ({game: serializedGame}))
+    const serializedGameState = GameStateSerializer.getMostRecentDetail(gameStates)
+    io.to(gameId).emit("load game", ({game: serializedGameState}))
   })
 
   socket.on("leave game", async({gameId, status}) => {
