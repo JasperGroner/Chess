@@ -23,7 +23,7 @@ const Lobby = props => {
     socket.on("available games", ({games}) => {
       setActiveGameList(games)
     })
-    
+
     return(() => {
       socket.emit("leave lobby")
       socket.off("available games")
@@ -31,14 +31,23 @@ const Lobby = props => {
   }, [])
 
   const activeGameReact = activeGameList.map(game => {
-    return <p key={game.id}>{game.name}</p>
+    return <a href="#" onClick={joinGame} key={game.id} className="main-menu--item">{game.name}</a>
   })
+
+  const joinGame = event => {
+    event.preventDefault()
+  }
 
   return (
     <div className="sub-page-container">
       <div className="centered-content">
       <h1>Gamers' Lobby</h1>
-      {activeGameReact}
+      <div className="lobby--active-game-display--frame">
+        <h2>Available Games:</h2>
+        <div className="lobby--active-game-display">
+          {activeGameReact}
+        </div>
+      </div>
       </div>
     </div>
   )
