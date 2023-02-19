@@ -26,7 +26,7 @@ const NetworkPlayMenu = props => {
       >
         Create a New Game
       </Link>
-      <Link to={"/chess/join"} className="main-menu--item">
+      <Link to={"/lobby"} className="main-menu--item">
         Join an Available Game
       </Link>
       <a href="#" onClick={loadGames} className="main-menu--item">Resume a Game</a>

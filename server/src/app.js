@@ -13,6 +13,7 @@ import { createServer } from "http"
 import { Server } from "socket.io"
 import { Game, GameState } from "./models/index.js"
 import GameStateSerializer from "./serializers/GameStateSerializer.js"
+import GameSerializer from "./serializers/GameSerializer.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -45,6 +46,18 @@ addMiddlewaresIO(io)
 
 io.on("connection", (socket) => {
   console.log(socket.id + " connected")
+
+  socket.on("get available games", async () => {
+    const games = await Game.query().where("status", "looking")
+    const serializedGames = await GameSerializer.getSummary(games)
+    socket.emit("available games", {games: serializedGames})
+  })// dry this up
+
+  socket.on("update available games", async () => {
+    const games = await Game.query().where("status", "looking")
+    const serializedGames = await GameSerializer.getSummary(games)
+    io.emit("available games", {games: serializedGames}) 
+  })
 
   socket.on("load game", async ({ gameId }) => {
     socket.join(gameId)

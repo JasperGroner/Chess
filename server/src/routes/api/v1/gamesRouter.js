@@ -19,6 +19,17 @@ gamesRouter.get("/type/:gameType", async (req, res) => {
   }
 })
 
+gamesRouter.get("/status/:gameStatus", async (req, res)=> {
+  const gameStatus = req.params.gameStatus
+  try {
+    const games = await Game.query().where("gameStatus", gameStatus)
+    const serializedGames = await GameSerializer.getSummary(games)
+    res.status(200).json({games: serializedGames})
+  } catch(error) {
+    res.status(500).json({ errors: error})
+  }
+})
+
 gamesRouter.get("/:gameId", async (req, res) => {
   const userId = req.user.id
   const gameId = req.params.gameId
@@ -41,11 +52,14 @@ gamesRouter.delete("/:gameId", async(req, res) => {
   }
 })
 
-gamesRouter.post("/:gameType", async (req, res) => {
+gamesRouter.post("/", async (req, res) => {
   const userId = req.user.id
   const { body } = req
-  body.gameType = req.params.gameType
-  body.status = "looking"
+  if (body.gameType = "newtork") {
+    body.status = "looking"
+  } else {
+    body.status = "playing"
+  }
   const formPayload = cleanUserInput(body)
   try {
     const newGame = await Game.query().insertAndFetch(formPayload)

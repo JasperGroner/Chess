@@ -10,6 +10,7 @@ import TopBar from "./layout/TopBar";
 import Board from "./board/Board"
 import MainMenu from "./menus/MainMenu"
 import NewGameForm from "./menus/NewGameForm";
+import Lobby from "./Lobby"
 
 const App = props => {
   const [ currentUser, setCurrentUser ] = useState(undefined);
@@ -50,6 +51,7 @@ const App = props => {
             render={props => <Board {...props} currentUser={currentUser} />} 
           />
           <Route exact path="/chess/new" component={NewGameForm}/>
+          <Route exact path="/lobby" component={Lobby} />
           <Route exact path="/users/new" component={RegistrationForm} />
           <Route exact path="/user-sessions/new" component={SignInForm} />
         </Switch>

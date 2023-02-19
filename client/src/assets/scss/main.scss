@@ -98,10 +98,14 @@ a:hover, a:active, a:focus {
   text-align: center;
 }
 
-.sub-page-container {
+.sub-page-container-flex {
   width: 100vw;
   display: flex;
   justify-content: space-evenly;
+}
+
+.sub-page-container {
+  width: 100vw;
 }
 
 .game-display {

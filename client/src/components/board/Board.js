@@ -187,7 +187,7 @@ const Board = props => {
 
   if (!currentUser || game) {
     return (
-      <div className="sub-page-container">
+      <div className="sub-page-container-flex">
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">

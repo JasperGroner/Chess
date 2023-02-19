@@ -19,12 +19,12 @@ const NewGameForm = props => {
 
   const createNewGame = async (nameString) => {
     try {
-      const response = await fetch(`/api/v1/games/${gameType}`, {
+      const response = await fetch(`/api/v1/games/`, {
         method: "POST",
         headers: new Headers({
           "Content-Type": "application/json"
         }),
-        body: JSON.stringify({name: nameString})
+        body: JSON.stringify({name: nameString, gameType})
       })
       if (!response.ok) {
         if (response.status === 422) {
