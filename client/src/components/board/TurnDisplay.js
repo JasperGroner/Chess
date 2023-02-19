@@ -5,6 +5,8 @@ const TurnDisplay = ({turn}) => {
     
     if (turn) {
         turnString = `${turn[0].toUpperCase() + turn.slice(1)}'s Turn`
+    } else {
+        turnString = "Loading..."
     }
 
     return (

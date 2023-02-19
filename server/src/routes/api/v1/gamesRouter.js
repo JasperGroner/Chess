@@ -55,7 +55,7 @@ gamesRouter.delete("/:gameId", async(req, res) => {
 gamesRouter.post("/", async (req, res) => {
   const userId = req.user.id
   const { body } = req
-  if (body.gameType = "newtork") {
+  if (body.gameType === "network") {
     body.status = "looking"
   } else {
     body.status = "playing"

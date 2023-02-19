@@ -73,6 +73,9 @@ const Board = props => {
     }
 
     return(() => {
+      if (game) {
+        socket.emit("leave game", {gameId: game.id, status: "paused"})
+      }
       socket.off("connect")
       socket.off("turn switch")
       socket.off("load game")

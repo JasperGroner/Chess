@@ -243,6 +243,11 @@ a:hover, a:active, a:focus {
   display: block;
 }
 
+.main-menu--choice {
+  font-size: 30px;
+  padding-bottom: 0.5rem;
+}
+
 .main-menu--submenu {
   background-color: $board-light;
   border-radius: 10px;

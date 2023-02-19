@@ -13,6 +13,8 @@ const Lobby = props => {
 
     socket.emit("get available games")
 
+    socket.emit("join lobby")
+
     if (props.location.state &&
         props.location.state.game) {
       socket.emit("update available games")
@@ -20,6 +22,10 @@ const Lobby = props => {
 
     socket.on("available games", ({games}) => {
       setActiveGameList(games)
+    })
+    return(() => {
+      socket.emit("leave lobby")
+      socket.off("available games")
     })
   }, [])
 
