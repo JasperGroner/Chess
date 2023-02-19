@@ -23,6 +23,7 @@ const Lobby = props => {
     socket.on("available games", ({games}) => {
       setActiveGameList(games)
     })
+    
     return(() => {
       socket.emit("leave lobby")
       socket.off("available games")
@@ -32,7 +33,6 @@ const Lobby = props => {
   const activeGameReact = activeGameList.map(game => {
     return <p key={game.id}>{game.name}</p>
   })
-
 
   return (
     <div className="sub-page-container">

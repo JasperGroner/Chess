@@ -55,15 +55,15 @@ gamesRouter.delete("/:gameId", async(req, res) => {
 gamesRouter.post("/", async (req, res) => {
   const userId = req.user.id
   const { body } = req
-  if (body.gameType === "network") {
-    body.status = "looking"
+  if (body.game.gameType === "network") {
+    body.game.status = "looking"
   } else {
-    body.status = "playing"
+    body.game.status = "playing"
   }
-  const formPayload = cleanUserInput(body)
+  const formPayload = cleanUserInput(body.game)
   try {
     const newGame = await Game.query().insertAndFetch(formPayload)
-    const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id, color: "both"})
+    const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id, color: "white"})
     const newGameState = await GameState.query().insertAndFetch({gameId: newGame.id, encodedState: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})
     const serializedGame = await GameSerializer.getDetail(newGame, userId)
     return res.status(200).json({game: serializedGame})

@@ -26,7 +26,6 @@ const LocalPlayMenu = ({ currentUser }) => {
     newGameLink="/chess/new"  
     gameType="hot seat"
   }
-  console.log(gameType)
 
   return (
     <div className="main-menu--submenu">

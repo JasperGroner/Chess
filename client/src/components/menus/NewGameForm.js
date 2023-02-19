@@ -40,7 +40,7 @@ const NewGameForm = props => {
         headers: new Headers({
           "Content-Type": "application/json"
         }),
-        body: JSON.stringify({name: nameString, gameType})
+        body: JSON.stringify({game: {name: nameString, gameType}, color})
       })
       if (!response.ok) {
         if (response.status === 422) {

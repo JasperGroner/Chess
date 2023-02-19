@@ -57,11 +57,11 @@ io.on("connection", (socket) => {
   })
 
   socket.on("get available games", async () => {
-    socket.emit("available games", {games: getAvailableGames()})
+    socket.emit("available games", {games: await getAvailableGames()})
   })
 
   socket.on("update available games", async () => {
-    io.emit("available games", {games: getAvailableGames()}) 
+    io.emit("available games", {games: await getAvailableGames()}) 
   })
 
   socket.on("load game", async ({ gameId }) => {
