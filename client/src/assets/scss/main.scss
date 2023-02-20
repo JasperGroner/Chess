@@ -35,8 +35,8 @@ a:hover, a:active, a:focus {
 
 .page-container {
   display: flex;
-  justify-content:space-between;
-  height: 100vh
+  justify-content: space-between;
+  width: 100vw;
 }
 
 .button-menu {
@@ -98,10 +98,14 @@ a:hover, a:active, a:focus {
   text-align: center;
 }
 
-.chess-page-container {
+.sub-page-container-flex {
   width: 100vw;
   display: flex;
   justify-content: space-evenly;
+}
+
+.sub-page-container {
+  width: 100vw;
 }
 
 .game-display {
@@ -236,14 +240,57 @@ a:hover, a:active, a:focus {
 .main-menu--item {
   font-size: 36px;
   margin: 0.5rem;
+  display: block;
 }
 
-.game-list {
+.main-menu--choice {
+  font-size: 30px;
+  padding-bottom: 0.5rem;
+}
+
+.main-menu--submenu {
+  background-color: $board-light;
+  border-radius: 10px;
+}
+
+.main-menu--game-list--header {
+  background-color: $board-dark;
+  color: white;
+  border-radius: 10px;
+  padding: 0 1rem 1rem;;
+}
+
+.main-menu--game-list {
   list-style: none;
   padding: 10px 0 0;
   margin: 0;
   background-color: $board-light;
   border-radius: 10px;
+}
+
+.main-menu--game-list--item {
+  font-size: 36px;
+  margin: 0 0.5rem;
+  display: block;
+  color: black;
+}
+
+.lobby--active-game-display--frame {
+  background-color: $board-dark;
+  padding: 10px 40px;
+  border-radius: 10px;
+  color: white;
+}
+
+.lobby--active-game-display {
+  background-color: white;
+  border-radius: 10px;
+  color: $board-dark
+}
+
+.lobby--active-game-display--item {
+  font-size: 36px;
+  display: block;
 }
 
 .delete-game {
@@ -257,4 +304,8 @@ a:hover, a:active, a:focus {
 
 .load-game {
   padding-left: 3rem
+}
+
+.load-game--detail {
+  font-size: 18px;
 }

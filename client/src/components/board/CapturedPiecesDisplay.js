@@ -1,5 +1,5 @@
 import React from "react"
-import pieceConverter from "../services/pieceConverter"
+import pieceConverter from "../../services/pieceConverter"
 
 const CapturedPiecesDisplay = ({capturedPieces, color}) => {
   const capturedPiecesReact = capturedPieces.map((piece, index) => {

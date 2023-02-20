@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
+import { Redirect } from "react-router-dom"
 import BoardRow from "./BoardRow"
-import Chess from "../gameModels/Chess"
+import Chess from "../../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
-import PopupDisplay from "./PopupDisplay"
+import PopupDisplay from "../PopupDisplay"
 import { io } from "socket.io-client"
 
 const socket = io({
@@ -11,12 +12,13 @@ const socket = io({
 })
 
 const Board = props => {
-  let gameData
+  let gameData, userColor
 
-  const { currentUser } = props
+  const { currentUser} = props
 
   if (props.location.state) {
     gameData = props.location.state.game
+    userColor = props.location.state.color
   }
 
   const [ game, setGame ] = useState(gameData)
@@ -58,7 +60,7 @@ const Board = props => {
         const loadedGame = new Chess(game.encodedState)
         setBoardState(loadedGame)
         setCapturedPieces(loadedGame.capturedPieces)
-        setTurn(loadedGame.turn)
+        handleTurnColor(loadedGame.turn)
       })
 
       socket.on("turn switch", ({response}) => {
@@ -68,10 +70,13 @@ const Board = props => {
       })
 
     } else {
-      setTurn("white")
+      handleTurnColor("white")
     }
 
     return(() => {
+      if (game) {
+        socket.emit("leave game", {gameId: game.id, status: "paused"})
+      }
       socket.off("connect")
       socket.off("turn switch")
       socket.off("load game")
@@ -134,7 +139,6 @@ const Board = props => {
   }
 
   const handleTurnSwitch = (response) => {
-    setTurn(response.turnSwitch)
     if (response.check) {
       setCheck(response.check)
       if (response.check.black || response.check.white) {
@@ -148,12 +152,22 @@ const Board = props => {
     if (response.capturedPieces) {
       setCapturedPieces(response.capturedPieces)
     }
+    handleTurnColor(response.turnSwitch)
     setBoardState(boardState)
   }
 
   const showPopup = () => {
     setPopupState(true)
     setSelectable(false)
+  }
+
+  const handleTurnColor = (turnColor) => {
+    setTurn(turnColor)
+    if (userColor !== "both" && turnColor !== userColor) {
+      setSelectable(false)
+    } else {
+      setSelectable(true)
+    }
   }
 
   const saveGameState = (encodedState) => {
@@ -186,7 +200,7 @@ const Board = props => {
 
   if (!currentUser || game) {
     return (
-      <div className="chess-page-container">
+      <div className="sub-page-container-flex">
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
@@ -198,7 +212,11 @@ const Board = props => {
         <CapturedPiecesDisplay capturedPieces={capturedPieces.black} color="White" />
       </div>
     )
-  } 
+  } else {
+    return (
+      <Redirect to ="/" />
+    )
+  }
 }
 
 export default Board

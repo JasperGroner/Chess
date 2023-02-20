@@ -8,9 +8,9 @@ class Player extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["userId", "gameId"],
+      required: ["userId", "gameId", "color"],
       properties: {
-        color: { type: "string" },
+        color: { type: "string", enum: ["both", "white", "black"] },
         userId: { type: ["integer", "string"] },
         gameId: { type: ["integer", "string"] }
       }

@@ -7,14 +7,26 @@ import { ValidationError } from "objection"
 
 const gamesRouter = new express.Router()
 
-gamesRouter.get("/", async (req, res) => {
+gamesRouter.get("/type/:gameType", async (req, res) => {
   const userId = req.user.id
+  const gameType = req.params.gameType
   try { 
-    const games = await Game.query()
+    const games = await Game.query().where("gameType", gameType)
     const serializedGames = await GameSerializer.getSummaryByUser(games, userId)
     res.status(200).json({games: serializedGames})
   } catch(error) {
     res.status(500).json({ errors: error })
+  }
+})
+
+gamesRouter.get("/status/:gameStatus", async (req, res)=> {
+  const gameStatus = req.params.gameStatus
+  try {
+    const games = await Game.query().where("gameStatus", gameStatus)
+    const serializedGames = await GameSerializer.getSummary(games)
+    res.status(200).json({games: serializedGames})
+  } catch(error) {
+    res.status(500).json({ errors: error})
   }
 })
 
@@ -23,7 +35,7 @@ gamesRouter.get("/:gameId", async (req, res) => {
   const gameId = req.params.gameId
   try {
     const game = await Game.query().findById(gameId)
-    const serializedGame = await GameSerializer.getDetail(game, userId)
+    const serializedGame = await GameSerializer.getDetailByUser(game, userId)
     res.status(200).json({ game: serializedGame })
   } catch(error) {
     res.status(500).json({ errors: error })
@@ -40,16 +52,20 @@ gamesRouter.delete("/:gameId", async(req, res) => {
   }
 })
 
-gamesRouter.post("/hotSeat", async (req, res) => {
+gamesRouter.post("/", async (req, res) => {
   const userId = req.user.id
   const { body } = req
-  body.gameType = "hot seat"
-  const formPayload = cleanUserInput(body)
+  if (body.game.gameType === "network") {
+    body.game.status = "looking"
+  } else {
+    body.game.status = "playing"
+  }
+  const formPayload = cleanUserInput(body.game)
   try {
     const newGame = await Game.query().insertAndFetch(formPayload)
-    const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id})
+    const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id, color: body.color})
     const newGameState = await GameState.query().insertAndFetch({gameId: newGame.id, encodedState: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})
-    const serializedGame = await GameSerializer.getDetail(newGame, userId)
+    const serializedGame = await GameSerializer.getDetailByUser(newGame, userId)
     return res.status(200).json({game: serializedGame})
   } catch(error) {
     if (error instanceof ValidationError) {

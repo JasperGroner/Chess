@@ -7,11 +7,12 @@ import "../assets/scss/main.scss";
 import RegistrationForm from "./registration/RegistrationForm";
 import SignInForm from "./authentication/SignInForm";
 import TopBar from "./layout/TopBar";
-import Board from "./Board"
-import MainMenu from "./MainMenu"
-import NewGameForm from "./NewGameForm";
+import Board from "./board/Board"
+import MainMenu from "./menus/MainMenu"
+import NewGameForm from "./menus/NewGameForm";
+import Lobby from "./Lobby"
 
-const App = (props) => {
+const App = props => {
   const [ currentUser, setCurrentUser ] = useState(undefined);
   const [ menuHidden, setMenuHidden ] = useState(true);
 
@@ -40,19 +41,22 @@ const App = (props) => {
   return (
     <Router>
       <div className="page-container">
-      <button className={`button button-menu ${showHide}`} onClick={swapMenuDisplay}><i className="fa-solid fa-bars"></i></button>
-      <TopBar user={currentUser} hidden={menuHidden}/>
-      <Switch>
-        <Route exact path="/">
-          <MainMenu currentUser={currentUser} />
-        </Route>
-        <Route exact path="/chess" 
-          render={props => <Board {...props} currentUser={currentUser} />} 
-        />
-        <Route exact path="/chess/new" component={NewGameForm}/>
-        <Route exact path="/users/new" component={RegistrationForm} />
-        <Route exact path="/user-sessions/new" component={SignInForm} />
-      </Switch>
+        <button className={`button button-menu ${showHide}`} onClick={swapMenuDisplay}><i className="fa-solid fa-bars"></i></button>
+        <TopBar user={currentUser} hidden={menuHidden}/>
+          <Switch>
+            <Route exact path="/"
+              render={props => <MainMenu {...props} currentUser={currentUser} />}
+            />
+            <Route exact path="/chess" 
+              render={props => <Board {...props} currentUser={currentUser} />} 
+            />
+            <Route exact path="/chess/new" component={NewGameForm}/>
+            <Route exact path="/lobby"
+              render={props => <Lobby {...props} currentUser={currentUser} />}
+            />
+            <Route exact path="/users/new" component={RegistrationForm} />
+            <Route exact path="/user-sessions/new" component={SignInForm} />
+          </Switch>
       </div>
     </Router>
   );
