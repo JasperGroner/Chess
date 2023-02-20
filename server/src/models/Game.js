@@ -12,7 +12,7 @@ class Game extends Model {
       properties: {
         name: {type: "string", minLength: 3, maxLength: 20},
         gameType: {type: "string"},
-        status: {type: "string", enum: ["looking", "playing", "paused", "finished"]},
+        status: {type: "string", enum: ["looking", "playing", "finished"]},
         winner: {type: "string", enum: ["white", "black"]}
       }
     }

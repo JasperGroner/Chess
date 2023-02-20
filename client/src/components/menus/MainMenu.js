@@ -30,7 +30,7 @@ const MainMenu = ({currentUser}) => {
       </a>
     )
   }
-
+ 
   return (
     <div className="sub-page-container">
       <div className="centered-content">
@@ -39,6 +39,7 @@ const MainMenu = ({currentUser}) => {
           Play a Local Game
         </a>
         {onlineLink}
+
         {subMenu}
       </div>
     </div>
