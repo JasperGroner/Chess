@@ -88,7 +88,7 @@ const Board = props => {
     const rows = []
     for (let i = userColor === 'black' ? 7 : 0; 
          userColor === 'black' ? i >= 0 : i < 8; 
-         userColor === 'black'? i-- : i++) {
+         userColor === 'black' ? i-- : i++) {
       let firstTile
       if (i % 2 === 0) {
         firstTile = "light"

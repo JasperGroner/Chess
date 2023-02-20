@@ -13,7 +13,7 @@ const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selected
     const row = []
     for (let i = userColor === 'black' ? 7 : 0; 
          userColor === 'black' ? i >= 0 : i < 8; 
-         userColor === 'black'? i-- : i++) {
+         userColor === 'black' ? i-- : i++) {
       let color = squareColors[i % 2]
       row.push(
         <BoardTile 
