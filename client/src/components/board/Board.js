@@ -12,17 +12,15 @@ const socket = io({
 })
 
 const Board = props => {
-  let gameData, color
+  let gameData, userColor
 
   const { currentUser} = props
 
   if (props.location.state) {
     gameData = props.location.state.game
-    color = props.location.state.color
+    userColor = props.location.state.color
   }
 
-  console.log(color)
-  
   const [ game, setGame ] = useState(gameData)
 
   const [ selectedTile, setSelectedTile ] = useState({
@@ -62,7 +60,7 @@ const Board = props => {
         const loadedGame = new Chess(game.encodedState)
         setBoardState(loadedGame)
         setCapturedPieces(loadedGame.capturedPieces)
-        setTurn(loadedGame.turn)
+        handleTurnColor(loadedGame.turn)
       })
 
       socket.on("turn switch", ({response}) => {
@@ -72,7 +70,7 @@ const Board = props => {
       })
 
     } else {
-      setTurn("white")
+      handleTurnColor("white")
     }
 
     return(() => {
@@ -141,7 +139,6 @@ const Board = props => {
   }
 
   const handleTurnSwitch = (response) => {
-    setTurn(response.turnSwitch)
     if (response.check) {
       setCheck(response.check)
       if (response.check.black || response.check.white) {
@@ -155,12 +152,22 @@ const Board = props => {
     if (response.capturedPieces) {
       setCapturedPieces(response.capturedPieces)
     }
+    handleTurnColor(response.turnSwitch)
     setBoardState(boardState)
   }
 
   const showPopup = () => {
     setPopupState(true)
     setSelectable(false)
+  }
+
+  const handleTurnColor = (turnColor) => {
+    setTurn(turnColor)
+    if (userColor !== "both" && turnColor !== userColor) {
+      setSelectable(false)
+    } else {
+      setSelectable(true)
+    }
   }
 
   const saveGameState = (encodedState) => {
