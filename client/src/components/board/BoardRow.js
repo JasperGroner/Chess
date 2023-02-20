@@ -1,7 +1,7 @@
 import React from "react"
 import BoardTile from "./BoardTile"
 
-const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves, selectable} ) => {
+const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves, selectable, userColor} ) => {
   let squareColors = []
   if (firstTile === "light") {
     squareColors = ["light", "dark"]
@@ -11,7 +11,9 @@ const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selected
 
   const setUpRow = () => {
     const row = []
-    for (let i = 0; i < 8; i++) {
+    for (let i = userColor === 'black' ? 7 : 0; 
+         userColor === 'black' ? i >= 0 : i < 8; 
+         userColor === 'black'? i-- : i++) {
       let color = squareColors[i % 2]
       row.push(
         <BoardTile 
