@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
-const GameList = ({gameType}) => {
+const GameList = ({gameType, currentUser}) => {
   const [ gameListData, setGameListData ] = useState([])
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ game, setGame ] = useState({})
@@ -23,7 +23,7 @@ const GameList = ({gameType}) => {
     try {
       const response = await fetch(`/api/v1/games/${gameId}`)
       if (!response.ok) {
-        throw new Error(`OH NO: ${response.status} (${response.statusText})`)
+        throw new Error(`${response.status} (${response.statusText})`)
       } 
       const body = await response.json()
       setGame(body.game)
@@ -73,6 +73,7 @@ const GameList = ({gameType}) => {
         pathname: '/chess',
         state: { 
           game: game,
+          color: game.color
         }
       }}/>
     )
@@ -81,8 +82,9 @@ const GameList = ({gameType}) => {
   const gameListReact = gameListData.map(game => {
     return (
       <li key={game.id} className="main-menu--game-list--item">
-        <a href="#" id={game.id} onClick={loadGameClickHandler} className="load-game">{game.name}</a>
+        <a href="#" id={game.id} onClick={loadGameClickHandler} className="load-game" color={game.color}>{game.name}</a>
         <i className="fa-solid fa-trash delete-game" onClick={deleteGameHandler} id={game.id}></i>
+        <p className="load-game--detail">(Color: {game.color}) (Opponent: {game.opponent || "none"})</p>
       </li>
     )
   })

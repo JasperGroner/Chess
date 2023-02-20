@@ -12,13 +12,16 @@ const socket = io({
 })
 
 const Board = props => {
-  let gameData
+  let gameData, color
 
-  const { currentUser } = props
+  const { currentUser} = props
 
   if (props.location.state) {
     gameData = props.location.state.game
+    color = props.location.state.color
   }
+
+  console.log(color)
   
   const [ game, setGame ] = useState(gameData)
 

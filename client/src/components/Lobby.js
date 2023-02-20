@@ -8,9 +8,10 @@ const socket = io({
 
 const Lobby = props => {
  
-  let gameId
+  let gameId, passedColor
   if (props.location.state) {
     gameId = props.location.state.game.id
+    passedColor = props.location.state.color
   }
 
   const { currentUser } = props
@@ -18,6 +19,7 @@ const Lobby = props => {
   const [ activeGameList, setActiveGameList ] = useState([])
   const [ joinedGameId, setJoinedGameId ] = useState(gameId)
   const [ startingGame, setStartingGame ] = useState({})
+  const [ color, setColor ] = useState(passedColor)
 
   useEffect(() => {
     socket.connect()
@@ -49,15 +51,22 @@ const Lobby = props => {
   const joinGame = event => {
     event.preventDefault()
     const gameId = event.currentTarget.id
+    let availableColor
+    if (event.currentTarget.getAttribute("color") === "white") {
+      availableColor = "black"
+    } else {
+      availableColor = "white"
+    }
     setJoinedGameId(gameId)
-    socket.emit("join game", {gameId, availableColor: "white"})
+    setColor(availableColor)
+    socket.emit("join game", {gameId, availableColor})
   }
 
   const activeGameReact = activeGameList.map(game => {
     if (!currentUser || game.players[0].userId !== currentUser.id) {
       return (
         <div key={game.id}>
-          <a href="#" onClick={joinGame}  id={game.id} className="lobby--active-game-display--item">{game.name}</a>
+          <a href="#" onClick={joinGame} id={game.id} color={game.players[0].color} className="lobby--active-game-display--item">{game.name}</a>
           <p>Created by {game.players[0].username}, who will be playing {game.players[0].color}</p>
         </div>
       )
@@ -69,7 +78,8 @@ const Lobby = props => {
       <Redirect to={{
         pathname: "/chess",
         state: {
-          game: startingGame
+          game: startingGame,
+          color: color
         }
       }}/>
     )

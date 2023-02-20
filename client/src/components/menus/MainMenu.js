@@ -19,7 +19,7 @@ const MainMenu = ({currentUser}) => {
   if (showSubMenu === "solo") {
     subMenu=<LocalPlayMenu currentUser={currentUser} />
   } else if (showSubMenu === "network") {
-    subMenu=<NetworkPlayMenu />
+    subMenu=<NetworkPlayMenu currentUser={currentUser} />
   }
 
   let onlineLink

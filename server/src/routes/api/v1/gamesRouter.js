@@ -35,7 +35,7 @@ gamesRouter.get("/:gameId", async (req, res) => {
   const gameId = req.params.gameId
   try {
     const game = await Game.query().findById(gameId)
-    const serializedGame = await GameSerializer.getDetail(game, userId)
+    const serializedGame = await GameSerializer.getDetailByUser(game, userId)
     res.status(200).json({ game: serializedGame })
   } catch(error) {
     res.status(500).json({ errors: error })
@@ -65,7 +65,7 @@ gamesRouter.post("/", async (req, res) => {
     const newGame = await Game.query().insertAndFetch(formPayload)
     const newPlayer = await Player.query().insertAndFetch({userId, gameId: newGame.id, color: body.color})
     const newGameState = await GameState.query().insertAndFetch({gameId: newGame.id, encodedState: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"})
-    const serializedGame = await GameSerializer.getDetail(newGame, userId)
+    const serializedGame = await GameSerializer.getDetailByUser(newGame, userId)
     return res.status(200).json({game: serializedGame})
   } catch(error) {
     if (error instanceof ValidationError) {

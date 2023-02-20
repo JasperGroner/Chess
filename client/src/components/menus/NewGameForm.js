@@ -33,6 +33,18 @@ const NewGameForm = props => {
     )
   }
 
+  if (shouldRedirect) {
+    return (
+      <Redirect to={{
+        pathname: pathname,
+        state: { 
+          game: game,
+          color: color
+        }
+      }}/>
+    )
+  }
+
   const createNewGame = async (nameString) => {
     try {
       const response = await fetch(`/api/v1/games/`, {
@@ -70,17 +82,6 @@ const NewGameForm = props => {
       setGame(gameData)
       setShouldRedirect(true)
     }
-  }
-
-  if (shouldRedirect) {
-    return (
-      <Redirect to={{
-        pathname: pathname,
-        state: { 
-          game: game
-        }
-      }}/>
-    )
   }
 
   return (
