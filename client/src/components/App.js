@@ -50,7 +50,9 @@ const App = props => {
             <Route exact path="/chess" 
               render={props => <Board {...props} currentUser={currentUser} />} 
             />
-            <Route exact path="/chess/new" component={NewGameForm}/>
+            <Route exact path="/chess/new"
+              render={props => <NewGameForm {...props} currentUser={currentUser} />}
+            />
             <Route exact path="/lobby"
               render={props => <Lobby {...props} currentUser={currentUser} />}
             />

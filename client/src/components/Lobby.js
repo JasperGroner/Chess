@@ -16,6 +16,10 @@ const Lobby = props => {
 
   const { currentUser } = props
 
+  if ( currentUser === null) {
+    return <Redirect to="/user-sessions/new"/>
+  }
+
   const [ activeGameList, setActiveGameList ] = useState([])
   const [ joinedGameId, setJoinedGameId ] = useState(gameId)
   const [ startingGame, setStartingGame ] = useState({})
