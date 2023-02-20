@@ -13,7 +13,7 @@ const NetworkPlayMenu = props => {
 
   let gameList
   if (showGameList) {
-    gameList = <GameList gameType={"network"} gameStatus={"paused"}/>
+    gameList = <GameList gameType={"network"} gameStatus={"playing"}/>
   }
 
   return (

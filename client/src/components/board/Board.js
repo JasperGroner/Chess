@@ -72,8 +72,8 @@ const Board = props => {
     }
 
     return(() => {
-      if (game) {
-        socket.emit("leave game", {gameId: game.id, status: "paused"})
+      if (game && !checkmate) {
+        socket.emit("leave game", {gameId: game.id})
       }
       socket.off("connect")
       socket.off("turn switch")
@@ -146,6 +146,7 @@ const Board = props => {
     }
     if (response.checkmate) {
       setCheckmate(response.checkmate)
+      socket.emit("checkmate", {gameId: game.id})
       showPopup()
     }
     if (response.capturedPieces) {
