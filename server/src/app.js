@@ -86,13 +86,6 @@ io.on("connection", (socket) => {
     io.to(gameId).emit("load game", ({game: serializedGameState}))
   })
 
-  socket.on("leave game", async({gameId, status}) => {
-    socket.leave(gameId)
-    const patchedGame = await Game.query().patchAndFetchById(gameId, {
-      status: status
-    })
-  })
-
   socket.on("game state", async ({ gameId, encodedState }) => {
     const body = {gameId, encodedState}
     const newGameState = await GameState.query().insert(body)
@@ -102,8 +95,19 @@ io.on("connection", (socket) => {
     io.to(gameId).emit("turn switch", {response})
   })
 
+  socket.on("checkmate", async ({gameId}) => {
+    const patchedGame = await Game.query().patchAndFetchById(gameId, {
+      status: "finished"
+    })
+  })
+
+  socket.on("leave game", async ({gameId}) => {
+    socket.leave(gameId)
+  })
+
   socket.on("disconnect", async () => {
     console.log(socket.id + " disconnected")
+    
   })
 })
 
