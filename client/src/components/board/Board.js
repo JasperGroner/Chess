@@ -5,6 +5,8 @@ import Chess from "../../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import PopupDisplay from "../PopupDisplay"
+import CheckDisplay from "./CheckDisplay"
+import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
 import { io } from "socket.io-client"
 
 const socket = io({
@@ -29,19 +31,12 @@ const Board = props => {
   const [ popupState, setPopupState ] = useState(false)
 
   const [ selectable, setSelectable ] = useState(true)
-
   const [ pawnUpgrade, setPawnUpgrade ] = useState({display: false})
-
   const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
-
   const [ boardState, setBoardState ] = useState(new Chess({blankBoard: true}))
-
   const [ turn, setTurn ] = useState("")
-
   const [ check, setCheck ] = useState({})
-
   const [ checkmate, setCheckmate ] = useState(false)
-
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
 
   useEffect(() => {
@@ -183,19 +178,27 @@ const Board = props => {
 
   let popup = ""
   if (popupState) {
-    popup = (
-      <PopupDisplay 
-        check={check}
-        checkmate={checkmate}
-        pawnUpgrade={pawnUpgrade} 
-        selfDestruct={selfDestruct}
-        boardState={boardState}
-        handleResponse={handleResponse}
-        setPawnUpgrade={setPawnUpgrade}
-      />
-    )
-  } else {
-    popup = ""
+    if (pawnUpgrade.display) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <PawnUpgradeDisplay 
+            pawnUpgrade={pawnUpgrade} 
+            boardState={boardState}
+            check={check}
+            selfDestruct={selfDestruct}
+            handleResponse={handleResponse}
+            setPawnUpgrade={setPawnUpgrade}
+          />
+        </PopupDisplay>
+      )
+    } else if (check.black || check.white || checkmate) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <CheckDisplay check={check} checkmate={checkmate} />
+          <button onClick={selfDestruct} className="popup-button button">Okay</button>
+        </PopupDisplay>
+      )
+    }
   }
 
   if (!currentUser || game) {
