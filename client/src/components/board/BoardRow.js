@@ -1,7 +1,7 @@
 import React from "react"
 import BoardTile from "./BoardTile"
 
-const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves, selectable} ) => {
+const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selectedPieceMoves, selectable, userColor} ) => {
   let squareColors = []
   if (firstTile === "light") {
     squareColors = ["light", "dark"]
@@ -17,7 +17,7 @@ const BoardRow = ( {firstTile, rowId, selectedTile, select, boardState, selected
         <BoardTile 
           color={color} 
           key={i}
-          columnId={i}
+          columnId={userColor === "black" ? 7 - i : i}
           rowId={rowId}
           boardState={boardState}
           selectedTile={selectedTile}

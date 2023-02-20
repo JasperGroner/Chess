@@ -101,7 +101,8 @@ const Board = props => {
           selectable={selectable}
           boardState={boardState}
           selectedPieceMoves={selectedPieceMoves}
-          rowId={i} 
+          userColor={userColor}
+          rowId={userColor === "black" ? 7 - i: i} 
           key={i}
         />
       )
