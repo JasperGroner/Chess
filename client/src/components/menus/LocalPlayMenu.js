@@ -17,7 +17,7 @@ const LocalPlayMenu = ({ currentUser }) => {
 
   let gameList
   if (showGameList) {
-    gameList = <GameList gameType={"hot seat"} currentUser={currentUser} />
+    gameList = <GameList gameType={"hot seat"} />
   }
 
   let newGameLink="/chess"

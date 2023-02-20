@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
-const GameList = ({gameType, currentUser}) => {
+const GameList = ({gameType}) => {
   const [ gameListData, setGameListData ] = useState([])
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ game, setGame ] = useState({})

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import GameList from "./GameList";
 
-const NetworkPlayMenu = ({currentUser})=> {
+const NetworkPlayMenu = props => {
   
   const [ showGameList, setShowGameList ] = useState(false)
 
@@ -13,7 +13,7 @@ const NetworkPlayMenu = ({currentUser})=> {
 
   let gameList
   if (showGameList) {
-    gameList = <GameList gameType={"network"} currentUser={currentUser}/>
+    gameList = <GameList gameType={"network"}/>
   }
 
   return (
