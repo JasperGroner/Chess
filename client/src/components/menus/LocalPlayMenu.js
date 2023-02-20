@@ -16,10 +16,33 @@ const LocalPlayMenu = ({ currentUser }) => {
     showCompletedGames === false ? setShowCompletedGames(true) : setShowCompletedGames(false)
   }
 
-  let loadGameLink, completedGamesLink
+  let loadGameLink, completedGamesLink, newGameLink
   if (currentUser) {
     loadGameLink = <a href="#" onClick={loadGames} className="main-menu--item">Resume a Game</a>
     completedGamesLink = <a href="#" onClick={toggleCompletedGames} className="main-menu--item">Show Completed Games</a>
+    newGameLink = (
+      <Link 
+        className="main-menu--item"
+        to={{
+          pathname: "/chess/new",
+          state: { gameType: "hot seat" }
+        }}
+      >
+        Create a New Game
+      </Link>
+    )
+  } else {
+    newGameLink = (
+      <Link 
+        className="main-menu--item"
+        to = {{
+          pathname: "/chess",
+          state: { color: "both"}
+        }}
+      >
+        Create a New Game
+      </Link>
+    )
   }
 
   let gameList
@@ -32,24 +55,9 @@ const LocalPlayMenu = ({ currentUser }) => {
     completedGames = <GameList gameType={"hot seat"} gameStatus={"finished"} />
   }
 
-  let newGameLink="/chess"
-  let gameType
-  if (currentUser) {
-    newGameLink="/chess/new"  
-    gameType="hot seat"
-  }
-
   return (
     <div className="main-menu--submenu">
-      <Link 
-        className="main-menu--item"
-        to={{
-          pathname: newGameLink,
-          state: { gameType: gameType }
-        }}
-      >
-          Create a New Game
-      </Link>
+      {newGameLink}
       {loadGameLink}
       {gameList}
       {completedGamesLink}
