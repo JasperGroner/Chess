@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
-const GameList = ({gameType}) => {
+const GameList = ({gameType, gameStatus}) => {
   const [ gameListData, setGameListData ] = useState([])
   const [ shouldRedirect, setShouldRedirect ] = useState(false)
   const [ game, setGame ] = useState({})
 
   const getGames = async () => {
     try {
-      const response = await fetch(`/api/v1/games/type/${gameType}`)
+      const response = await fetch(`/api/v1/games/type/${gameType}${gameStatus ? "/" + gameStatus : ""}`)
       if (!response.ok) {
         throw new Error(`${response.status} (${response.statusText})`)
       }

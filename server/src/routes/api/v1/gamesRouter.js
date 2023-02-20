@@ -19,14 +19,15 @@ gamesRouter.get("/type/:gameType", async (req, res) => {
   }
 })
 
-gamesRouter.get("/status/:gameStatus", async (req, res)=> {
-  const gameStatus = req.params.gameStatus
-  try {
-    const games = await Game.query().where("gameStatus", gameStatus)
-    const serializedGames = await GameSerializer.getSummary(games)
+gamesRouter.get("/type/:gameType/:status", async (req, res) => {
+  const userId = req.user.id
+  const { gameType, status } = req.params
+  try { 
+    const games = await Game.query().where("gameType", gameType).where("status", status)
+    const serializedGames = await GameSerializer.getSummaryByUser(games, userId)
     res.status(200).json({games: serializedGames})
   } catch(error) {
-    res.status(500).json({ errors: error})
+    res.status(500).json({ errors: error })
   }
 })
 
