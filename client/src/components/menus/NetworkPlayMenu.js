@@ -23,9 +23,8 @@ const NetworkPlayMenu = props => {
 
   let completedGames
   if (showCompletedGames) {
-    completedGames = <GameList gameType={"hot seat"} gameStatus={"finished"} />
+    completedGames = <GameList gameType={"network"} gameStatus={"finished"} />
   }
-
 
   return (
     <div className="main-menu--submenu">
@@ -43,7 +42,8 @@ const NetworkPlayMenu = props => {
       </Link>
       <a href="#" onClick={loadGames} className="main-menu--item">Resume a Game</a>
       {gameList}
-      <a href="#" onClick={toggleCompletedGames} className="main-menu--item">Show Completed Game</a>
+      <a href="#" onClick={toggleCompletedGames} className="main-menu--item">Show Completed Games</a>
+      {completedGames}
     </div>
   )
 }
