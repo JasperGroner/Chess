@@ -4,20 +4,32 @@ import GameList from "./GameList";
 
 const LocalPlayMenu = ({ currentUser }) => {
   const [ showGameList, setShowGameList ] = useState(false)
+  const [ showCompletedGames, setShowCompletedGames ] = useState(false)
 
   const loadGames = event => {
     event.preventDefault()
     showGameList === false ? setShowGameList(true) : setShowGameList(false)
   }
 
-  let loadGameLink
+  const toggleCompletedGames = event => {
+    event.preventDefault()
+    showCompletedGames === false ? setShowCompletedGames(true) : setShowCompletedGames(false)
+  }
+
+  let loadGameLink, completedGamesLink
   if (currentUser) {
     loadGameLink = <a href="#" onClick={loadGames} className="main-menu--item">Resume a Game</a>
+    completedGamesLink = <a href="#" onClick={toggleCompletedGames} className="main-menu--item">Show Completed Games</a>
   }
 
   let gameList
   if (showGameList) {
     gameList = <GameList gameType={"hot seat"} gameStatus={"playing"} />
+  }
+
+  let completedGames
+  if (showCompletedGames) {
+    completedGames = <GameList gameType={"hot seat"} gameStatus={"finished"} />
   }
 
   let newGameLink="/chess"
@@ -40,6 +52,8 @@ const LocalPlayMenu = ({ currentUser }) => {
       </Link>
       {loadGameLink}
       {gameList}
+      {completedGamesLink}
+      {completedGames}
     </div>
   )
 }

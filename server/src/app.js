@@ -78,9 +78,10 @@ io.on("connection", (socket) => {
   socket.on("load game", async ({ gameId }) => {
     console.log("loading " + gameId)
     socket.join(gameId)
-    const game = await Game.query().patchAndFetchById(gameId, {
-      status: "playing"
-    })
+    const game = await Game.query().findById(gameId)
+    if (game.status === "looking") {
+      await game.$query().patch({status: "playing"})
+    }
     const gameStates = await game.$relatedQuery("gameStates")
     const serializedGameState = GameStateSerializer.getMostRecentDetail(gameStates)
     io.to(gameId).emit("load game", ({game: serializedGameState}))
@@ -95,10 +96,13 @@ io.on("connection", (socket) => {
     io.to(gameId).emit("turn switch", {response})
   })
 
-  socket.on("checkmate", async ({gameId}) => {
-    const patchedGame = await Game.query().patchAndFetchById(gameId, {
-      status: "finished"
-    })
+  socket.on("checkmate", async ({gameId, winner}) => {
+    if (gameId && winner) {
+      const patchedGame = await Game.query().patchAndFetchById(gameId, {
+        status: "finished",
+        winner: winner
+      })
+    }
   })
 
   socket.on("leave game", async ({gameId}) => {
