@@ -34,7 +34,7 @@ const Board = props => {
 
   const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
 
-  const [ boardState, setBoardState ] = useState(new Chess())
+  const [ boardState, setBoardState ] = useState(new Chess({blankBoard: true}))
 
   const [ turn, setTurn ] = useState("")
 
@@ -55,7 +55,7 @@ const Board = props => {
       socket.emit("load game", ({gameId: game.id}))
 
       socket.on("load game", ({game}) => {
-        const loadedGame = new Chess(game.encodedState)
+        const loadedGame = new Chess({gameState: game.encodedState})
         setBoardState(loadedGame)
         setCapturedPieces(loadedGame.capturedPieces)
         handleTurnColor(loadedGame.turn)

@@ -4,8 +4,10 @@ import pieceConverter from "../services/pieceConverter"
 import SquareDecoder from "./SquareDecoder"
 
 class Chess {
-  constructor(gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical) {
-    if (!gameState) {
+  constructor({gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical, blankBoard}) {
+    if (blankBoard) {
+      this.loadGame(Chess.blankBoard, blankBoard)
+    } else if (!gameState) {
       this.loadGame(Chess.defaultBoard)
     } else {
       this.loadGame(gameState)
@@ -18,7 +20,7 @@ class Chess {
   
   // method for loading board
 
-  loadGame(encodedGame) {
+  loadGame(encodedGame, blankBoard) {
     const game = GameDecoder.decodeGame(encodedGame)
     this.boardModel = game.board
     this.turn = game.turn
@@ -26,7 +28,11 @@ class Chess {
     this.enPassantSquare = game.enPassantSquare
     this.halfmoveClock = game.halfmoveClock
     this.fullmoves = game.fullmoves
-    this.capturedPieces = game.capturedPieces
+    if (!blankBoard) {
+      this.capturedPieces = game.capturedPieces
+    } else {
+      this.capturedPieces = {white: [], black: []}
+    }
   }  
 
   // method for handling user input
@@ -238,11 +244,11 @@ class Chess {
 
   // methods for determining whether move would put you in check
 
-  wouldNotBeCheck({row, column, piece, move, pieceRow, pieceColumn}) {
+  wouldNotBeCheck({row, column, piece, pieceRow, pieceColumn}) {
     if (this.hypothetical) {
       return true
     }
-    const hypotheticalBoard = new Chess(GameDecoder.encodeGame(this), this.selectedPiece, this.selectedPieceLocation, this.selectedPieceMoves, true)
+    const hypotheticalBoard = new Chess({gameState: GameDecoder.encodeGame(this), selectedPiece: this.selectedPiece, selectedPieceLocation: this.selectedPieceLocation, selectedPieceMoves: this.selectedPieceMoves, hypothetical: true})
     hypotheticalBoard.boardModel[row][column] = piece
     hypotheticalBoard.boardModel[pieceRow][pieceColumn] = false
     return !hypotheticalBoard.opponentCanTakeKing()
@@ -376,6 +382,11 @@ class Chess {
   static get defaultBoard() {
     const defaultBoardStr = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     return defaultBoardStr
+  }
+
+  static get blankBoard() {
+    const blankBoardStr = "8/8/8/8/8/8/8/8 w KQkq - 0 1"
+    return blankBoardStr
   }
 }
 

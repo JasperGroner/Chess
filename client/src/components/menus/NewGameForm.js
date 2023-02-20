@@ -4,6 +4,12 @@ import ErrorList from "../layout/ErrorList"
 import translateServerErrors from "../../services/translateServerErrors"
 
 const NewGameForm = props => {
+  const { currentUser } = props
+
+  if ( currentUser === null) {
+    return <Redirect to="/user-sessions/new"/>
+  }
+
   const gameType = props.location.state.gameType
 
   const [ name, setName ] = useState("")
