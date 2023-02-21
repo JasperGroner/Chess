@@ -84,7 +84,7 @@ io.on("connection", (socket) => {
     }
     const gameStates = await game.$relatedQuery("gameStates")
     const serializedGameState = GameStateSerializer.getMostRecentDetail(gameStates)
-    io.to(gameId).emit("load game", ({game: serializedGameState}))
+    io.to(gameId).emit("load game", ({gameData: serializedGameState}))
   })
 
   socket.on("game state", async ({ gameId, encodedState }) => {

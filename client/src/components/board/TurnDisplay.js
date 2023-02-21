@@ -1,14 +1,11 @@
 import React from "react";
+import GameDecoder from "../../gameModels/GameDecoder"
 
-const TurnDisplay = ({turn, gameStatus, replayIndex, setReplayIndex, allGameStates, boardState, setBoardState}) => {
+const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState}) => {
   const changeState = event => {
     const modifier = parseInt(event.currentTarget.getAttribute("value"))
     const newLocation = replayIndex + modifier
-    if (newLocation >= 0 && newLocation < allGameStates.length - 1) {
-      setReplayIndex(newLocation)
-      boardState.loadGame(allGameStates[newLocation].encodedState)
-      setBoardState(boardState)
-    }
+    updateReplayState(newLocation)
   }
 
   let turnString = ""
