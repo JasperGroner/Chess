@@ -17,8 +17,8 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState}) => {
 
   let leftArrow, rightArrow
   if (gameStatus === "finished") {
-    leftArrow = <i className="fa-solid fa-arrow-left" onClick={changeState} value="-1"/>
-    rightArrow = <i className="fa-solid fa-arrow-right" onClick={changeState} value="1"/>
+    leftArrow = <button class="button replay-button" onClick={changeState} value="-1"><i className="fa-solid fa-arrow-left" /></button>
+    rightArrow = <button class="button replay-button" onClick={changeState} value="1"><i className="fa-solid fa-arrow-right"/></button>
   }
 
   return (

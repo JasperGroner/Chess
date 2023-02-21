@@ -310,10 +310,15 @@ a:hover, a:active, a:focus {
   font-size: 18px;
 }
 
-.fa-arrow-left {
-  margin-right: 4rem
+.replay-button {
+  margin: 0 1rem;
+  padding: 0;
+  background-color: white;
+  color: black;
+  font-size: 2vw;
 }
 
-.fa-arrow-right {
-  margin-left: 4rem
+.replay-button:hover, .replay-button:focus, .replay-button:active {
+  background-color: white;
+  color: black;
 }
