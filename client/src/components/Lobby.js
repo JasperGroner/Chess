@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { io } from "socket.io-client";
+import Chat from "./chat/Chat";
 
 const socket = io({
   autoConnect: false
@@ -14,7 +15,7 @@ const Lobby = props => {
     passedColor = props.location.state.color
   }
 
-  const { currentUser } = props
+  const { currentUser, setChatSocket } = props
 
   if ( currentUser === null) {
     return <Redirect to="/user-sessions/new"/>
@@ -26,6 +27,8 @@ const Lobby = props => {
   const [ color, setColor ] = useState(passedColor)
 
   useEffect(() => {
+    setChatSocket(socket)
+
     socket.connect()
 
     socket.emit("get available games")
@@ -49,6 +52,7 @@ const Lobby = props => {
 
     return(() => {
       socket.emit("leave lobby", ({gameId}))
+      setSocket(null)
       socket.off("available games")
       socket.off("game starting")
     })
@@ -78,8 +82,7 @@ const Lobby = props => {
       )
     }
   })
-  console.log(joinedGameId)
-  console.log(startingGame)
+
   if (joinedGameId && startingGame.id === joinedGameId) {
     return (
       <Redirect to={{
@@ -100,13 +103,13 @@ const Lobby = props => {
   return (
     <div className="sub-page-container">
       <div className="centered-content">
-      <h1>Gamers' Lobby</h1>
-      <div className="lobby--active-game-display--frame">
-        <h2>{title}</h2>
-        <div className="lobby--active-game-display">
-          {activeGameReact}
+        <h1>Gamers' Lobby</h1>
+        <div className="lobby--active-game-display--frame">
+          <h2>{title}</h2>
+          <div className="lobby--active-game-display">
+            {activeGameReact}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   )

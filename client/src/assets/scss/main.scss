@@ -48,7 +48,7 @@ a:hover, a:active, a:focus {
 }
 
 .button-menu--hide {
-  margin: 1rem 3rem;
+  margin: 1rem 2.8rem;
 }
 
 .button-menu--show {
@@ -321,4 +321,88 @@ a:hover, a:active, a:focus {
 .replay-button:hover, .replay-button:focus, .replay-button:active {
   background-color: white;
   color: black;
+}
+
+.chat--frame{
+  position: absolute;
+  z-index: 1;
+  width: 60vw;
+  margin: 0 20vw;
+  bottom: 0px;
+  background-color: #f9deb3;
+  border: 2px solid black;
+  border-radius: 10px 10px 0 0;
+  padding-top: 2rem;
+  transition: margin 500ms;
+  text-align: center;
+}
+
+.chat--frame--hide {
+  margin-left: -120vw;
+}
+
+.chat--form {
+  padding: 10px
+}
+
+.chat--input {
+  max-width: 50%;
+  display: inline-block;
+  margin: 0px;
+}
+
+.chat--submit-button {
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 0 10px 10px 0;
+  border: 1px
+};
+
+.chat--toggle-button {
+  z-index: 2;
+  position: absolute;
+  width: 2rem;
+  padding: 0.3rem;
+  bottom: 0rem;
+  right: 1rem;
+}
+
+.chat--display {
+  background-color: white;
+  width: 95%;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 0 auto;
+  height: 20vh;
+  overflow-y: scroll;
+  text-align: left;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.chat--message {
+  margin-bottom: 0;
+}
+
+.chat--message--username {
+  font-weight: 900;
+}
+
+.chat--new-message {
+  background-color: green;
+  animation: wiggle 2s;
+}
+
+@keyframes wiggle {
+  0% {transform: rotate(10deg)}
+  10% {transform: rotate(-10deg)}
+  20% {transform: rotate(8deg)}
+  30% {transform: rotate(-8deg)}
+  40% {transform: rotate(6deg)}
+  50% {transform: rotate(-6deg)}
+  60% {transform: rotate(4deg)}
+  70% {transform: rotate(-4deg)}
+  80% {transform: rotate(2deg)}
+  90% {transform: rotate(-2deg)}
+  100% {transform: rotate(0deg)}
 }
