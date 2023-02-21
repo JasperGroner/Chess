@@ -6,8 +6,6 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, setReplayIndex, allGameStat
     const newLocation = replayIndex + modifier
     if (newLocation >= 0 && newLocation < allGameStates.length - 1) {
       setReplayIndex(newLocation)
-      console.log(allGameStates)
-      console.log(newLocation)
       boardState.loadGame(allGameStates[newLocation].encodedState)
       setBoardState(boardState)
     }

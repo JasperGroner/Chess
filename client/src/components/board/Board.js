@@ -59,11 +59,12 @@ const Board = props => {
 
       socket.on("turn switch", ({response}) => {
         boardState.loadGame(response.encodedState)
-        saveGameState(response.encodedState)
         handleTurnSwitch(response)
     })
 
     if (game && game.status === "finished") {
+      setSelectable(false)
+
       socket.emit("get replay states", {gameId: game.id})
 
       socket.on("replay states", ({gameStates}) => {
