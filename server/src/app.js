@@ -109,6 +109,13 @@ io.on("connection", (socket) => {
     socket.leave(gameId)
   })
 
+  socket.on("get replay states", async ({gameId}) => {
+    const finishedGame = await Game.query().findById(gameId)
+    const gameStates = await finishedGame.$relatedQuery("gameStates").orderBy("createdAt")
+    const serializedGameStates = GameStateSerializer.getSummary(gameStates)
+    socket.emit("replay states", ({gameStates: serializedGameStates}))
+  })
+
   socket.on("disconnect", async () => {
     console.log(socket.id + " disconnected")
     

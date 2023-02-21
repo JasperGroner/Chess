@@ -29,7 +29,6 @@ const Board = props => {
   })
 
   const [ popupState, setPopupState ] = useState(false)
-
   const [ selectable, setSelectable ] = useState(true)
   const [ pawnUpgrade, setPawnUpgrade ] = useState({display: false})
   const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
@@ -38,6 +37,8 @@ const Board = props => {
   const [ check, setCheck ] = useState({})
   const [ checkmate, setCheckmate ] = useState(false)
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
+  const [ allGameStates, setAllGameStates ] = useState([])
+  const [ replayIndex, setReplayIndex ] = useState(false)
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -47,7 +48,7 @@ const Board = props => {
     if (game && game.id) {
       socket.connect()
 
-      socket.emit("load game", ({gameId: game.id}))
+      socket.emit("load game", {gameId: game.id})
 
       socket.on("load game", ({game}) => {
         const loadedGame = new Chess({gameState: game.encodedState})
@@ -60,7 +61,16 @@ const Board = props => {
         boardState.loadGame(response.encodedState)
         saveGameState(response.encodedState)
         handleTurnSwitch(response)
+    })
+
+    if (game && game.status === "finished") {
+      socket.emit("get replay states", {gameId: game.id})
+
+      socket.on("replay states", ({gameStates}) => {
+        setAllGameStates(gameStates)
+        setReplayIndex(gameStates.length - 1)
       })
+    }
 
     } else {
       handleTurnColor("white")
@@ -73,6 +83,7 @@ const Board = props => {
       socket.off("connect")
       socket.off("turn switch")
       socket.off("load game")
+      socket.off("replay states")
       socket.disconnect()
     })
   }, [])
@@ -207,7 +218,7 @@ const Board = props => {
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
-          <TurnDisplay turn={turn} />
+          <TurnDisplay turn={turn} gameStatus={game.status} replayIndex={replayIndex} setReplayIndex={setReplayIndex} allGameStates={allGameStates} boardState={boardState} setBoardState={setBoardState}/>
           <div className ="container">
             {rows}
           </div>
