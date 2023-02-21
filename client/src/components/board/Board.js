@@ -29,8 +29,7 @@ const Board = props => {
   })
 
   const [ popupState, setPopupState ] = useState(false)
-
-  const [ selectable, setSelectable ] = useState(true)
+  const [ selectable, setSelectable ] = useState(game.status !== "finished" ? true : false)
   const [ pawnUpgrade, setPawnUpgrade ] = useState({display: false})
   const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
   const [ boardState, setBoardState ] = useState(new Chess({blankBoard: true}))
@@ -38,6 +37,8 @@ const Board = props => {
   const [ check, setCheck ] = useState({})
   const [ checkmate, setCheckmate ] = useState(false)
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
+  const [ allGameStates, setAllGameStates ] = useState([])
+  const [ replayIndex, setReplayIndex ] = useState(false)
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -47,10 +48,10 @@ const Board = props => {
     if (game && game.id) {
       socket.connect()
 
-      socket.emit("load game", ({gameId: game.id}))
+      socket.emit("load game", {gameId: game.id})
 
-      socket.on("load game", ({game}) => {
-        const loadedGame = new Chess({gameState: game.encodedState})
+      socket.on("load game", ({gameData}) => {
+        const loadedGame = new Chess({gameState: gameData.encodedState})
         setBoardState(loadedGame)
         setCapturedPieces(loadedGame.capturedPieces)
         handleTurnColor(loadedGame.turn)
@@ -58,9 +59,17 @@ const Board = props => {
 
       socket.on("turn switch", ({response}) => {
         boardState.loadGame(response.encodedState)
-        saveGameState(response.encodedState)
         handleTurnSwitch(response)
+    })
+
+    if (game && game.status === "finished") {
+      socket.emit("get replay states", {gameId: game.id})
+
+      socket.on("replay states", ({gameStates}) => {
+        setAllGameStates(gameStates)
+        setReplayIndex(gameStates.length - 1)
       })
+    }
 
     } else {
       handleTurnColor("white")
@@ -73,6 +82,7 @@ const Board = props => {
       socket.off("connect")
       socket.off("turn switch")
       socket.off("load game")
+      socket.off("replay states")
       socket.disconnect()
     })
   }, [])
@@ -158,10 +168,21 @@ const Board = props => {
 
   const handleTurnColor = (turnColor) => {
     setTurn(turnColor)
-    if (userColor !== "both" && turnColor !== userColor) {
+    if (userColor !== "both" && turnColor !== userColor || game.status === "finished") {
       setSelectable(false)
     } else {
       setSelectable(true)
+    }
+  }
+
+  const updateReplayState = (newLocation) => {
+    if (newLocation >= 0 && newLocation < allGameStates.length) {
+      setReplayIndex(newLocation)
+      const newGameState = allGameStates[newLocation].encodedState
+      boardState.loadGame(newGameState)
+      setCapturedPieces(boardState.capturedPieces)
+      setBoardState(boardState)
+      setTurn(boardState.turn)
     }
   }
 
@@ -207,7 +228,12 @@ const Board = props => {
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
-          <TurnDisplay turn={turn} />
+          <TurnDisplay 
+            turn={turn} 
+            gameStatus={game.status} 
+            replayIndex={replayIndex} 
+            updateReplayState={updateReplayState}
+          />
           <div className ="container">
             {rows}
           </div>

@@ -84,7 +84,7 @@ io.on("connection", (socket) => {
     }
     const gameStates = await game.$relatedQuery("gameStates")
     const serializedGameState = GameStateSerializer.getMostRecentDetail(gameStates)
-    io.to(gameId).emit("load game", ({game: serializedGameState}))
+    io.to(gameId).emit("load game", ({gameData: serializedGameState}))
   })
 
   socket.on("game state", async ({ gameId, encodedState }) => {
@@ -107,6 +107,13 @@ io.on("connection", (socket) => {
 
   socket.on("leave game", async ({gameId}) => {
     socket.leave(gameId)
+  })
+
+  socket.on("get replay states", async ({gameId}) => {
+    const finishedGame = await Game.query().findById(gameId)
+    const gameStates = await finishedGame.$relatedQuery("gameStates").orderBy("createdAt")
+    const serializedGameStates = GameStateSerializer.getSummary(gameStates)
+    socket.emit("replay states", ({gameStates: serializedGameStates}))
   })
 
   socket.on("disconnect", async () => {

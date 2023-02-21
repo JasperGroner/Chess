@@ -13,8 +13,16 @@ class GameStateSerializer extends Serializer {
     return this.getDetail(gameStates[latestIndex])
   }
 
+  static getSummary(gameStates) {
+    const serializedGameStates = []
+    for (const gameState of gameStates) {
+      serializedGameStates.push(this.getDetail(gameState))
+    }
+    return serializedGameStates
+  }
+
   static getDetail(gameState) {
-    return this.serialize(gameState, ["encodedState"])
+    return this.serialize(gameState, ["encodedState", "createdAt"])
   }
 }
 

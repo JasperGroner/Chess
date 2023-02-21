@@ -69,12 +69,13 @@ class Chess {
     this.moveRookIfCastled(column)
     this.updateCastling()
     this.updateEnPassant(row, column)
-    this.selectedPieceLocation = {row, column}
     this.switchTurn()
     const check = this.isCheck()
     const checkmate = this.inCheckmate(check)
     const encodedState = GameDecoder.encodeGame(this)
     this.selectedPiece = null
+    this.selectedPieceLocation = {}
+    this.selectedPieceMoves = []
     return {moves: [], turnSwitch: this.turn, unselect: true, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
   }
 
