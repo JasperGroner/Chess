@@ -1,5 +1,4 @@
 import React from "react";
-import GameDecoder from "../../gameModels/GameDecoder"
 
 const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState}) => {
   const changeState = event => {
