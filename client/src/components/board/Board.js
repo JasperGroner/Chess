@@ -23,11 +23,17 @@ const Board = props => {
     userColor = props.location.state.color
   }
 
+  const playerNames = {}
+  if (game.players) {
+    game.players.forEach(player => {
+      playerNames[player.color] = player.username
+    })
+  }
+
   const [ selectedTile, setSelectedTile ] = useState({
     row: null,
     column: null
   })
-
   const [ popupState, setPopupState ] = useState(false)
   const [ selectable, setSelectable ] = useState(game.status !== "finished" ? true : false)
   const [ pawnUpgrade, setPawnUpgrade ] = useState({display: false})
@@ -41,10 +47,6 @@ const Board = props => {
   const [ replayIndex, setReplayIndex ] = useState(false)
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected to back end")
-    })
-
     if (game && game.id) {
       socket.connect()
 
@@ -233,6 +235,7 @@ const Board = props => {
             gameStatus={game.status} 
             replayIndex={replayIndex} 
             updateReplayState={updateReplayState}
+            playerNames={playerNames}
           />
           <div className ="container">
             {rows}

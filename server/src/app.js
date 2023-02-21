@@ -48,13 +48,18 @@ addMiddlewaresIO(io)
 io.on("connection", (socket) => {
   console.log(socket.id + " connected")
 
-  socket.on("join lobby", async () => {
-    console.log("joining lobby")
+  socket.on("join lobby", () => {
     socket.join("lobby")
   })
 
-  socket.on("leave lobby", async () => {
-    socket.leave("lobby")
+  socket.on("leave lobby", async ({ gameId }) => {
+    if (gameId) {
+      const game = await Game.query().findById(gameId)
+      if (game.status === "looking") {
+        await Game.query().deleteById(gameId)
+      }
+    }
+    io.emit("available games", {games: await getAvailableGames()}) 
   })
 
   socket.on("get available games", async () => {
@@ -65,18 +70,21 @@ io.on("connection", (socket) => {
     io.emit("available games", {games: await getAvailableGames()}) 
   })
 
+  socket.on("delete game", async ({ gameId }) => {
+    await Game.query().deleteById(gameId)
+  })
+
   socket.on("join game", async ({ gameId, availableColor }) => {
-    console.log("joining " + gameId)
     const userId = socket.request.user.id
     const game = await Game.query().patchAndFetchById(gameId, {
       status: "playing"
     })
     const player = await Player.query().insert({gameId, userId, color: availableColor})
-    io.to("lobby").emit("game starting", ({startingGame: game}))
+    const serializedGame = await GameSerializer.getDetail(game)
+    io.to("lobby").emit("game starting", ({startingGame: serializedGame}))
   })
 
   socket.on("load game", async ({ gameId }) => {
-    console.log("loading " + gameId)
     socket.join(gameId)
     const game = await Game.query().findById(gameId)
     if (game.status === "looking") {
@@ -105,7 +113,7 @@ io.on("connection", (socket) => {
     }
   })
 
-  socket.on("leave game", async ({gameId}) => {
+  socket.on("leave game", ({gameId}) => {
     socket.leave(gameId)
   })
 
@@ -116,9 +124,8 @@ io.on("connection", (socket) => {
     socket.emit("replay states", ({gameStates: serializedGameStates}))
   })
 
-  socket.on("disconnect", async () => {
+  socket.on("disconnect", () => {
     console.log(socket.id + " disconnected")
-    
   })
 })
 
