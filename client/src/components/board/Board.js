@@ -47,10 +47,6 @@ const Board = props => {
   const [ replayIndex, setReplayIndex ] = useState(false)
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected to back end")
-    })
-
     if (game && game.id) {
       socket.connect()
 

@@ -22,7 +22,7 @@ const Lobby = props => {
 
   const [ activeGameList, setActiveGameList ] = useState([])
   const [ joinedGameId, setJoinedGameId ] = useState(gameId)
-  const [ startingGame, setStartingGame ] = useState(null)
+  const [ startingGame, setStartingGame ] = useState({})
   const [ color, setColor ] = useState(passedColor)
 
   useEffect(() => {
@@ -48,10 +48,7 @@ const Lobby = props => {
     })
 
     return(() => {
-      socket.emit("leave lobby")
-      if (!startingGame && gameId) {
-        socket.emit("delete game", ({gameId}))
-      }
+      socket.emit("leave lobby", ({gameId}))
       socket.off("available games")
       socket.off("game starting")
     })
@@ -81,7 +78,8 @@ const Lobby = props => {
       )
     }
   })
-
+  console.log(joinedGameId)
+  console.log(startingGame)
   if (joinedGameId && startingGame.id === joinedGameId) {
     return (
       <Redirect to={{
