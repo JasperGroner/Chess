@@ -11,10 +11,12 @@ import Board from "./board/Board"
 import MainMenu from "./menus/MainMenu"
 import NewGameForm from "./menus/NewGameForm";
 import Lobby from "./Lobby"
+import Chat from "./chat/Chat"
 
 const App = props => {
   const [ currentUser, setCurrentUser ] = useState(undefined);
   const [ menuHidden, setMenuHidden ] = useState(true);
+  const [ chatSocket, setChatSocket ] = useState(null)
 
   const fetchCurrentUser = async () => {
     try {
@@ -38,6 +40,11 @@ const App = props => {
     showHide="button-menu--hide"
   }
 
+  let chatDisplay
+  if (chatSocket) {
+    chatDisplay = <Chat socket={chatSocket}/>
+  }
+
   return (
     <Router>
       <div className="page-container">
@@ -48,17 +55,18 @@ const App = props => {
               render={props => <MainMenu {...props} currentUser={currentUser} />}
             />
             <Route exact path="/chess" 
-              render={props => <Board {...props} currentUser={currentUser} />} 
+              render={props => <Board {...props} currentUser={currentUser} setChatSocket={setChatSocket}/>} 
             />
             <Route exact path="/chess/new"
               render={props => <NewGameForm {...props} currentUser={currentUser} />}
             />
             <Route exact path="/lobby"
-              render={props => <Lobby {...props} currentUser={currentUser} />}
+              render={props => <Lobby {...props} currentUser={currentUser} setChatSocket={setChatSocket}/>}
             />
             <Route exact path="/users/new" component={RegistrationForm} />
             <Route exact path="/user-sessions/new" component={SignInForm} />
           </Switch>
+        {chatDisplay}
       </div>
     </Router>
   );

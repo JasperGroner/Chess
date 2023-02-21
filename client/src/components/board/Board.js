@@ -16,7 +16,7 @@ const socket = io({
 const Board = props => {
   let game, userColor
 
-  const { currentUser} = props
+  const { currentUser, setChatSocket } = props
 
   if (props.location.state) {
     game = props.location.state.game
@@ -24,7 +24,7 @@ const Board = props => {
   }
 
   const playerNames = {}
-  if (game.players) {
+  if (game && game.players) {
     game.players.forEach(player => {
       playerNames[player.color] = player.username
     })
@@ -34,11 +34,12 @@ const Board = props => {
     row: null,
     column: null
   })
+
   const [ popupState, setPopupState ] = useState(false)
-  const [ selectable, setSelectable ] = useState(game.status !== "finished" ? true : false)
+  const [ selectable, setSelectable ] = useState(game?.status !== "finished" ? true : false)
   const [ pawnUpgrade, setPawnUpgrade ] = useState({display: false})
   const [ selectedPieceMoves, setSelectedPieceMoves] = useState([])
-  const [ boardState, setBoardState ] = useState(new Chess({blankBoard: true}))
+  const [ boardState, setBoardState ] = useState(game ? new Chess({blankBoard: true}) : new Chess({gameState: null}))
   const [ turn, setTurn ] = useState("")
   const [ check, setCheck ] = useState({})
   const [ checkmate, setCheckmate ] = useState(false)
@@ -62,16 +63,20 @@ const Board = props => {
       socket.on("turn switch", ({response}) => {
         boardState.loadGame(response.encodedState)
         handleTurnSwitch(response)
-    })
-
-    if (game && game.status === "finished") {
-      socket.emit("get replay states", {gameId: game.id})
-
-      socket.on("replay states", ({gameStates}) => {
-        setAllGameStates(gameStates)
-        setReplayIndex(gameStates.length - 1)
       })
-    }
+
+      if (game.status === "finished") {
+        socket.emit("get replay states", {gameId: game.id})
+
+        socket.on("replay states", ({gameStates}) => {
+          setAllGameStates(gameStates)
+          setReplayIndex(gameStates.length - 1)
+        })
+      }
+
+      if (game.status === "playing") {
+        setChatSocket(socket)
+      }
 
     } else {
       handleTurnColor("white")
@@ -85,6 +90,7 @@ const Board = props => {
       socket.off("turn switch")
       socket.off("load game")
       socket.off("replay states")
+      setChatSocket(null)
       socket.disconnect()
     })
   }, [])
@@ -170,7 +176,7 @@ const Board = props => {
 
   const handleTurnColor = (turnColor) => {
     setTurn(turnColor)
-    if (userColor !== "both" && turnColor !== userColor || game.status === "finished") {
+    if (userColor !== "both" && turnColor !== userColor || game && game.status === "finished") {
       setSelectable(false)
     } else {
       setSelectable(true)
@@ -232,7 +238,7 @@ const Board = props => {
         <div className="game-display">
           <TurnDisplay 
             turn={turn} 
-            gameStatus={game.status} 
+            gameStatus={game?.status} 
             replayIndex={replayIndex} 
             updateReplayState={updateReplayState}
             playerNames={playerNames}

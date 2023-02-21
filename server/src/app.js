@@ -124,6 +124,19 @@ io.on("connection", (socket) => {
     socket.emit("replay states", ({gameStates: serializedGameStates}))
   })
 
+  socket.on("send message", ({messageText}) => {
+    let receivingRoom
+    socket.rooms.forEach(room => {
+      if (room !== socket.id) {
+        receivingRoom = room
+      }
+    })
+    const currentTime = new Date()
+    const timestamp = `${currentTime.getHours().toString().padStart(2, '0')}:` +
+      `${currentTime.getMinutes().toString().padStart(2, '0')}`
+    io.to(receivingRoom).emit("add message", ({message: {user: socket.request.user.username, timestamp, text: messageText}}))
+  })
+
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected")
   })
