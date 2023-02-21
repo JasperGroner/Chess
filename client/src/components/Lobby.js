@@ -52,7 +52,7 @@ const Lobby = props => {
 
     return(() => {
       socket.emit("leave lobby", ({gameId}))
-      setSocket(null)
+      setChatSocket(null)
       socket.off("available games")
       socket.off("game starting")
     })
