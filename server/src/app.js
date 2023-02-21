@@ -65,14 +65,20 @@ io.on("connection", (socket) => {
     io.emit("available games", {games: await getAvailableGames()}) 
   })
 
+  socket.on("delete game", async ({ gameId }) => {
+    console.log("deleting " + gameId)
+    await Game.query().deleteById(gameId)
+  })
+
   socket.on("join game", async ({ gameId, availableColor }) => {
     console.log("joining " + gameId)
     const userId = socket.request.user.id
     const game = await Game.query().patchAndFetchById(gameId, {
       status: "playing"
     })
+    const serializedGame = await GameSerializer.getDetail(game)
     const player = await Player.query().insert({gameId, userId, color: availableColor})
-    io.to("lobby").emit("game starting", ({startingGame: game}))
+    io.to("lobby").emit("game starting", ({startingGame: serializedGame}))
   })
 
   socket.on("load game", async ({ gameId }) => {

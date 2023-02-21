@@ -22,7 +22,7 @@ const Lobby = props => {
 
   const [ activeGameList, setActiveGameList ] = useState([])
   const [ joinedGameId, setJoinedGameId ] = useState(gameId)
-  const [ startingGame, setStartingGame ] = useState({})
+  const [ startingGame, setStartingGame ] = useState(null)
   const [ color, setColor ] = useState(passedColor)
 
   useEffect(() => {
@@ -38,7 +38,9 @@ const Lobby = props => {
     }
 
     socket.on("available games", ({games}) => {
-      setActiveGameList(games)
+      if (!gameId) {
+        setActiveGameList(games)
+      }
     })
 
     socket.on("game starting", ({startingGame}) => {
@@ -47,6 +49,9 @@ const Lobby = props => {
 
     return(() => {
       socket.emit("leave lobby")
+      if (!startingGame && gameId) {
+        socket.emit("delete game", ({gameId}))
+      }
       socket.off("available games")
       socket.off("game starting")
     })
@@ -89,12 +94,17 @@ const Lobby = props => {
     )
   }
 
+  let title = "Available Games:"
+  if (gameId) {
+    title = "Waiting for an Opponent"
+  }
+
   return (
     <div className="sub-page-container">
       <div className="centered-content">
       <h1>Gamers' Lobby</h1>
       <div className="lobby--active-game-display--frame">
-        <h2>Available Games:</h2>
+        <h2>{title}</h2>
         <div className="lobby--active-game-display">
           {activeGameReact}
         </div>
