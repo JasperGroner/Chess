@@ -19,7 +19,7 @@ class Game extends Model {
   }
 
   static get relationMappings() {
-    const { GameState, Player, User } = require("./index.js")
+    const { GameState, Player, User, PuzzleMove } = require("./index.js")
 
     return {
       gameStates: {
@@ -50,6 +50,15 @@ class Game extends Model {
             to: "players.userId"
           },
           to: "users.id"
+        }
+      },
+
+      puzzleMoves: {
+        relation: Model.HasManyRelation,
+        modelClass: PuzzleMove,
+        join: {
+          from: "games.id",
+          to: "puzzleMoves.id"
         }
       }
     }
