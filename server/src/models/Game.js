@@ -11,7 +11,7 @@ class Game extends Model {
       required: ["name", "gameType", "status"],
       properties: {
         name: {type: "string", minLength: 3, maxLength: 20},
-        gameType: {type: "string"},
+        gameType: {type: "string", enum: ["hot seat", "network", "puzzle"]},
         status: {type: "string", enum: ["looking", "playing", "finished"]},
         winner: {type: "string", enum: ["white", "black"]}
       }
