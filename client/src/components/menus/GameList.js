@@ -81,7 +81,6 @@ const GameList = ({gameType, gameStatus}) => {
 
   const gameListReact = gameListData.map(game => {
     let deleteButton
-    console.log(game)
     if (game.status !== "playing" || game.gameType !== "network") {
       deleteButton = <i className="fa-solid fa-trash delete-game" onClick={deleteGameHandler} id={game.id}></i>
     }
