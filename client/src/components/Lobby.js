@@ -31,9 +31,11 @@ const Lobby = props => {
 
     socket.connect()
 
-    socket.emit("get available games")
+    socket.on("connect", () => {
+      socket.emit("get available games")
 
-    socket.emit("join lobby")
+      socket.emit("join lobby")
+    })
 
     if (props.location.state &&
         props.location.state.game) {
