@@ -68,7 +68,6 @@ class GameSerializer extends Serializer {
     const puzzleMoves = await game.$relatedQuery("puzzleMoves")
     serializedGame.puzzleMoves = PuzzleMoveSerializer.getSummary(puzzleMoves)
     serializedGame.color = await getPuzzlePlayerColor(game)
-    console.log(serializedGame)
     return serializedGame
   }
 }
