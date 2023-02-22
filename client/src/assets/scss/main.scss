@@ -1,6 +1,7 @@
 @import "./foundation/settings";
 @import "~foundation-sites/scss/foundation";
 @include foundation-everything;
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
 
 $square-dimension: 5vw;
 $board-dimension: $square-dimension * 8;
@@ -18,6 +19,10 @@ $board-select: #4c853e;
 :root {
   -moz-tab-size: 4;
   tab-size: 4;
+}
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 img {
