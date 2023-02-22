@@ -1,36 +1,29 @@
 import SquareDecoder from "./SquareDecoder"
 
 class Puzzle {
-  constructor(game, moves, loadGameFunction, selectFunction) {
+  constructor(moves, selectFunction) {
     this.moves = moves.sort((a, b) => {
       return a.moveNumber - b.moveNumber
     })
     this.puzzleLength = moves.length / 2
     this.selectFunction = selectFunction
     this.moveIterator = 0
-    loadGameFunction(game)
-    this.computerMove()
   }
 
-  computerMove() {
+  nextMove() {
     if (this.moveIterator >= this.moves.length) {
       return false
     }
-
-    this.decodeAndSelect(this.moves[this.moveIterator].moveStart)
-
-    // implement wait 1 second later
-
-    this.decodeAndSelect(this.moves[this.moveIterator].moveEnd)
     
-    this.moveIterator +=  2
+    const moveObject = {}
+    
+    moveObject.moveStart = SquareDecoder.decodeSquare((this.moves[this.moveIterator].moveStart))
 
-    return true
-  }
+    moveObject.moveEnd = SquareDecoder.decodeSquare((this.moves[this.moveIterator].moveEnd))
+    
+    this.moveIterator +=  1
 
-  decodeAndSelect(encodedLocation) {
-    const decodedLocation = SquareDecoder.decodeSquare(encodedLocation)
-    this.selectFunction(selectPiece.row, selectPiece.column)
+    return moveObject
   }
 }
 

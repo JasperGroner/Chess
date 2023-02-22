@@ -7,6 +7,7 @@ import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import PopupDisplay from "../PopupDisplay"
 import CheckDisplay from "./CheckDisplay"
 import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
+import Puzzle from "../../gameModels/Puzzle"
 import { io } from "socket.io-client"
 
 const socket = io({
@@ -22,8 +23,6 @@ const Board = props => {
     game = props.location.state.game
     userColor = props.location.state.color
   }
-
-  console.log(game, userColor)
 
   const playerNames = {}
   if (game && game.players) {
@@ -48,6 +47,7 @@ const Board = props => {
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
   const [ allGameStates, setAllGameStates ] = useState([])
   const [ replayIndex, setReplayIndex ] = useState(false)
+  const [ computerPuzzleMove, setComputerPuzzleMove ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -60,6 +60,9 @@ const Board = props => {
         setBoardState(loadedGame)
         setCapturedPieces(loadedGame.capturedPieces)
         handleTurnColor(loadedGame.turn)
+        if (game.gameType === "puzzle") {
+          setComputerPuzzleMove(true)
+        }
       })
 
       socket.on("turn switch", ({response}) => {
@@ -128,6 +131,8 @@ const Board = props => {
     handleResponse(response, row, column)
   }
 
+  const [ puzzleHandler, setPuzzleHandler ] = useState(game?.gameType === "puzzle" ? new Puzzle(game.puzzleMoves) : false)
+
   const handleResponse = (response, row, column) => {
     setSelectedPieceMoves(response.moves)
     if (response.capturedPieces) {
@@ -144,7 +149,7 @@ const Board = props => {
       showPopup()
       setBoardState(boardState)
     } else if (response.turnSwitch) {
-      if (game && game.type !== "puzzle") {
+      if (game && game.gameType !== "puzzle") {
         socket.emit("turn switch", {response, gameId: game.id})
         saveGameState(response.encodedState)
       }
@@ -168,6 +173,7 @@ const Board = props => {
       setCapturedPieces(response.capturedPieces)
     }
     handleTurnColor(response.turnSwitch)
+    setComputerPuzzleMove(true)
     setBoardState(boardState)
   }
 
@@ -204,7 +210,20 @@ const Board = props => {
 
   const selfDestruct = event => {
     setSelectable(true)
-    setPopupState(false)
+    setPopupState(false)  
+  }
+
+  const handleComputerMove = async computerMove => {
+    select(computerMove.moveStart.row, computerMove.moveStart.column)
+    select(computerMove.moveEnd.row, computerMove.moveEnd.column)
+  }
+
+  if (computerPuzzleMove) {
+    let computerMove = puzzleHandler.nextMove()
+    if (computerMove) {
+      handleComputerMove(computerMove)
+    }
+    setComputerPuzzleMove(false)
   }
 
   let popup = ""
