@@ -20,7 +20,21 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const app = express()
 const httpServer = createServer( app )
-const io = new Server(httpServer)
+const io = 
+  process.env.NODE_ENV === "development"
+    ? new Server(httpServer, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+      },
+    })
+    : new Server(httpServer, {
+      cors: {
+        origin: "https://chess-game.herokuapp.com/",
+        methods: ["GET", "POST"]
+      }
+    })
+
 
 app.set("views", path.join(__dirname, "../views"))
 app.engine(
