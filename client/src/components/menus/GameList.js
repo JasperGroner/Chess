@@ -80,16 +80,20 @@ const GameList = ({gameType, gameStatus}) => {
   }
 
   const gameListReact = gameListData.map(game => {
-    let deleteButton
-    console.log(game)
+    let deleteButton, detail
     if (game.status !== "playing" || game.gameType !== "network") {
       deleteButton = <i className="fa-solid fa-trash delete-game" onClick={deleteGameHandler} id={game.id}></i>
+    }
+    if (game.gameType !== "puzzle") {
+      detail = <p className="load-game--detail">(Color: {game.color}) (Opponent: {game.opponent || "none"})</p>
+    } else {
+      detail = <p className="load-game--detail">(Moves to Check: {game.puzzleMoves.length / 2})</p>
     }
     return (
       <li key={game.id} className="main-menu--game-list--item">
         <a href="#" id={game.id} onClick={loadGameClickHandler} className="load-game" color={game.color}>{game.name}</a>
         {deleteButton}
-        <p className="load-game--detail">(Color: {game.color}) (Opponent: {game.opponent || "none"})</p>
+        {detail}
       </li>
     )
   })

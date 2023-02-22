@@ -58,7 +58,7 @@ class Game extends Model {
         modelClass: PuzzleMove,
         join: {
           from: "games.id",
-          to: "puzzleMoves.id"
+          to: "puzzleMoves.gameId"
         }
       }
     }

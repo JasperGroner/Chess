@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import LocalPlayMenu from "./LocalPlayMenu";
-import NetworkPlayMenu from "./NetworkPlayMenu";
-import PuzzleMenu from "./PuzzleMenu";
+import React, { useState } from "react"
+import LocalPlayMenu from "./LocalPlayMenu"
+import NetworkPlayMenu from "./NetworkPlayMenu"
+import GameList from "./GameList"
 
 const MainMenu = ({currentUser}) => {
   const [ showSubMenu, setShowSubMenu ] = useState(false)
@@ -27,7 +27,7 @@ const MainMenu = ({currentUser}) => {
   } else if (showSubMenu === "network") {
     subMenu=<NetworkPlayMenu currentUser={currentUser} />
   } else if (showSubMenu === "puzzle") {
-    subMenu=<PuzzleMenu />
+    subMenu=<GameList gameType="puzzle"/>
   }
 
   let onlineLink

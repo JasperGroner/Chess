@@ -1,8 +1,16 @@
 import Serializer from "./Serializer.js";
 import PlayerSerializer from "./PlayerSerializer.js";
 import userPlayedGame from "../services/userPlayedGame.js";
+import PuzzleMoveSerializer from "./PuzzleMoveSerializer.js";
 
 class GameSerializer extends Serializer {
+  static async getSummarySwitcher({games, userId, gameType}) {
+    if (gameType === "puzzle") {
+      return await this.getPuzzleSummary(games)
+    }
+    return await this.getSummaryByUser(games, userId)
+  }
+
   static async getSummaryByUser(games, userId) {
     const serializedGames = []
     for (const game of games) {
@@ -13,12 +21,28 @@ class GameSerializer extends Serializer {
     return serializedGames
   }
 
+  static async getPuzzleSummary(games) {
+    console.log("starting")
+    const serializedGames = []
+    for (const game of games) {
+      serializedGames.push(await this.getPuzzleDetail(game))
+    }
+    return serializedGames
+  }
+
   static async getSummary(games) {
     const serializedGames = []
     for (const game of games) {
       serializedGames.push(await this.getDetail(game))
     }
     return serializedGames
+  }
+
+  static async getDetailSwitch(game, userId) {
+    if (game.gameType === "puzzle") {
+      return await this.getPuzzleDetail(game)
+    }
+    return await this.getDetailByUser(game, userId)
   }
 
   static async getDetailByUser(game, userId) {
@@ -35,6 +59,13 @@ class GameSerializer extends Serializer {
     serializedGame.color = serializedResult.color
     serializedGame.opponent = serializedResult.opponent
     serializedGame.players = serializedResult.serializedPlayers
+    return serializedGame
+  }
+
+  static async getPuzzleDetail(game) {
+    const serializedGame = this.serialize(game, ["id", "name", "gameType", "status"])
+    const puzzleMoves = await game.$relatedQuery("puzzleMoves")
+    serializedGame.puzzleMoves = PuzzleMoveSerializer.getSummary(puzzleMoves)
     return serializedGame
   }
 }
