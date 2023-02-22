@@ -142,7 +142,7 @@ const Board = props => {
       showPopup()
       setBoardState(boardState)
     } else if (response.turnSwitch) {
-      if (game) {
+      if (game && game.type !== "puzzle") {
         socket.emit("turn switch", {response, gameId: game.id})
         saveGameState(response.encodedState)
       }
