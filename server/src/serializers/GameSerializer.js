@@ -2,6 +2,7 @@ import Serializer from "./Serializer.js";
 import PlayerSerializer from "./PlayerSerializer.js";
 import userPlayedGame from "../services/userPlayedGame.js";
 import PuzzleMoveSerializer from "./PuzzleMoveSerializer.js";
+import getPuzzlePlayerColor from "../services/getPuzzlePlayerColor.js";
 
 class GameSerializer extends Serializer {
   static async getSummarySwitcher({games, userId, gameType}) {
@@ -66,6 +67,8 @@ class GameSerializer extends Serializer {
     const serializedGame = this.serialize(game, ["id", "name", "gameType", "status"])
     const puzzleMoves = await game.$relatedQuery("puzzleMoves")
     serializedGame.puzzleMoves = PuzzleMoveSerializer.getSummary(puzzleMoves)
+    serializedGame.color = await getPuzzlePlayerColor(game)
+    console.log(serializedGame)
     return serializedGame
   }
 }

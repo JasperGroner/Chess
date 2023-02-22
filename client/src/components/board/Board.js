@@ -23,6 +23,8 @@ const Board = props => {
     userColor = props.location.state.color
   }
 
+  console.log(game, userColor)
+
   const playerNames = {}
   if (game && game.players) {
     game.players.forEach(player => {
