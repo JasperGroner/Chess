@@ -15,7 +15,7 @@ class UserSeeder {
         password: "s3cret!p4ssw0rd"
       },
       {
-        email: "dan.hore@gmail.com",
+        email: "agoodfriend@gmail.com",
         username: "BuddyPal",
         password: "s3cret!p4ssw0rd"
       }
