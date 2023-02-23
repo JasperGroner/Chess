@@ -50,6 +50,7 @@ const Board = props => {
   const [ replayIndex, setReplayIndex ] = useState(false)
   const [ computerMove, setComputerMove ] = useState(false)
   const [ wrongMove, setWrongMove ] = useState(false)
+  const [ puzzleCompleted, setPuzzleCompleted ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -221,8 +222,20 @@ const Board = props => {
     setPopupState(false)  
   }
 
+  const selfDestructNoInteraction = event => {
+    setPopupState(false)
+  }
+
+  const handleComputerMove = async () => {
+    const result = await boardState.computerMove(select)
+    if (result === "completed") {
+      setPuzzleCompleted(true)
+      setPopupState(true)
+    }
+  }
+
   if (computerMove) {
-    boardState.computerMove(select)
+    handleComputerMove()
     setComputerMove(false)
   }
 
@@ -239,6 +252,13 @@ const Board = props => {
             handleResponse={handleResponse}
             setPawnUpgrade={setPawnUpgrade}
           />
+        </PopupDisplay>
+      )
+    } else if (puzzleCompleted) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h2>Puzzle Complete!</h2>
+          <button onClick={selfDestructNoInteraction} className="popup-button button">Hooray!</button>
         </PopupDisplay>
       )
     } else if (check.black || check.white || checkmate) {
@@ -275,6 +295,7 @@ const Board = props => {
     topDisplay = (
       <PuzzleTurnDisplay
         userColor={userColor}
+        puzzleCompleted={puzzleCompleted}
         puzzleLength={boardState.puzzleLength}
         moveIterator={boardState.moveIterator}
       />

@@ -405,7 +405,7 @@ class Chess {
 
   async computerMove(selectFunction) {
     if (this.moveIterator >= this.puzzleMoves.length) {
-      return false
+      return "completed"
     }
 
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
