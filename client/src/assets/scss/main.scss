@@ -314,7 +314,7 @@ a:hover, a:active, a:focus {
 }
 
 .replay-button {
-  margin: 0 1rem;
+  margin: 0rem;
   padding: 0;
   background-color: white;
   color: black;
@@ -415,4 +415,14 @@ a:hover, a:active, a:focus {
   object-fit: contain;
   height: 80%;
   align-self: center;
+}
+
+.replay-game{
+  float: left;
+  margin-top: 0.25vw;
+  font-size: 2vw;
+}
+
+.arrows{
+  float: right;
 }

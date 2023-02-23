@@ -1,4 +1,5 @@
 import React from "react";
+import AutoReplayDisplay from "./AutoReplayDisplay";
 
 const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState, playerNames, replayLength}) => {
   const changeState = event => {
@@ -9,11 +10,14 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState, playerNa
     }
   }
 
-  const autoReplay = async event => {
-    event.preventDefault()
-    while (newLocation < replayLength) {
-      
-    }
+  let replayDisplay
+  if (gameStatus === "finished") {
+    replayDisplay = (
+      <AutoReplayDisplay
+        updateReplayState={updateReplayState}
+        replayLength={replayLength}
+      />
+    )
   }
 
   let turnString = ""
@@ -40,9 +44,8 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState, playerNa
   return (
     <div className="info-display">
       <h1 className="main-heading">
-        {leftArrow}{turnString}{rightArrow}
+        {replayDisplay}{turnString}<span className="arrows">{leftArrow}{rightArrow}</span>
       </h1>
-      <a href="#" onClick={autoReplay}>Auto Replay</a>
     </div>
   )
 }
