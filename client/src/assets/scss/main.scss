@@ -186,7 +186,9 @@ a:hover, a:active, a:focus {
 }
 
 .popup-button {
+  margin-top: 0.5rem;
   background-color: $board-dark;
+  font-size: 24px;
 }
 
 .popup-message {
@@ -195,7 +197,7 @@ a:hover, a:active, a:focus {
 
 .info-display {
   width: $board-dimension;
-  margin: 10px auto;
+  margin: 8px auto 0 auto;
   text-align: center;
 }
 
@@ -216,7 +218,6 @@ a:hover, a:active, a:focus {
 
 .main-heading {
   padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
   font-size: 2.5vw;
 }
 
@@ -302,6 +303,10 @@ a:hover, a:active, a:focus {
 
 .load-game {
   padding-left: 3rem
+}
+
+.load-game--no-delete {
+  padding-left: 0rem
 }
 
 .load-game--detail {

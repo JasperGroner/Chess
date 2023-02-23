@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import LocalPlayMenu from "./LocalPlayMenu";
-import NetworkPlayMenu from "./NetworkPlayMenu";
+import React, { useState } from "react"
+import LocalPlayMenu from "./LocalPlayMenu"
+import NetworkPlayMenu from "./NetworkPlayMenu"
+import GameList from "./GameList"
 
 const MainMenu = ({currentUser}) => {
   const [ showSubMenu, setShowSubMenu ] = useState(false)
@@ -15,18 +16,30 @@ const MainMenu = ({currentUser}) => {
     showSubMenu !== "network" ? setShowSubMenu("network") : setShowSubMenu(false)
   }
 
+  const showPuzzleMenu = event => {
+    event.preventDefault()
+    showSubMenu !== "puzzle" ? setShowSubMenu("puzzle") : setShowSubMenu(false)
+  }
+
   let subMenu
   if (showSubMenu === "solo") {
     subMenu=<LocalPlayMenu currentUser={currentUser} />
   } else if (showSubMenu === "network") {
     subMenu=<NetworkPlayMenu currentUser={currentUser} />
+  } else if (showSubMenu === "puzzle") {
+    subMenu=<GameList gameType="puzzle"/>
   }
 
-  let onlineLink
+  let onlineLink, puzzleLink
   if (currentUser) {
     onlineLink = (
       <a href="#" onClick={showNetworkMenu} className="main-menu--item">
         Play an Online Opponent
+      </a>
+    )
+    puzzleLink = (
+      <a href="#" onClick={showPuzzleMenu} className="main-menu--item">
+        Play a Puzzle
       </a>
     )
   }
@@ -39,7 +52,7 @@ const MainMenu = ({currentUser}) => {
           Play a Local Game
         </a>
         {onlineLink}
-
+        {puzzleLink}
         {subMenu}
       </div>
     </div>

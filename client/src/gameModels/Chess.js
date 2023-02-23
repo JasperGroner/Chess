@@ -2,6 +2,7 @@ import King from "./Pieces/King"
 import GameDecoder from "./GameDecoder"
 import pieceConverter from "../services/pieceConverter"
 import SquareDecoder from "./SquareDecoder"
+import MoveDecoder from "./MoveDecoder"
 
 class Chess {
   constructor({gameState, selectedPiece, selectedPieceLocation, selectedPieceMoves, hypothetical, blankBoard}) {
@@ -39,6 +40,14 @@ class Chess {
 
   handleClick(row, column) {
     if (this.canMove(row, column)) {
+      if (this.isPuzzle) {
+        const wrongMove = this.isWrongMove(row, column)
+        if (wrongMove) {
+          this.selectedPiece = null
+          this.selectedPieceLocation = {row: null, column: null}
+          return { wrongMove: true, moves: []}
+        }
+      }
       const pawnUpgrade = this.isPawnUpgrade(row, column)
       if (pawnUpgrade) {
         return { pawnUpgrade, moves: [] }
@@ -76,6 +85,9 @@ class Chess {
     this.selectedPiece = null
     this.selectedPieceLocation = {}
     this.selectedPieceMoves = []
+    if (this.isPuzzle && this.moveIterator % 2 === 1) {
+      this.moveIterator++
+    }
     return {moves: [], turnSwitch: this.turn, unselect: true, check, checkmate, capturedPieces: this.capturedPieces, encodedState}
   }
 
@@ -115,27 +127,6 @@ class Chess {
     }
   }
   
-  inCheckmate(check) {
-    if (!check.black && !check.white) {
-      return false 
-    } else {
-      const checkedColor = check.black ? "black" : "white"
-      for (let row = 0; row < this.boardModel.length; row++) {
-        for (let column = 0; column < this.boardModel.length; column++) {
-          const piece = this.boardModel[row][column]
-          if (piece && pieceConverter[piece].color === checkedColor) {
-            let moves = this.getPieceMoves(piece, row, column)
-            if (moves.length > 0)
-            {
-              return false
-            }
-          }
-        }
-      }
-      return true
-    }
-  }
-
   // methods for getting moves for pieces
 
   getSelectedPieceMoves() {
@@ -277,6 +268,29 @@ class Chess {
     return false
   }
 
+  // checkmate method
+
+  inCheckmate(check) {
+    if (!check.black && !check.white) {
+      return false 
+    } else {
+      const checkedColor = check.black ? "black" : "white"
+      for (let row = 0; row < this.boardModel.length; row++) {
+        for (let column = 0; column < this.boardModel.length; column++) {
+          const piece = this.boardModel[row][column]
+          if (piece && pieceConverter[piece].color === checkedColor) {
+            let moves = this.getPieceMoves(piece, row, column)
+            if (moves.length > 0)
+            {
+              return false
+            }
+          }
+        }
+      }
+      return true
+    }
+  }
+
   // castling methods
 
   updateCastling() {
@@ -376,6 +390,41 @@ class Chess {
     } else {
       this.enPassantSquare = null
     }
+  }
+
+  // puzzle moves
+
+  setUpPuzzle(moves) {
+    this.isPuzzle = true
+    this.puzzleMoves = moves.sort((a, b) => {
+      return a.moveNumber - b.moveNumber
+    })
+    this.puzzleLength = moves.length / 2
+    this.moveIterator = 0
+  }
+
+  async computerMove(selectFunction) {
+    if (this.moveIterator >= this.puzzleMoves.length) {
+      return "completed"
+    }
+
+    const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
+
+    selectFunction(decodedMove.moveStart.row, decodedMove.moveStart.column)
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    selectFunction(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
+
+    this.moveIterator += 1
+  }
+
+  isWrongMove(row, column) {
+    const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
+    return (decodedMove.moveStart.row !== this.selectedPieceLocation.row ||
+            decodedMove.moveStart.column !== this.selectedPieceLocation.column ||
+            decodedMove.moveEnd.row !== row ||
+            decodedMove.moveEnd.column !== column)
   }
 
   // method for getting default board

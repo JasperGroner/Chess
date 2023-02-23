@@ -11,7 +11,7 @@ class Game extends Model {
       required: ["name", "gameType", "status"],
       properties: {
         name: {type: "string", minLength: 3, maxLength: 20},
-        gameType: {type: "string"},
+        gameType: {type: "string", enum: ["hot seat", "network", "puzzle"]},
         status: {type: "string", enum: ["looking", "playing", "finished"]},
         winner: {type: "string", enum: ["white", "black"]}
       }
@@ -19,7 +19,7 @@ class Game extends Model {
   }
 
   static get relationMappings() {
-    const { GameState, Player, User } = require("./index.js")
+    const { GameState, Player, User, PuzzleMove } = require("./index.js")
 
     return {
       gameStates: {
@@ -50,6 +50,15 @@ class Game extends Model {
             to: "players.userId"
           },
           to: "users.id"
+        }
+      },
+
+      puzzleMoves: {
+        relation: Model.HasManyRelation,
+        modelClass: PuzzleMove,
+        join: {
+          from: "games.id",
+          to: "puzzleMoves.gameId"
         }
       }
     }

@@ -3,17 +3,19 @@ import { Redirect } from "react-router-dom"
 import BoardRow from "./BoardRow"
 import Chess from "../../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
+import PuzzleTurnDisplay from "./PuzzleTurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import PopupDisplay from "../PopupDisplay"
 import CheckDisplay from "./CheckDisplay"
 import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
+import WrongMoveDisplay from "./WrongMoveDisplay"
 import { io } from "socket.io-client"
 
 const socket = io({
   autoConnect: false
 })
 
-const Board = props => {
+const Board = props => {  
   let game, userColor
 
   const { currentUser, setChatSocket } = props
@@ -46,6 +48,9 @@ const Board = props => {
   const [ capturedPieces, setCapturedPieces ] = useState(boardState.capturedPieces)
   const [ allGameStates, setAllGameStates ] = useState([])
   const [ replayIndex, setReplayIndex ] = useState(false)
+  const [ computerMove, setComputerMove ] = useState(false)
+  const [ wrongMove, setWrongMove ] = useState(false)
+  const [ puzzleCompleted, setPuzzleCompleted ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -58,6 +63,10 @@ const Board = props => {
       socket.on("load game", ({gameData}) => {
         const loadedGame = new Chess({gameState: gameData.encodedState})
         setBoardState(loadedGame)
+        if(game.gameType === "puzzle") {
+          loadedGame.setUpPuzzle(game.puzzleMoves)
+          setComputerMove(true)
+        }
         setCapturedPieces(loadedGame.capturedPieces)
         handleTurnColor(loadedGame.turn)
       })
@@ -72,7 +81,7 @@ const Board = props => {
 
         socket.on("replay states", ({gameStates}) => {
           setAllGameStates(gameStates)
-          setReplayIndex(0)
+          setReplayIndex(gameStates.length - 1)
         })
       }
 
@@ -143,8 +152,11 @@ const Board = props => {
       setPawnUpgrade(response.pawnUpgrade)
       showPopup()
       setBoardState(boardState)
+    } else if (response.wrongMove) {
+      setWrongMove(true)
+      showPopup()
     } else if (response.turnSwitch) {
-      if (game) {
+      if (game && game.gameType !== "puzzle") {
         socket.emit("turn switch", {response, gameId: game.id})
         saveGameState(response.encodedState)
       }
@@ -161,7 +173,9 @@ const Board = props => {
     }
     if (response.checkmate) {
       setCheckmate(response.checkmate)
-      socket.emit("checkmate", {gameId: game.id, winner: turn})
+      if (game.gameType !== "puzzle") {
+        socket.emit("checkmate", {gameId: game.id, winner: turn})
+      }
       showPopup()
     }
     if (response.capturedPieces) {
@@ -169,6 +183,9 @@ const Board = props => {
     }
     handleTurnColor(response.turnSwitch)
     setBoardState(boardState)
+    if (game.gameType === "puzzle" && computerMove === false) {
+      setComputerMove(true)
+    }
   }
 
   const showPopup = () => {
@@ -204,7 +221,24 @@ const Board = props => {
 
   const selfDestruct = event => {
     setSelectable(true)
+    setPopupState(false)  
+  }
+
+  const selfDestructNoInteraction = event => {
     setPopupState(false)
+  }
+
+  const handleComputerMove = async () => {
+    const result = await boardState.computerMove(select)
+    if (result === "completed") {
+      setPuzzleCompleted(true)
+      setPopupState(true)
+    }
+  }
+
+  if (computerMove) {
+    handleComputerMove()
+    setComputerMove(false)
   }
 
   let popup = ""
@@ -222,6 +256,13 @@ const Board = props => {
           />
         </PopupDisplay>
       )
+    } else if (puzzleCompleted) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h2>Puzzle Complete!</h2>
+          <button onClick={selfDestructNoInteraction} className="popup-button button">Hooray!</button>
+        </PopupDisplay>
+      )
     } else if (check.black || check.white || checkmate) {
       popup = (
         <PopupDisplay selfDestruct={selfDestruct}>
@@ -229,7 +270,38 @@ const Board = props => {
           <button onClick={selfDestruct} className="popup-button button">Okay</button>
         </PopupDisplay>
       )
+    } else if (wrongMove) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <WrongMoveDisplay
+            selfDestruct={selfDestruct}
+            setWrongMove={setWrongMove}
+          />
+        </PopupDisplay>
+      )
     }
+  }
+
+  let topDisplay
+  if (!game || game.gameType !== "puzzle") {
+    topDisplay = (
+      <TurnDisplay 
+        turn={turn} 
+        gameStatus={game?.status} 
+        replayIndex={replayIndex} 
+        updateReplayState={updateReplayState}
+        playerNames={playerNames}
+      />
+    )
+  } else {
+    topDisplay = (
+      <PuzzleTurnDisplay
+        userColor={userColor}
+        puzzleCompleted={puzzleCompleted}
+        puzzleLength={boardState.puzzleLength}
+        moveIterator={boardState.moveIterator}
+      />
+    )
   }
 
   if (!currentUser || game) {
@@ -238,13 +310,7 @@ const Board = props => {
         {popup}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
-          <TurnDisplay 
-            turn={turn} 
-            gameStatus={game?.status} 
-            replayIndex={replayIndex} 
-            updateReplayState={updateReplayState}
-            playerNames={playerNames}
-          />
+          {topDisplay}
           <div className ="container">
             {rows}
           </div>
