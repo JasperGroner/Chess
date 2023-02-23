@@ -81,7 +81,7 @@ const Board = props => {
 
         socket.on("replay states", ({gameStates}) => {
           setAllGameStates(gameStates)
-          setReplayIndex(gameStates.length - 1)
+          setReplayIndex(0)
         })
       }
 
@@ -203,14 +203,12 @@ const Board = props => {
   }
 
   const updateReplayState = (newLocation) => {
-    if (newLocation >= 0 && newLocation < allGameStates.length) {
-      setReplayIndex(newLocation)
-      const newGameState = allGameStates[newLocation].encodedState
-      boardState.loadGame(newGameState)
-      setCapturedPieces(boardState.capturedPieces)
-      setBoardState(boardState)
-      setTurn(boardState.turn)
-    }
+    setReplayIndex(newLocation)
+    const newGameState = allGameStates[newLocation].encodedState
+    boardState.loadGame(newGameState)
+    setCapturedPieces(boardState.capturedPieces)
+    setBoardState(boardState)
+    setTurn(boardState.turn)
   }
 
   const saveGameState = (encodedState) => {
@@ -290,6 +288,7 @@ const Board = props => {
         gameStatus={game?.status} 
         replayIndex={replayIndex} 
         updateReplayState={updateReplayState}
+        replayLength={allGameStates.length}
         playerNames={playerNames}
       />
     )

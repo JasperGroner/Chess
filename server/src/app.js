@@ -104,8 +104,13 @@ io.on("connection", (socket) => {
     if (game.status === "looking") {
       await game.$query().patch({status: "playing"})
     }
-    const gameStates = await game.$relatedQuery("gameStates")
-    const serializedGameState = GameStateSerializer.getMostRecentDetail(gameStates)
+    const gameStates = await game.$relatedQuery("gameStates").orderBy("createdAt")
+    let serializedGameState
+    if (game.status !== "finished") {
+      serializedGameState = gameStates[gameStates.length - 1]
+    } else {
+      serializedGameState = gameStates[0]
+    }
     io.to(gameId).emit("load game", ({gameData: serializedGameState}))
   })
 
