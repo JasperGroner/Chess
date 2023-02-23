@@ -3,3 +3,5 @@ const daysSince = (dateString) => {
   const msInDay = 1000 * 60 * 60 * 24
   return msSinceDate / msInDay
 }
+
+export default daysSince

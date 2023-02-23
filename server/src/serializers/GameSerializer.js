@@ -23,7 +23,6 @@ class GameSerializer extends Serializer {
   }
 
   static async getPuzzleSummary(games) {
-    console.log("starting")
     const serializedGames = []
     for (const game of games) {
       serializedGames.push(await this.getPuzzleDetail(game))

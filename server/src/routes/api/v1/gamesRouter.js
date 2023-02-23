@@ -1,17 +1,21 @@
 import express from "express"
+import { ValidationError } from "objection"
 import { Game, Player, GameState } from "../../../models/index.js"
 import GameSerializer from "../../../serializers/GameSerializer.js"
 import cleanUserInput from "../../../services/cleanUserInput.js"
 import gamesGameStatesRouter from "./gamesGameStatesRouter.js"
-import { ValidationError } from "objection"
+import handlePuzzleUpdate from "../../../services/handlePuzzleUpdate.js"
 
 const gamesRouter = new express.Router()
 
 gamesRouter.get("/type/:gameType", async (req, res) => {
-  const userId = req.user.id
+  let userId
   const gameType = req.params.gameType
   try { 
-    const games = await Game.query().where("gameType", gameType)
+    let games = await Game.query().where("gameType", gameType).orderBy("createdAt")
+    if (gameType === "puzzle") {
+      games = await handlePuzzleUpdate(games)
+    }
     const serializedGames = await GameSerializer.getSummarySwitcher({games, userId, gameType})
     res.status(200).json({games: serializedGames})
   } catch(error) {
