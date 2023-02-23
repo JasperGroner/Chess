@@ -25,7 +25,7 @@ const BoardTile = ({color, selectedTile, select, rowId, columnId, boardState, se
   if (boardState.boardModel &&
     boardState.boardModel[rowId][columnId]) {
     const piece = boardState.boardModel[rowId][columnId]
-    image = <img src={pieceConverter[piece].image} />
+    image = <img className="piece-image" src={pieceConverter[piece].image} />
   }
 
   return (<div className={classes} onClick={selectTile}>

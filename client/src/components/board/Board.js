@@ -55,7 +55,9 @@ const Board = props => {
     if (game && game.id) {
       socket.connect()
 
-      socket.emit("load game", {gameId: game.id})
+      socket.on("connect", ()=> {
+        socket.emit("load game", {gameId: game.id})
+      })
 
       socket.on("load game", ({gameData}) => {
         const loadedGame = new Chess({gameState: gameData.encodedState})
@@ -78,7 +80,7 @@ const Board = props => {
 
         socket.on("replay states", ({gameStates}) => {
           setAllGameStates(gameStates)
-          setReplayIndex(gameStates.length - 1)
+          setReplayIndex(0)
         })
       }
 
