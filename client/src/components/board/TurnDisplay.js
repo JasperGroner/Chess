@@ -9,6 +9,13 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState, playerNa
     }
   }
 
+  const autoReplay = async event => {
+    event.preventDefault()
+    while (newLocation < replayLength) {
+      
+    }
+  }
+
   let turnString = ""
 
   let leftArrow, rightArrow
@@ -35,6 +42,7 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState, playerNa
       <h1 className="main-heading">
         {leftArrow}{turnString}{rightArrow}
       </h1>
+      <a href="#" onClick={autoReplay}>Auto Replay</a>
     </div>
   )
 }
