@@ -18,12 +18,10 @@ const handlePuzzleUpdate = async currentPuzzles => {
     try {
       const response = await fetch('https://chess-puzzles.p.rapidapi.com/?themes=%5B%22mate%22%5D&themesType=ALL&count=20', options)
       const newPuzzles = await response.json()
-      console.log(newPuzzles)
       await Game.query().where("gameType", "puzzle").delete()
       const puzzleArray = newPuzzles.puzzles
       for (let i = 0; i < puzzleArray.length; i++) {
         const puzzle = puzzleArray[i]
-        console.log(puzzle.moves)
         const newGame = await Game.query().insertAndFetch({name: `Today's Puzzle #${i + 1}`, gameType: "puzzle", status: "playing"})
         await GameState.query().insert({gameId: newGame.id, encodedState: puzzle.fen})
         for (let j = 0; j < puzzle.moves.length; j++) {
