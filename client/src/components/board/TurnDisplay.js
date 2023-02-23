@@ -27,8 +27,10 @@ const TurnDisplay = ({turn, gameStatus, replayIndex, updateReplayState, playerNa
   }
 
   return (
-    <div className = "info-display">
-      <h1 className = "main-heading">{leftArrow}{turnString}{rightArrow}</h1>
+    <div className="info-display">
+      <h1 className="main-heading">
+        {leftArrow}{turnString}{rightArrow}
+      </h1>
     </div>
   )
 }

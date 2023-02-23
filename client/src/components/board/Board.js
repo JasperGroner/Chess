@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom"
 import BoardRow from "./BoardRow"
 import Chess from "../../gameModels/Chess"
 import TurnDisplay from "./TurnDisplay"
+import PuzzleTurnDisplay from "./PuzzleTurnDisplay"
 import CapturedPiecesDisplay from "./CapturedPiecesDisplay"
 import PopupDisplay from "../PopupDisplay"
 import CheckDisplay from "./CheckDisplay"
@@ -269,7 +270,13 @@ const Board = props => {
       />
     )
   } else {
-    topDisplay = "Moves Left Placeholder"
+    topDisplay = (
+      <PuzzleTurnDisplay
+        userColor={userColor}
+        puzzleLength={boardState.puzzleLength}
+        moveIterator={boardState.moveIterator}
+      />
+    )
   }
 
   if (!currentUser || game) {
