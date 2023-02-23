@@ -31,6 +31,8 @@ const Lobby = props => {
 
     socket.connect()
 
+    socket.emit("get available games")
+
     socket.on("connect", () => {
       socket.emit("get available games")
 

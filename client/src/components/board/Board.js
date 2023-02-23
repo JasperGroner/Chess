@@ -80,7 +80,7 @@ const Board = props => {
 
         socket.on("replay states", ({gameStates}) => {
           setAllGameStates(gameStates)
-          setReplayIndex(0)
+          setReplayIndex(gameStates.length - 1)
         })
       }
 

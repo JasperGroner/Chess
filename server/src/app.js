@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
   socket.on("leave lobby", async ({ gameId }) => {
     if (gameId) {
       const game = await Game.query().findById(gameId)
-      if (game.status === "looking") {
+      if (game?.status === "looking") {
         await Game.query().deleteById(gameId)
       }
     }
