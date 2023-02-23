@@ -3,7 +3,11 @@ import pieceConverter from "../../services/pieceConverter"
 
 const CapturedPiecesDisplay = ({capturedPieces, color}) => {
   const capturedPiecesReact = capturedPieces.map((piece, index) => {
-    return <img src={pieceConverter[piece].image} key={index} className="pieces-square"/>
+    return (
+      <div className="square">
+        <img src={pieceConverter[piece].image} key={index} className="piece-image"/>
+      </div>
+    )
   })
 
   return (
