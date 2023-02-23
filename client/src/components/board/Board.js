@@ -173,7 +173,9 @@ const Board = props => {
     }
     if (response.checkmate) {
       setCheckmate(response.checkmate)
-      socket.emit("checkmate", {gameId: game.id, winner: turn})
+      if (game.gameType !== "puzzle") {
+        socket.emit("checkmate", {gameId: game.id, winner: turn})
+      }
       showPopup()
     }
     if (response.capturedPieces) {
