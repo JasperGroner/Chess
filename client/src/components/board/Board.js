@@ -85,7 +85,7 @@ const Board = props => {
         })
       }
 
-      if (game.status === "playing") {
+      if (game.status === "playing" && game.gameType === "network") {
         setChatSocket(socket)
       }
 
