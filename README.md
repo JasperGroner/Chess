@@ -2,7 +2,7 @@
 
 This is a fully featured chess app that allows for local and network play, chat during network play and matchmaking, replays of finished games, and daily puzzles.
 
-![Sample board](https://github.com/JasperGroner/chess/blob/main/images/board.png)
+<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" width="400" alt="Sample chess board from game."/>
 
 ## Features: 
 
@@ -51,3 +51,7 @@ Jasper Groner
 Front End: ReactJS, Sass/CSS, HTML
 
 Back End: NodeJS, Express, Socket.io, Objection, Knex
+
+## Attributions:
+
+[Chess Icons Vectors by Vecteezy]("https://www.vecteezy.com/free-vector/chess-icons")
