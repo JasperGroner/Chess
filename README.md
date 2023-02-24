@@ -2,7 +2,7 @@
 
 This is a fully featured chess app that allows for local and network play, chat during network play and matchmaking, replays of finished games, and daily puzzles.
 
-![https://github.com/JasperGroner/chess/blob/main/images/board.png]
+![Sample board](https://github.com/JasperGroner/chess/blob/main/images/board.png)
 
 ## Features: 
 
