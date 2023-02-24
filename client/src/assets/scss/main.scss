@@ -46,7 +46,7 @@ a:hover, a:active, a:focus {
 
 .button-menu {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   width: 2rem;
   padding: 0.3rem;
   transition: margin 1000ms;
@@ -64,8 +64,8 @@ a:hover, a:active, a:focus {
   background-color: $board-light;
   padding: 0 10px;
   display: block;
-  height: 100vh;
   padding-top: 3rem;
+  min-height: 100vh;
   width: 8rem;
   text-align: center; 
   transition: margin 1000ms;

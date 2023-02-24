@@ -4,7 +4,7 @@ const AutoReplayDisplay = ({updateReplayState, replayLength}) => {
   const autoReplay = async event => {
     event.preventDefault()
     let newLocation = 0
-    while (newLocation < replayLength - 1) {
+    while (newLocation < replayLength) {
       updateReplayState(newLocation)
       await new Promise(resolve => setTimeout(resolve, 1000));
       newLocation++
