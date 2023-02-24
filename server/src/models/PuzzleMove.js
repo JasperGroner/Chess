@@ -12,7 +12,8 @@ class PuzzleMove extends Model {
       properties: {
         moveStart: {type: "string", minLength: 2, maxLength: 2},
         moveEnd: {type: "string", minLength: 2, maxLength: 2},
-        moveNumber:  {type: ["integer", "string"]},
+        pawnUpgrade: {type: "string", minLength: 1, maxLength: 1},
+        moveNumber: {type: ["integer", "string"]},
         gameId: { type: ["integer", "string"]}
       }
     }

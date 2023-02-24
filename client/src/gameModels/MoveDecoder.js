@@ -5,6 +5,7 @@ class MoveDecoder {
     const decodedMove = {}
     decodedMove.moveStart = SquareDecoder.decodeSquare(encodedMove.moveStart)
     decodedMove.moveEnd = SquareDecoder.decodeSquare(encodedMove.moveEnd)
+    decodedMove.pawnUpgrade = encodedMove.pawnUpgrade
     return decodedMove
   }
 }

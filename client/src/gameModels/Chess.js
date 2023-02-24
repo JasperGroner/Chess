@@ -40,16 +40,16 @@ class Chess {
 
   handleClick(row, column) {
     if (this.canMove(row, column)) {
-      if (this.isPuzzle) {
-        const wrongMove = this.isWrongMove(row, column)
-        if (wrongMove) {
-          this.selectedPiece = null
-          this.selectedPieceLocation = {row: null, column: null}
-          return { wrongMove: true, moves: []}
-        }
-      }
       const pawnUpgrade = this.isPawnUpgrade(row, column)
       if (pawnUpgrade) {
+        if (this.isPuzzle) {
+          this.pawnUpgraded = true
+          this.priorPawnLocation = {
+            row: this.selectedPieceLocation.row,
+            column: this.selectedPieceLocation.column
+          }
+          this.priorPawnDestinationPiece = this.boardModel[row][column]
+        }
         return { pawnUpgrade, moves: [] }
       }
       return this.handleMove(row, column)
@@ -71,6 +71,14 @@ class Chess {
   }
 
   handleMove(row, column) {
+    if (this.isPuzzle) {
+      const wrongMove = this.isWrongMove(row, column)
+      if (wrongMove) {
+        this.selectedPiece = null
+        this.selectedPieceLocation = {row: null, column: null}
+        return { wrongMove: true, moves: []}
+      }
+    }
     this.updateCapturedPieces(this.boardModel[row][column])
     this.enPassantCapture(row, column)
     this.boardModel[row][column] = this.selectedPiece
@@ -403,24 +411,43 @@ class Chess {
     this.moveIterator = 0
   }
 
-  async computerMove(selectFunction) {
+  async computerMove(selectFunction, handleResposeFunction, userColor) {
     if (this.moveIterator >= this.puzzleMoves.length) {
       return "completed"
     }
 
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
-
+    
     selectFunction(decodedMove.moveStart.row, decodedMove.moveStart.column)
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
     selectFunction(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
 
+    if (decodedMove.pawnUpgrade) {
+      this.upgradePawn(decodedMove.pawnUpgrade)
+      const response = this.handleMove(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
+      handleResposeFunction(response)
+    }
+
     this.moveIterator += 1
   }
 
   isWrongMove(row, column) {
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
+    if (decodedMove.pawnUpgrade) {
+      if (decodedMove.moveEnd.row !== row ||
+            decodedMove.moveEnd.column !== column ||
+            this.boardModel[row][column] && this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase() ||
+            !this.pawnUpgraded) {
+        this.boardModel[row][column] = this.priorPawnDestinationPiece
+        this.boardModel[this.priorPawnLocation.row][this.priorPawnLocation.column] = this.turn === "white" ? "P" : "p"
+        this.pawnUpgraded = false
+        return true
+      }
+      this.pawnUpgraded = false
+      return false
+    }
     return (decodedMove.moveStart.row !== this.selectedPieceLocation.row ||
             decodedMove.moveStart.column !== this.selectedPieceLocation.column ||
             decodedMove.moveEnd.row !== row ||

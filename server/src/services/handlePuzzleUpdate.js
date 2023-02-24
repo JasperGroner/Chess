@@ -26,7 +26,11 @@ const handlePuzzleUpdate = async currentPuzzles => {
         await GameState.query().insert({gameId: newGame.id, encodedState: puzzle.fen})
         for (let j = 0; j < puzzle.moves.length; j++) {
           const move = puzzle.moves[j]
-          await PuzzleMove.query().insert({gameId: newGame.id, moveStart: move.slice(0, 2), moveEnd: move.slice(2, 4), moveNumber: j})
+          let pawnUpgrade
+          if (move.length > 4) {
+            pawnUpgrade = move.slice(4)
+          }
+          await PuzzleMove.query().insert({gameId: newGame.id, moveStart: move.slice(0, 2), moveEnd: move.slice(2, 4), pawnUpgrade: pawnUpgrade, moveNumber: j})
         }
       }
       const updatedPuzzles = await Game.query().where("gameType", "puzzle")
