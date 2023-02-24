@@ -426,3 +426,42 @@ a:hover, a:active, a:focus {
 .arrows{
   float: right;
 }
+
+.authentication--container {
+  width: 75%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.authentication--line {
+  display: flex;
+  overflow-x: visible;
+}
+
+.authentication--input {
+  display: inline-block;
+  max-width: 70%;
+  margin: 0 1% 0 12%;
+  text-align: left;
+}
+
+.authentication--input-top {
+  border-radius: 10px 10px 0 0
+}
+
+.authentication--input-bottom {
+  border-radius: 0 0 10px 10px;
+}
+
+.authentication--label {
+  font-size: 15px;
+  align-self: center;
+}
+
+.authentication--button {
+  margin: 1rem;
+}
+
+.form-error {
+  margin: 0.25rem;
+}
