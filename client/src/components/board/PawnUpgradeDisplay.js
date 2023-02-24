@@ -5,14 +5,13 @@ const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, handleRespon
 
   const upgrade = event => {
     event.preventDefault()
-    boardState.upgradePawn(event.currentTarget.id)
+    boardState.upgradePawn(event.currentTarget.id, pawnUpgrade.row, pawnUpgrade.column)
     const response = boardState.handleMove(pawnUpgrade.row, pawnUpgrade.column)
     setPawnUpgrade(false)
     selfDestruct()
     handleResponse(response)
   }
   
-  console.log(computerMove)
   if (computerMove) {
     selfDestruct()
   }

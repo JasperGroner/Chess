@@ -46,15 +46,8 @@ class Chess {
           row: this.selectedPieceLocation.row,
           column: this.selectedPieceLocation.column
         }
+        this.priorPawnDestinationPiece = this.boardModel[row][column]
         return { pawnUpgrade, moves: [] }
-      }
-      if (this.isPuzzle) {
-        const wrongMove = this.isWrongMove(row, column)
-        if (wrongMove) {
-          this.selectedPiece = null
-          this.selectedPieceLocation = {row: null, column: null}
-          return { wrongMove: true, moves: []}
-        }
       }
       return this.handleMove(row, column)
     } else if (this.boardModel[row][column]) {
@@ -75,6 +68,14 @@ class Chess {
   }
 
   handleMove(row, column) {
+    if (this.isPuzzle) {
+      const wrongMove = this.isWrongMove(row, column)
+      if (wrongMove) {
+        this.selectedPiece = null
+        this.selectedPieceLocation = {row: null, column: null}
+        return { wrongMove: true, moves: []}
+      }
+    }
     this.updateCapturedPieces(this.boardModel[row][column])
     this.enPassantCapture(row, column)
     this.boardModel[row][column] = this.selectedPiece
@@ -358,8 +359,11 @@ class Chess {
     return false
   }
 
-  upgradePawn(piece) {
+  upgradePawn(piece, row, column) {
     this.selectedPiece = piece
+    if (this.isPuzzle && row & column) {
+      this.boardModel[row][column] = piece
+    }
   }
 
   // en passant update method
@@ -431,14 +435,15 @@ class Chess {
 
   isWrongMove(row, column) {
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
-    console.log(decodedMove)
+    console.log(this.priorPawnLocation)
+    console.log(this.priorPawnDestinationPiece)
     console.log(row, column)
     if (decodedMove.pawnUpgrade) {
       if (decodedMove.moveEnd.row !== row ||
-            decodedMove.moveEnd.column !== column) {
-        return true
-      } else if ( this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase()) {
-        this.boardModel[row][column] = false
+            decodedMove.moveEnd.column !== column ||
+            this.boardModel[row][column] && this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase()) {
+        console.log(row, column)
+        this.boardModel[row][column] = this.priorPawnDestinationPiece
         this.boardModel[this.priorPawnLocation.row][this.priorPawnLocation.column] = this.turn === "white" ? "P" : "p"
         return true
       }
