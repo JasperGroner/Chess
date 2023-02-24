@@ -67,30 +67,37 @@ const SignInForm = () => {
 
   return (
     <div className="sub-page-container" onSubmit={onSubmit}>
-      <div className="centered-content">
+      <div className="authentication--container">
         <h1>Sign In</h1>
         <form>
           <div>
-            <label>
-              Email
-              <input type="text" name="email" value={userPayload.email} onChange={onInputChange} />
-              <FormError error={errors.email} />
+            <label className="authentication--line">
+              <input 
+                type="text" 
+                name="email" 
+                value={userPayload.email} 
+                onChange={onInputChange} 
+                className="authentication--input authentication--input-top"
+              />
+              <span className="authentication--label">Email</span>
             </label>
+            <FormError error={errors.email} />
           </div>
           <div>
-            <label>
-              Password
+            <label className="authentication--line">
               <input
                 type="password"
                 name="password"
                 value={userPayload.password}
                 onChange={onInputChange}
+                className="authentication--input authentication--input-bottom"
               />
-              <FormError error={errors.password} />
+              <span className="authentication--label">Password</span>
             </label>
+            <FormError error={errors.password} />
           </div>
           <div>
-            <input type="submit" className="button" value="Sign In" />
+            <input type="submit" className="button authentication--button" value="Sign In" />
           </div>
         </form>
       </div>

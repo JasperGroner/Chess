@@ -95,49 +95,63 @@ const RegistrationForm = () => {
 
   return (
     <div className="sub-page-container">
-      <div className="centered-content">
+      <div className="authentication--container">
         <h1>Register</h1>
         <form onSubmit={onSubmit}>
           <div>
-            <label>
-              Email
-              <input type="text" name="email" value={userPayload.email} onChange={onInputChange} />
-              <FormError error={errors.email} />
+            <label className="authentication--line">
+              <input 
+                type="text" 
+                name="email" 
+                value={userPayload.email} 
+                onChange={onInputChange} 
+                className="authentication--input authentication--input-top"
+              />
+              <span className="authentication--label">Email</span>
             </label>
+            <FormError error={errors.email} />
           </div>
           <div>
-            <label>
-              Username
-              <input type="text" name="username" value={userPayload.username} onChange={onInputChange} />
-              <FormError error={errors.username} />
+            <label className="authentication--line">
+              <input 
+                type="text" 
+                name="username" 
+                value={userPayload.username} 
+                onChange={onInputChange} 
+                className="authentication--input"
+              />
+              <span className="authentication--label">Username</span>
             </label>
+            <FormError error={errors.username} />
           </div>
           <div>
-            <label>
-              Password
+            <label className="authentication--line">
               <input
                 type="password"
                 name="password"
                 value={userPayload.password}
                 onChange={onInputChange}
+                className="authentication--input"
               />
-              <FormError error={errors.password} />
+              <span className="authentication--label">Password</span>
             </label>
+            <FormError error={errors.password} />
           </div>
           <div>
-            <label>
-              Password Confirmation
+            <label className="authentication--line">
               <input
                 type="password"
                 name="passwordConfirmation"
                 value={userPayload.passwordConfirmation}
                 onChange={onInputChange}
+                className="authentication--input authentication--input-bottom"
               />
-              <FormError error={errors.passwordConfirmation} />
+              <span className="authentication--label">Confirm Password</span>
             </label>
+            <FormError error={errors.passwordConfirmation} />
           </div>
           <div>
-            <input type="submit" className="button" value="Register" />
+            <input type="submit" className="button authentication--button" value="Register" />
           </div>
         </form>
       </div>
