@@ -79,8 +79,9 @@ const GameList = ({gameType, gameStatus}) => {
     )
   }
 
+  let showDelete = (gameStatus !== "playing" || gameType !== "network") && gameType !== "puzzle"
+
   const gameListReact = gameListData.map(game => {
-    let showDelete = (game.status !== "playing" || game.gameType !== "network") && game.gameType !== "puzzle"
     let deleteButton, detail, loadClass
     if (showDelete) {
       deleteButton = <i className="fa-solid fa-trash delete-game" onClick={deleteGameHandler} id={game.id}></i>
@@ -88,7 +89,7 @@ const GameList = ({gameType, gameStatus}) => {
     } else {
       loadClass="load-game--no-delete"
     }
-    if (game.gameType !== "puzzle") {
+    if (gameType !== "puzzle") {
       detail = <p className="load-game--detail">(Color: {game.color}) (Opponent: {game.opponent || "none"})</p>
     } else {
       detail = <p className="load-game--detail">(Moves to Check: {game.puzzleMoves.length / 2})</p>
@@ -102,9 +103,14 @@ const GameList = ({gameType, gameStatus}) => {
     )
   })
 
+  let title = "Available Games"
+  if (gameType === "puzzle") {
+    title = "Daily Puzzles"
+  }
+
   return (
     <div className="main-menu--game-list--header">
-      <h2>Available Games</h2>
+      <h2>{title}</h2>
       <ul className="main-menu--game-list">
         {gameListReact}
       </ul>
