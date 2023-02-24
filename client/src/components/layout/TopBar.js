@@ -27,16 +27,18 @@ const TopBar = ({ user, hidden }) => {
 
   return (
     <div className={barClass}>
-      <div className="top-bar-left">
-        <ul className="menu">
-          <li className="menu-text">Chess</li>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-        </ul>
-      </div>
-      <div className="top-bar-right">
-        <ul className="menu">{user ? authenticatedListItems : unauthenticatedListItems}</ul>
+      <div className="top-bar--subcontainer">
+        <div className="top-bar-left">
+          <ul className="menu">
+            <li className="menu-text">Chess</li>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+          </ul>
+        </div>
+        <div className="top-bar-right">
+          <ul className="menu">{user ? authenticatedListItems : unauthenticatedListItems}</ul>
+        </div>
       </div>
     </div>
   );
