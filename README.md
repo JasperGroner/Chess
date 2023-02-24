@@ -10,7 +10,9 @@ Email: themainplayer@gmail.com
 
 Password: password
 
-<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" align="center" alt="Sample chess board from game."/>
+(Not a real email!)
+
+<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" align="center" width: 400px; alt="Sample chess board from game."/>
 
 ## Features: 
 
