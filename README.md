@@ -1,6 +1,16 @@
-# The Chess App
+<h1 align="center">The Chess App</h1>
 
 This is a fully featured chess app that allows for local and network play, chat during network play and matchmaking, replays of finished games, and daily puzzles.
+
+[Play it Here](https://chess-game.herokuapp.com/)
+
+If you don't have time to make a user and want to access online elements, saving, and daily puzzles, please feel free to use the following credentials:
+
+Email: themainplayer@gmail.com
+
+Password: password
+
+(Not a real email!)
 
 <img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" width="400" alt="Sample chess board from game."/>
 
