@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import pieceConverter from "../../services/pieceConverter"
 
-const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, handleResponse, setPawnUpgrade}) => {
+const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, handleResponse, setPawnUpgrade, computerMove}) => {
 
   const upgrade = event => {
     event.preventDefault()
@@ -10,6 +10,11 @@ const PawnUpgradeDisplay = ({pawnUpgrade, selfDestruct, boardState, handleRespon
     setPawnUpgrade(false)
     selfDestruct()
     handleResponse(response)
+  }
+  
+  console.log(computerMove)
+  if (computerMove) {
+    selfDestruct()
   }
 
   let upgradeList

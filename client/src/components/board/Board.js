@@ -148,7 +148,7 @@ const Board = props => {
     } else {
       setSelectedTile({row, column})
     }
-    if (response.pawnUpgrade) {
+    if (response.pawnUpgrade && !computerMove) {
       setPawnUpgrade(response.pawnUpgrade)
       showPopup()
       setBoardState(boardState)
@@ -227,7 +227,7 @@ const Board = props => {
   }
 
   const handleComputerMove = async () => {
-    const result = await boardState.computerMove(select)
+    const result = await boardState.computerMove(select, handleResponse, userColor)
     if (result === "completed") {
       setPuzzleCompleted(true)
       setPopupState(true)

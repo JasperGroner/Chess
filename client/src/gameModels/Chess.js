@@ -40,6 +40,14 @@ class Chess {
 
   handleClick(row, column) {
     if (this.canMove(row, column)) {
+      const pawnUpgrade = this.isPawnUpgrade(row, column)
+      if (pawnUpgrade) {
+        this.priorPawnLocation = {
+          row: this.selectedPieceLocation.row,
+          column: this.selectedPieceLocation.column
+        }
+        return { pawnUpgrade, moves: [] }
+      }
       if (this.isPuzzle) {
         const wrongMove = this.isWrongMove(row, column)
         if (wrongMove) {
@@ -47,10 +55,6 @@ class Chess {
           this.selectedPieceLocation = {row: null, column: null}
           return { wrongMove: true, moves: []}
         }
-      }
-      const pawnUpgrade = this.isPawnUpgrade(row, column)
-      if (pawnUpgrade) {
-        return { pawnUpgrade, moves: [] }
       }
       return this.handleMove(row, column)
     } else if (this.boardModel[row][column]) {
@@ -403,24 +407,43 @@ class Chess {
     this.moveIterator = 0
   }
 
-  async computerMove(selectFunction) {
+  async computerMove(selectFunction, handleResposeFunction, userColor) {
     if (this.moveIterator >= this.puzzleMoves.length) {
       return "completed"
     }
 
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
-
+    
     selectFunction(decodedMove.moveStart.row, decodedMove.moveStart.column)
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
     selectFunction(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
 
+    if (decodedMove.pawnUpgrade) {
+      this.upgradePawn(decodedMove.pawnUpgrade)
+      const response = this.handleMove(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
+      handleResposeFunction(response)
+    }
+
     this.moveIterator += 1
   }
 
   isWrongMove(row, column) {
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
+    console.log(decodedMove)
+    console.log(row, column)
+    if (decodedMove.pawnUpgrade) {
+      if (decodedMove.moveEnd.row !== row ||
+            decodedMove.moveEnd.column !== column) {
+        return true
+      } else if ( this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase()) {
+        this.boardModel[row][column] = false
+        this.boardModel[this.priorPawnLocation.row][this.priorPawnLocation.column] = this.turn === "white" ? "P" : "p"
+        return true
+      }
+      return false
+    }
     return (decodedMove.moveStart.row !== this.selectedPieceLocation.row ||
             decodedMove.moveStart.column !== this.selectedPieceLocation.column ||
             decodedMove.moveEnd.row !== row ||
