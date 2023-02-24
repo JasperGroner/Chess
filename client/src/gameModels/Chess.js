@@ -43,6 +43,7 @@ class Chess {
       const pawnUpgrade = this.isPawnUpgrade(row, column)
       if (pawnUpgrade) {
         if (this.isPuzzle) {
+          this.pawnUpgraded = true
           this.priorPawnLocation = {
             row: this.selectedPieceLocation.row,
             column: this.selectedPieceLocation.column
@@ -361,11 +362,8 @@ class Chess {
     return false
   }
 
-  upgradePawn(piece, row, column) {
+  upgradePawn(piece) {
     this.selectedPiece = piece
-    if (this.isPuzzle && row & column) {
-      this.boardModel[row][column] = piece
-    }
   }
 
   // en passant update method
@@ -440,11 +438,14 @@ class Chess {
     if (decodedMove.pawnUpgrade) {
       if (decodedMove.moveEnd.row !== row ||
             decodedMove.moveEnd.column !== column ||
-            this.boardModel[row][column] && this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase()) {
+            this.boardModel[row][column] && this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase() ||
+            !this.pawnUpgraded) {
         this.boardModel[row][column] = this.priorPawnDestinationPiece
         this.boardModel[this.priorPawnLocation.row][this.priorPawnLocation.column] = this.turn === "white" ? "P" : "p"
+        this.pawnUpgraded = false
         return true
       }
+      this.pawnUpgraded = false
       return false
     }
     return (decodedMove.moveStart.row !== this.selectedPieceLocation.row ||
