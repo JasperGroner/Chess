@@ -42,11 +42,13 @@ class Chess {
     if (this.canMove(row, column)) {
       const pawnUpgrade = this.isPawnUpgrade(row, column)
       if (pawnUpgrade) {
-        this.priorPawnLocation = {
-          row: this.selectedPieceLocation.row,
-          column: this.selectedPieceLocation.column
+        if (this.isPuzzle) {
+          this.priorPawnLocation = {
+            row: this.selectedPieceLocation.row,
+            column: this.selectedPieceLocation.column
+          }
+          this.priorPawnDestinationPiece = this.boardModel[row][column]
         }
-        this.priorPawnDestinationPiece = this.boardModel[row][column]
         return { pawnUpgrade, moves: [] }
       }
       return this.handleMove(row, column)
@@ -435,14 +437,10 @@ class Chess {
 
   isWrongMove(row, column) {
     const decodedMove = MoveDecoder.decodeMove(this.puzzleMoves[this.moveIterator])
-    console.log(this.priorPawnLocation)
-    console.log(this.priorPawnDestinationPiece)
-    console.log(row, column)
     if (decodedMove.pawnUpgrade) {
       if (decodedMove.moveEnd.row !== row ||
             decodedMove.moveEnd.column !== column ||
             this.boardModel[row][column] && this.boardModel[row][column].toLowerCase() !== decodedMove.pawnUpgrade.toLowerCase()) {
-        console.log(row, column)
         this.boardModel[row][column] = this.priorPawnDestinationPiece
         this.boardModel[this.priorPawnLocation.row][this.priorPawnLocation.column] = this.turn === "white" ? "P" : "p"
         return true
