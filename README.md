@@ -1,4 +1,4 @@
-<h1 style="text-align: center">The Chess App</h1>
+<h1 align="center">The Chess App</h1>
 
 This is a fully featured chess app that allows for local and network play, chat during network play and matchmaking, replays of finished games, and daily puzzles.
 
@@ -10,7 +10,7 @@ Email: themainplayer@gmail.com
 
 Password: password
 
-<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" style="height: 400px; margin: 0 auto;" alt="Sample chess board from game."/>
+<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" align="center" alt="Sample chess board from game."/>
 
 ## Features: 
 
