@@ -12,7 +12,7 @@ Password: password
 
 (Not a real email!)
 
-<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" align="center" width: 400px; alt="Sample chess board from game."/>
+<img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" align="center" width="400"; alt="Sample chess board from game."/>
 
 ## Features: 
 
