@@ -303,7 +303,7 @@ const Board = props => {
     )
   }
 
-  if (!currentUser || game) {
+  if (!currentUser || game || gameType === "puzzle") {
     return (
       <div className="sub-page-container-flex">
         {popup}

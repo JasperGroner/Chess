@@ -11,6 +11,9 @@ const gamesRouter = new express.Router()
 gamesRouter.get("/type/:gameType", async (req, res) => {
   let userId
   const gameType = req.params.gameType
+  if (gameType !== "puzzle") {
+    userId = req.user.id
+  }
   try { 
     let games = await Game.query().where("gameType", gameType).orderBy("createdAt")
     if (gameType === "puzzle") {
@@ -36,10 +39,13 @@ gamesRouter.get("/type/:gameType/:status", async (req, res) => {
 })
 
 gamesRouter.get("/:gameId", async (req, res) => {
-  const userId = req.user.id
+  let userId
   const gameId = req.params.gameId
   try {
     const game = await Game.query().findById(gameId)
+    if (game.gameType !== "puzzle") {
+      userId = req.user.id
+    }
     const serializedGame = await GameSerializer.getDetailSwitch(game, userId)
     res.status(200).json({ game: serializedGame })
   } catch(error) {

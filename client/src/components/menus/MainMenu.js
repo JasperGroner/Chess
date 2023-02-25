@@ -30,16 +30,11 @@ const MainMenu = ({currentUser}) => {
     subMenu=<GameList gameType="puzzle"/>
   }
 
-  let onlineLink, puzzleLink
+  let onlineLink
   if (currentUser) {
     onlineLink = (
       <a href="#" onClick={showNetworkMenu} className="main-menu--item">
         Play an Online Opponent
-      </a>
-    )
-    puzzleLink = (
-      <a href="#" onClick={showPuzzleMenu} className="main-menu--item">
-        Play a Puzzle
       </a>
     )
   }
@@ -52,7 +47,9 @@ const MainMenu = ({currentUser}) => {
           Play a Local Game
         </a>
         {onlineLink}
-        {puzzleLink}
+        <a href="#" onClick={showPuzzleMenu} className="main-menu--item">
+          Play a Puzzle
+        </a>
         {subMenu}
       </div>
     </div>
