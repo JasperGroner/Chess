@@ -12,7 +12,7 @@ const AutoReplayDisplay = ({updateReplayState, replayLength}) => {
   }
 
   return (
-    <a href="#" onClick={autoReplay} className="replay-game"><i class="fa-solid fa-play" /></a>
+    <a href="#" onClick={autoReplay} className="replay-game"><i className="fa-solid fa-play" /></a>
   )
 }
 
