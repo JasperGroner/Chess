@@ -4,19 +4,19 @@ This is a fully featured chess app that allows for local and network play, chat 
 
 [Play it Here](https://chess-game.herokuapp.com/)
 
-If you don't have time to make a user and want to access online elements, saving, and daily puzzles, please feel free to use the following credentials:
+If you don't have time to make a user and want to access online elements and saving please feel free to use the following credentials:
 
 Email: themainplayer@gmail.com
-
 Password: password
 
-(Not a real email!)
+Email: agoodfriend@gmail.com
+Password: password
 
 <img src="https://github.com/JasperGroner/chess/blob/main/images/board.png" width="400" alt="Sample chess board from game."/>
 
 ## Features: 
 
-  - Play the classic board game chess, either locally against a friend or online (if logged in and app is deployed to the web).
+  - Play the classic board game chess, either locally against a friend or online (account required).
 
   - All logic for playing chess custom built for this project:
 
