@@ -10,6 +10,10 @@ const Chat = ({ socket }) => {
   useEffect(() => {
     if (socket) {
       socket.on("add message", ({message}) => {
+        const currentTime = new Date()
+        const timestamp = `${currentTime.getHours().toString().padStart(2, '0')}:` +
+          `${currentTime.getMinutes().toString().padStart(2, '0')}`
+        message.timestamp = timestamp  
         setNewMessage(message)
       })
     }
