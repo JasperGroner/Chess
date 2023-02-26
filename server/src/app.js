@@ -150,10 +150,7 @@ io.on("connection", (socket) => {
         receivingRoom = room
       }
     })
-    const currentTime = new Date()
-    const timestamp = `${currentTime.getHours().toString().padStart(2, '0')}:` +
-      `${currentTime.getMinutes().toString().padStart(2, '0')}`
-    io.to(receivingRoom).emit("add message", ({message: {user: socket.request.user.username, timestamp, text: messageText}}))
+    io.to(receivingRoom).emit("add message", ({message: {user: socket.request.user.username, text: messageText}}))
   })
 
   socket.on("disconnect", () => {
