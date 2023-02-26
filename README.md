@@ -16,7 +16,7 @@ Password: password
 
 ## Features: 
 
-  - Play the classic board game chess, either locally against a friend or online (account required).
+  - Play the classic board game chess, either locally against a friend or online (account required). Board updates in real time to reflect your online opponent's moves using Socket.io.
 
   - All logic for playing chess custom built for this project:
 
@@ -28,7 +28,7 @@ Password: password
   
   - Saving of every turn of every game played by a logged-in user, so that the game can be picked up at any time and replayed on a move-by-move basis after it is completed.
 
-  - In-game chat in the matchmaking lobby for online play and during online matches.
+  - In-game chat in the matchmaking lobby and during online matches using Socket.io.
 
   - Chess puzzles where you have a set number of moves to mate the computer opponent. Twenty new chess puzzles loaded daily from the [Lichess database](https://database.lichess.org/#puzzles) if you have an API key from [Chess Puzzles](https://rapidapi.com/KeeghanM/api/chess-puzzles).
 
