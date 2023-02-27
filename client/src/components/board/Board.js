@@ -183,7 +183,7 @@ const Board = props => {
     }
     handleTurnColor(response.turnSwitch)
     setBoardState(boardState)
-    if (game.gameType === "puzzle" && computerMove === false) {
+    if (game && game.gameType === "puzzle" && computerMove === false) {
       setComputerMove(true)
     }
   }

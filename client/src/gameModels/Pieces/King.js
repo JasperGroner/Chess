@@ -25,7 +25,7 @@ class King extends Piece {
       }
       for (let i = 5; i <= 6; i++) {
         const move = {vertical: 0, horizontal: (i - 4)}
-        if (!(board.wouldNotBeCheck({row, column: i, piece, move}))) {
+        if (!(board.wouldNotBeCheck({row, column: i, piece, move, pieceRow: row, pieceColumn: 4}))) {
           return false
         }
       }
@@ -55,7 +55,7 @@ class King extends Piece {
       }
       for (let i = 3; i >= 2; i--) {
         const move = {vertical: 0, horizontal: (i - 4)}
-        if (!(board.wouldNotBeCheck({row, column: i, piece, move}))) {
+        if (!(board.wouldNotBeCheck({row, column: i, piece, move, pieceRow: row, pieceColumn: 4}))) {
           return false
         }
       }
