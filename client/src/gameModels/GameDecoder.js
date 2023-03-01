@@ -1,15 +1,6 @@
 class GameDecoder {
   static decodeGame(encodedGame) {
-      const game = {
-        board: [],
-        turn: "",
-        canCastle: {
-          whiteKingSide: false,
-          whiteQueenSide: false,
-          blackKingSide: false,
-          blackQueenSide: false
-        }
-      }
+      const game = {}
       const encodedGameArray = encodedGame.split(" ")
       game.board = GameDecoder.decodeBoard(encodedGameArray[0])
       game.turn = encodedGameArray[1] === "w" ? "white" : "black"
