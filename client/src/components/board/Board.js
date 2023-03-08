@@ -51,6 +51,7 @@ const Board = props => {
   const [ computerMove, setComputerMove ] = useState(false)
   const [ wrongMove, setWrongMove ] = useState(false)
   const [ puzzleCompleted, setPuzzleCompleted ] = useState(false)
+  const [ gameMenu, setGameMenu ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -234,9 +235,33 @@ const Board = props => {
     }
   }
 
+  const showGameMenu = event => {
+    event.preventDefault()
+    if (!popup) { 
+      showPopup()
+      setGameMenu(true)
+    } else {
+      selfDestruct()
+      setGameMenu(false)
+    }
+  }
+
+  const forfeitGame = event => {
+    event.preventDefault()
+  }
+
+  const offerDraw = event => {
+    event.preventDefault()
+  }
+
   if (computerMove) {
     handleComputerMove()
     setComputerMove(false)
+  }
+
+  let gameMenuButton = ""
+  if (currentUser && game?.gameType === "network") {
+    gameMenuButton = <button className='button button-game-menu' onClick={showGameMenu}><i className="fa-solid fa-chess"></i></button>
   }
 
   let popup = ""
@@ -277,6 +302,13 @@ const Board = props => {
           />
         </PopupDisplay>
       )
+    } else if (gameMenu) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <button onClick={forfeitGame} className="popup-button button">Forfeit Game</button>
+          <button onClick={offerDraw} className="popup-button button">Offer Draw</button>
+        </PopupDisplay>
+      )
     }
   }
 
@@ -307,7 +339,7 @@ const Board = props => {
     return (
       <div className="sub-page-container-flex">
         {popup}
-        <button className='button button-game-menu'><i className="fa-solid fa-chess"></i></button>
+        {gameMenuButton}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
           {topDisplay}
