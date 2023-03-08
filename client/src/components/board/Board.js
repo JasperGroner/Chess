@@ -52,6 +52,7 @@ const Board = props => {
   const [ wrongMove, setWrongMove ] = useState(false)
   const [ puzzleCompleted, setPuzzleCompleted ] = useState(false)
   const [ gameMenu, setGameMenu ] = useState(false)
+  const [ gameForfeited, setGameForfeited ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -75,6 +76,11 @@ const Board = props => {
       socket.on("turn switch", ({response}) => {
         boardState.loadGame(response.encodedState)
         handleTurnSwitch(response)
+      })
+
+      socket.on("forfeit", ({winner}) => {
+        setGameForfeited(winner)
+        showPopup()
       })
 
       if (game.status === "finished") {
@@ -248,6 +254,10 @@ const Board = props => {
 
   const forfeitGame = event => {
     event.preventDefault()
+    selfDestruct()
+    setGameMenu(false)
+    const winner = turn === "white" ? "black" : "white"
+    socket.emit("forfeit", {gameId: game.id, winner})
   }
 
   const offerDraw = event => {
@@ -309,6 +319,13 @@ const Board = props => {
           <button onClick={forfeitGame} className="button popup-game-menu">Forfeit Game</button>
           <button onClick={offerDraw} className="button popup-game-menu">Offer Draw</button>
           <button onClick={showGameMenu} className="button popup-game-menu">Return to Game</button>
+        </PopupDisplay>
+      )
+    } else if (gameForfeited) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h2>Game forfeited! {gameForfeited} wins!</h2>
+          <button onClick={selfDestructNoInteraction} className="popup-button button">Okay</button>
         </PopupDisplay>
       )
     }
