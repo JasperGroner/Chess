@@ -307,6 +307,7 @@ const Board = props => {
     return (
       <div className="sub-page-container-flex">
         {popup}
+        <button className='button button-game-menu'><i className="fa-solid fa-chess"></i></button>
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
           {topDisplay}
