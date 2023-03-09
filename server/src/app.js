@@ -133,8 +133,6 @@ io.on("connection", (socket) => {
   })
 
   socket.on("forfeit", async ({gameId, winner}) => {
-    console.log("HI")
-    console.log(gameId, winner)
     if (gameId && winner) {
       const patchedGame = await Game.query().patchAndFetchById(gameId, {
         status: "finished",
@@ -142,6 +140,10 @@ io.on("connection", (socket) => {
       })
     }
     io.to(gameId).emit("forfeit", ({winner}))
+  })
+
+  socket.on("offer draw", async({gameId, userColor}) => {
+    socket.broadcast.to(gameId).emit("draw offered", {userColor})
   })
 
   socket.on("leave game", ({gameId}) => {

@@ -53,6 +53,7 @@ const Board = props => {
   const [ puzzleCompleted, setPuzzleCompleted ] = useState(false)
   const [ gameMenu, setGameMenu ] = useState(false)
   const [ gameForfeited, setGameForfeited ] = useState(false)
+  const [ drawOffered, setDrawOffered ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -80,6 +81,11 @@ const Board = props => {
 
       socket.on("forfeit", ({winner}) => {
         setGameForfeited(winner)
+        showPopup()
+      })
+
+      socket.on("draw offered", ({userColor}) => {
+        setDrawOffered(userColor)
         showPopup()
       })
 
@@ -256,12 +262,28 @@ const Board = props => {
     event.preventDefault()
     selfDestruct()
     setGameMenu(false)
-    const winner = turn === "white" ? "black" : "white"
+    const winner = userColor === "white" ? "black" : "white"
     socket.emit("forfeit", {gameId: game.id, winner})
   }
 
   const offerDraw = event => {
     event.preventDefault()
+    selfDestruct()
+    setGameMenu(false)
+    socket.emit("offer draw", {gameId: game.id, userColor})
+  }
+
+  const resolveDrawOffer = event => {
+    event.preventDefault()
+    if (event.target.id === "accept-draw") {
+      console.log("accepted")
+      setDrawOffered(false)
+      selfDestruct()
+    } else {
+      console.log("denied")
+      setDrawOffered(false)
+      selfDestruct()
+    }
   }
 
   if (computerMove) {
@@ -324,8 +346,16 @@ const Board = props => {
     } else if (gameForfeited) {
       popup = (
         <PopupDisplay selfDestruct={selfDestruct}>
-          <h2>Game forfeited! {gameForfeited} wins!</h2>
+          <h2>Game forfeited! {playerNames[gameForfeited]} wins!</h2>
           <button onClick={selfDestructNoInteraction} className="popup-button button">Okay</button>
+        </PopupDisplay>
+      )
+    } else if (drawOffered) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h4>Accept {playerNames[drawOffered]}'s offer of a draw?</h4>
+          <button onClick={resolveDrawOffer} id="accept-draw" className="popup-button button">Yes</button>
+          <button onClick={resolveDrawOffer} id="decline-draw" className="popup-button button">No</button>
         </PopupDisplay>
       )
     }
