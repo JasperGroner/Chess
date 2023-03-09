@@ -4,7 +4,7 @@ This is a fully featured chess app that allows for local and network play, chat 
 
 [Play it Here](https://chess-game.herokuapp.com/)
 
-If you don't have time to make a user and want to access online elements and saving please feel free to use the following credentials:
+If you don't have time to make a user and want to access online elements and saving, please feel free to use the following credentials:
 
 Email: themainplayer@gmail.com
 Password: password

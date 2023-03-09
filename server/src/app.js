@@ -120,7 +120,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("turn switch",({ response, gameId }) => {
-    io.to(gameId).emit("turn switch", {response})
+    socket.broadcast.to(gameId).emit("turn switch", {response})
   })
 
   socket.on("checkmate", async ({gameId, winner}) => {
