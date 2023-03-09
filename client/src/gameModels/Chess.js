@@ -425,6 +425,8 @@ class Chess {
     selectFunction(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
 
     if (decodedMove.pawnUpgrade) {
+      const upgradedPiece = userColor === "black" ? 
+        decodedMove.pawnUpgrade.toUpperCase() : decodedMove.pawnUpgrade.toLowerCase()
       this.upgradePawn(decodedMove.pawnUpgrade)
       const response = this.handleMove(decodedMove.moveEnd.row, decodedMove.moveEnd.column)
       handleResposeFunction(response)
