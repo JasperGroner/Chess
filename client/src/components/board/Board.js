@@ -316,9 +316,9 @@ const Board = props => {
       popup = (
         <PopupDisplay selfDestruct={selfDestruct}>
           <h3>Chess Options</h3>
-          <button onClick={forfeitGame} className="button popup-game-menu">Forfeit Game</button>
-          <button onClick={offerDraw} className="button popup-game-menu">Offer Draw</button>
-          <button onClick={showGameMenu} className="button popup-game-menu">Return to Game</button>
+          <a href="#" onClick={forfeitGame} className="popup-game-menu">Forfeit Game</a>
+          <a href="#" onClick={offerDraw} className="popup-game-menu">Offer Draw</a>
+          <a href="#" onClick={showGameMenu} className="popup-game-menu">Return to Game</a>
         </PopupDisplay>
       )
     } else if (gameForfeited) {
