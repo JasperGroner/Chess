@@ -9,6 +9,7 @@ import PopupDisplay from "../PopupDisplay"
 import CheckDisplay from "./CheckDisplay"
 import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
 import WrongMoveDisplay from "./WrongMoveDisplay"
+import DrawResponseDisplay from "./DrawResponseDisplay"
 import { io } from "socket.io-client"
 
 const socket = io({
@@ -51,6 +52,10 @@ const Board = props => {
   const [ computerMove, setComputerMove ] = useState(false)
   const [ wrongMove, setWrongMove ] = useState(false)
   const [ puzzleCompleted, setPuzzleCompleted ] = useState(false)
+  const [ gameMenu, setGameMenu ] = useState(false)
+  const [ gameForfeited, setGameForfeited ] = useState(false)
+  const [ drawOffered, setDrawOffered ] = useState(false)
+  const [ drawResponse, setDrawResponse ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -74,6 +79,26 @@ const Board = props => {
       socket.on("turn switch", ({response}) => {
         boardState.loadGame(response.encodedState)
         handleTurnSwitch(response)
+      })
+
+      socket.on("forfeit", ({winner}) => {
+        setGameForfeited(winner)
+        showPopup()
+      })
+
+      socket.on("draw offered", ({userColor}) => {
+        setDrawOffered(userColor)
+        showPopup()
+      })
+
+      socket.on("draw denied", () => {
+        setDrawResponse("denied")
+        showPopup()
+      }) 
+
+      socket.on("draw accepted", () => {
+        setDrawResponse("accepted")
+        showPopup()
       })
 
       if (game.status === "finished") {
@@ -234,9 +259,47 @@ const Board = props => {
     }
   }
 
+  const showGameMenu = event => {
+    event.preventDefault()
+    if (!popup) { 
+      showPopup()
+      setGameMenu(true)
+    } else {
+      selfDestruct()
+      setGameMenu(false)
+    }
+  }
+
+  const forfeitGame = event => {
+    event.preventDefault()
+    selfDestruct()
+    setGameMenu(false)
+    const winner = userColor === "white" ? "black" : "white"
+    socket.emit("forfeit", {gameId: game.id, winner})
+  }
+
+  const offerDraw = event => {
+    event.preventDefault()
+    selfDestruct()
+    setGameMenu(false)
+    socket.emit("offer draw", {gameId: game.id, userColor})
+  }
+
+  const resolveDrawOffer = event => {
+    event.preventDefault()
+    setDrawOffered(false)
+    selfDestruct()
+    socket.emit("draw response", {gameId: game.id, response: event.target.id})
+  }
+
   if (computerMove) {
     handleComputerMove()
     setComputerMove(false)
+  }
+
+  let gameMenuButton = ""
+  if (currentUser && game?.gameType === "network") {
+    gameMenuButton = <button className='button button-game-menu' onClick={showGameMenu}><i className="fa-solid fa-chess"></i></button>
   }
 
   let popup = ""
@@ -277,6 +340,40 @@ const Board = props => {
           />
         </PopupDisplay>
       )
+    } else if (gameMenu) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h3>Chess Options</h3>
+          <a href="#" onClick={forfeitGame} className="popup-game-menu">Forfeit Game</a>
+          <a href="#" onClick={offerDraw} className="popup-game-menu">Offer Draw</a>
+          <a href="#" onClick={showGameMenu} className="popup-game-menu">Return to Game</a>
+        </PopupDisplay>
+      )
+    } else if (gameForfeited) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h2>Game forfeited! {playerNames[gameForfeited]} wins!</h2>
+          <button onClick={selfDestructNoInteraction} className="popup-button button">Okay</button>
+        </PopupDisplay>
+      )
+    } else if (drawOffered) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <h4>Accept {playerNames[drawOffered]}'s offer of a draw?</h4>
+          <button onClick={resolveDrawOffer} id="accepted" className="popup-button button">Yes</button>
+          <button onClick={resolveDrawOffer} id="declined" className="popup-button button">No</button>
+        </PopupDisplay>
+      )
+    } else if (drawResponse) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <DrawResponseDisplay 
+            response={drawResponse} 
+            selfDestruct={selfDestruct} 
+            selfDestructNoInteraction={selfDestructNoInteraction}
+          />
+        </PopupDisplay>
+      )
     }
   }
 
@@ -307,6 +404,7 @@ const Board = props => {
     return (
       <div className="sub-page-container-flex">
         {popup}
+        {gameMenuButton}
         <CapturedPiecesDisplay capturedPieces={capturedPieces.white} color="Black" />
         <div className="game-display">
           {topDisplay}
