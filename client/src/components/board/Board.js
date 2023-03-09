@@ -9,6 +9,7 @@ import PopupDisplay from "../PopupDisplay"
 import CheckDisplay from "./CheckDisplay"
 import PawnUpgradeDisplay from "./PawnUpgradeDisplay"
 import WrongMoveDisplay from "./WrongMoveDisplay"
+import DrawResponseDisplay from "./DrawResponseDisplay"
 import { io } from "socket.io-client"
 
 const socket = io({
@@ -54,6 +55,7 @@ const Board = props => {
   const [ gameMenu, setGameMenu ] = useState(false)
   const [ gameForfeited, setGameForfeited ] = useState(false)
   const [ drawOffered, setDrawOffered ] = useState(false)
+  const [ drawResponse, setDrawResponse ] = useState(false)
 
   useEffect(() => {
     if (game && game.id) {
@@ -86,6 +88,16 @@ const Board = props => {
 
       socket.on("draw offered", ({userColor}) => {
         setDrawOffered(userColor)
+        showPopup()
+      })
+
+      socket.on("draw denied", () => {
+        setDrawResponse("denied")
+        showPopup()
+      }) 
+
+      socket.on("draw accepted", () => {
+        setDrawResponse("accepted")
         showPopup()
       })
 
@@ -275,15 +287,9 @@ const Board = props => {
 
   const resolveDrawOffer = event => {
     event.preventDefault()
-    if (event.target.id === "accept-draw") {
-      console.log("accepted")
-      setDrawOffered(false)
-      selfDestruct()
-    } else {
-      console.log("denied")
-      setDrawOffered(false)
-      selfDestruct()
-    }
+    setDrawOffered(false)
+    selfDestruct()
+    socket.emit("draw response", {gameId: game.id, response: event.target.id})
   }
 
   if (computerMove) {
@@ -354,8 +360,18 @@ const Board = props => {
       popup = (
         <PopupDisplay selfDestruct={selfDestruct}>
           <h4>Accept {playerNames[drawOffered]}'s offer of a draw?</h4>
-          <button onClick={resolveDrawOffer} id="accept-draw" className="popup-button button">Yes</button>
-          <button onClick={resolveDrawOffer} id="decline-draw" className="popup-button button">No</button>
+          <button onClick={resolveDrawOffer} id="accepted" className="popup-button button">Yes</button>
+          <button onClick={resolveDrawOffer} id="declined" className="popup-button button">No</button>
+        </PopupDisplay>
+      )
+    } else if (drawResponse) {
+      popup = (
+        <PopupDisplay selfDestruct={selfDestruct}>
+          <DrawResponseDisplay 
+            response={drawResponse} 
+            selfDestruct={selfDestruct} 
+            selfDestructNoInteraction={selfDestructNoInteraction}
+          />
         </PopupDisplay>
       )
     }

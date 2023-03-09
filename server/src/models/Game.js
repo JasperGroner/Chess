@@ -13,7 +13,7 @@ class Game extends Model {
         name: {type: "string", minLength: 3, maxLength: 20},
         gameType: {type: "string", enum: ["hot seat", "network", "puzzle"]},
         status: {type: "string", enum: ["looking", "playing", "finished"]},
-        winner: {type: "string", enum: ["white", "black"]}
+        winner: {type: "string", enum: ["white", "black", "draw"]}
       }
     }
   }

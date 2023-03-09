@@ -142,8 +142,20 @@ io.on("connection", (socket) => {
     io.to(gameId).emit("forfeit", ({winner}))
   })
 
-  socket.on("offer draw", async({gameId, userColor}) => {
+  socket.on("offer draw", ({gameId, userColor}) => {
     socket.broadcast.to(gameId).emit("draw offered", {userColor})
+  })
+
+  socket.on("draw response", async  ({gameId, response}) => {
+    if (response === "accepted") {
+      const patchedGame = await Game.query().patchAndFetchById(gameId, {
+        status: "finished",
+        winner: "draw"
+      })
+      io.to(gameId).emit("draw accepted")
+    } else {
+      socket.broadcast.to(gameId).emit("draw denied")
+    }
   })
 
   socket.on("leave game", ({gameId}) => {
